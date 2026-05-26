@@ -29,7 +29,7 @@ import {
 	AppendOnlyContextManager,
 	resolveTelemetry,
 	ThinkingLevel,
-} from "@oh-my-pi/pi-agent-core";
+} from "@gajae-code/agent-core";
 import {
 	AUTO_HANDOFF_THRESHOLD_FOCUS,
 	CompactionCancelledError,
@@ -45,8 +45,8 @@ import {
 	prepareCompaction,
 	type SummaryOptions,
 	shouldCompact,
-} from "@oh-my-pi/pi-agent-core/compaction";
-import { DEFAULT_PRUNE_CONFIG, pruneToolOutputs } from "@oh-my-pi/pi-agent-core/compaction/pruning";
+} from "@gajae-code/agent-core/compaction";
+import { DEFAULT_PRUNE_CONFIG, pruneToolOutputs } from "@gajae-code/agent-core/compaction/pruning";
 import type {
 	AssistantMessage,
 	Context,
@@ -63,7 +63,7 @@ import type {
 	ToolChoice,
 	Usage,
 	UsageReport,
-} from "@oh-my-pi/pi-ai";
+} from "@gajae-code/ai";
 import {
 	calculateRateLimitBackoffMs,
 	clearAnthropicFastModeFallback,
@@ -74,8 +74,8 @@ import {
 	parseRateLimitReason,
 	resolveServiceTier,
 	streamSimple,
-} from "@oh-my-pi/pi-ai";
-import { MacOSPowerAssertion } from "@oh-my-pi/pi-natives";
+} from "@gajae-code/ai";
+import { MacOSPowerAssertion } from "@gajae-code/natives";
 import {
 	extractRetryHint,
 	getAgentDbPath,
@@ -84,7 +84,7 @@ import {
 	logger,
 	prompt,
 	Snowflake,
-} from "@oh-my-pi/pi-utils";
+} from "@gajae-code/utils";
 import { type AsyncJob, type AsyncJobDeliveryState, AsyncJobManager } from "../async";
 import { reset as resetCapabilities } from "../capability";
 import type { Rule } from "../capability/rule";
@@ -942,7 +942,7 @@ export class AgentSession {
 		if (!idle && !system && !user && !display) return;
 		try {
 			this.#powerAssertion = MacOSPowerAssertion.start({
-				reason: "Oh My Pi agent session",
+				reason: "Gajae Code agent session",
 				idle,
 				system,
 				user,

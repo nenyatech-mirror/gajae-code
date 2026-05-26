@@ -14,7 +14,7 @@ import type {
 	ToolChoice,
 	ToolResultMessage,
 	TSchema,
-} from "@oh-my-pi/pi-ai";
+} from "@gajae-code/ai";
 import type { AppendOnlyContextManager } from "./append-only-context";
 import type { HarmonyAuditEvent } from "./harmony-leak";
 import type { AgentRunCoverage, AgentRunSummary } from "./run-collector";
@@ -312,7 +312,7 @@ export interface AfterToolCallContext {
  *
  * @example
  * ```typescript
- * declare module "@oh-my-pi/agent" {
+ * declare module "@gajae-code/agent" {
  *   interface CustomAgentMessages {
  *     artifact: ArtifactMessage;
  *     notification: NotificationMessage;

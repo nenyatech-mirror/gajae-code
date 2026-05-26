@@ -9,13 +9,13 @@ import traceback
 from collections.abc import Callable
 from contextlib import suppress
 
-from robomp import tasks
-from robomp.cancellation import clear_current_event, set_current_event
-from robomp.config import Settings
-from robomp.db import Database, EventRow
-from robomp.github_backend import GitHubBackend
-from robomp.sandbox import GitTransport, SandboxManager, _reap_slot
-from robomp.slot_pool import SlotPool
+from robogjc import tasks
+from robogjc.cancellation import clear_current_event, set_current_event
+from robogjc.config import Settings
+from robogjc.db import Database, EventRow
+from robogjc.github_backend import GitHubBackend
+from robogjc.sandbox import GitTransport, SandboxManager, _reap_slot
+from robogjc.slot_pool import SlotPool
 
 log = logging.getLogger(__name__)
 
@@ -95,11 +95,11 @@ class WorkerPool:
         if recovered:
             log.info("recovered stuck events", extra={"count": recovered})
         # Single dispatcher loop is simpler than N workers; concurrency is gated by the slot pool.
-        self._workers.append(asyncio.create_task(self._dispatch_loop(), name="robomp-dispatch"))
+        self._workers.append(asyncio.create_task(self._dispatch_loop(), name="robogjc-dispatch"))
         # Periodic natives-cache GC, if enabled. Sleep-first so a freshly
         # restarted orchestrator doesn't burn CPU on a cold cache.
         if self.sandbox.natives_cache is not None and self.settings.natives_cache_gc_interval_seconds > 0:
-            self._workers.append(asyncio.create_task(self._natives_cache_gc_loop(), name="robomp-natives-gc"))
+            self._workers.append(asyncio.create_task(self._natives_cache_gc_loop(), name="robogjc-natives-gc"))
 
     async def stop(self, *, drain_timeout: float = 25.0, kill_timeout: float = 5.0) -> None:
         """Halt the dispatcher, then drain (or kill) in-flight `_run_event` tasks.
@@ -199,7 +199,7 @@ class WorkerPool:
                         pass
                     continue
                 # Schedule the task; the slot pool caps concurrent execution.
-                task = asyncio.create_task(self._run_event(row), name=f"robomp-event-{row.delivery_id[:8]}")
+                task = asyncio.create_task(self._run_event(row), name=f"robogjc-event-{row.delivery_id[:8]}")
                 self._inflight_tasks[task] = row.delivery_id
                 task.add_done_callback(lambda t: self._inflight_tasks.pop(t, None))
         except asyncio.CancelledError:

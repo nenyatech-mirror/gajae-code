@@ -1,4 +1,4 @@
-# omp-rpc
+# gjc-rpc
 
 Typed Python bindings for the `omp --mode rpc` protocol used by the coding agent.
 

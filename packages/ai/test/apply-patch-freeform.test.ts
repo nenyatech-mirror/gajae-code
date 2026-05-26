@@ -2,18 +2,18 @@ import { describe, expect, test } from "bun:test";
 import {
 	convertOpenAICodexResponsesTools as convertCodexTools,
 	normalizeCodexToolChoice,
-} from "@oh-my-pi/pi-ai/providers/openai-codex-responses";
+} from "@gajae-code/ai/providers/openai-codex-responses";
 import {
 	convertTools,
 	mapOpenAIResponsesToolChoiceForTools,
 	supportsFreeformApplyPatch,
-} from "@oh-my-pi/pi-ai/providers/openai-responses";
+} from "@gajae-code/ai/providers/openai-responses";
 import {
 	appendResponsesToolResultMessages,
 	convertResponsesAssistantMessage,
 	processResponsesStream,
-} from "@oh-my-pi/pi-ai/providers/openai-responses-shared";
-import type { AssistantMessage, Model, Tool, ToolResultMessage } from "@oh-my-pi/pi-ai/types";
+} from "@gajae-code/ai/providers/openai-responses-shared";
+import type { AssistantMessage, Model, Tool, ToolResultMessage } from "@gajae-code/ai/types";
 import type { ResponseStreamEvent } from "openai/resources/responses/responses";
 import * as z from "zod/v4";
 
@@ -25,7 +25,7 @@ const GRAMMAR = [
 	'LITERAL: "//"',
 	"",
 ].join("\n");
-const COMPACT_GRAMMAR = 'start: "*** Begin Patch" LF\nPATH: /https?:\\/\\/[^\\n]+/\nLITERAL: "//"';
+const CGJCACT_GRAMMAR = 'start: "*** Begin Patch" LF\nPATH: /https?:\\/\\/[^\\n]+/\nLITERAL: "//"';
 
 function makeModel(overrides: Partial<Model<"openai-responses">> = {}): Model<"openai-responses"> {
 	return {
@@ -132,7 +132,7 @@ describe("convertTools: freeform emission", () => {
 		const [out] = convertTools([editTool], false, freeformModel) as unknown as Array<Record<string, unknown>>;
 		expect(out.type).toBe("custom");
 		expect(out.name).toBe("apply_patch"); // wire name from tool.customWireName
-		expect(out.format).toEqual({ type: "grammar", syntax: "lark", definition: COMPACT_GRAMMAR });
+		expect(out.format).toEqual({ type: "grammar", syntax: "lark", definition: CGJCACT_GRAMMAR });
 	});
 
 	test("regular tools remain function-type alongside a custom one", () => {
@@ -381,7 +381,7 @@ describe("codex-backend convertTools (chatgpt.com/backend-api)", () => {
 		expect(out.type).toBe("custom");
 		expect(out.name).toBe("apply_patch");
 		if (out.type !== "custom") throw new Error("Expected custom tool payload");
-		expect(out.format).toEqual({ type: "grammar", syntax: "lark", definition: COMPACT_GRAMMAR });
+		expect(out.format).toEqual({ type: "grammar", syntax: "lark", definition: CGJCACT_GRAMMAR });
 	});
 
 	test("wire shape matches direct-OpenAI convertTools (single serializer contract)", () => {

@@ -2,14 +2,14 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import type { completeSimple, Model } from "@oh-my-pi/pi-ai";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { getThemeByName } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import { InspectImageTool } from "@oh-my-pi/pi-coding-agent/tools/inspect-image";
-import { inspectImageToolRenderer } from "@oh-my-pi/pi-coding-agent/tools/inspect-image-renderer";
-import { toolRenderers } from "@oh-my-pi/pi-coding-agent/tools/renderers";
-import { sanitizeText } from "@oh-my-pi/pi-utils";
+import type { completeSimple, Model } from "@gajae-code/ai";
+import { Settings } from "@gajae-code/coding-agent/config/settings";
+import { getThemeByName } from "@gajae-code/coding-agent/modes/theme/theme";
+import type { ToolSession } from "@gajae-code/coding-agent/tools";
+import { InspectImageTool } from "@gajae-code/coding-agent/tools/inspect-image";
+import { inspectImageToolRenderer } from "@gajae-code/coding-agent/tools/inspect-image-renderer";
+import { toolRenderers } from "@gajae-code/coding-agent/tools/renderers";
+import { sanitizeText } from "@gajae-code/utils";
 
 const TINY_PNG_BASE64 =
 	"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==";

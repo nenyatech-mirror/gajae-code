@@ -6,22 +6,22 @@
  * behavior they have in the TUI.
  */
 import { afterEach, beforeEach, expect, it, spyOn } from "bun:test";
-import { Agent, type AgentTool } from "@oh-my-pi/pi-agent-core";
-import { getBundledModel } from "@oh-my-pi/pi-ai";
-import { createMockModel, type MockModelOptions } from "@oh-my-pi/pi-ai/providers/mock";
-import { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { EditTool } from "@oh-my-pi/pi-coding-agent/edit";
-import { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
+import { Agent, type AgentTool } from "@gajae-code/agent-core";
+import { getBundledModel } from "@gajae-code/ai";
+import { createMockModel, type MockModelOptions } from "@gajae-code/ai/providers/mock";
+import { AssistantMessageEventStream } from "@gajae-code/ai/utils/event-stream";
+import { Settings } from "@gajae-code/coding-agent/config/settings";
+import { EditTool } from "@gajae-code/coding-agent/edit";
+import { AgentSession } from "@gajae-code/coding-agent/session/agent-session";
 import type {
 	ClientBridge,
 	ClientBridgePermissionOutcome,
 	ClientBridgePermissionToolCall,
-} from "@oh-my-pi/pi-coding-agent/session/client-bridge";
-import { convertToLlm } from "@oh-my-pi/pi-coding-agent/session/messages";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import { TempDir } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/coding-agent/session/client-bridge";
+import { convertToLlm } from "@gajae-code/coding-agent/session/messages";
+import { SessionManager } from "@gajae-code/coding-agent/session/session-manager";
+import type { ToolSession } from "@gajae-code/coding-agent/tools";
+import { TempDir } from "@gajae-code/utils";
 import * as z from "zod/v4";
 
 // ---------------------------------------------------------------------------

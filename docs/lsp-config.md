@@ -1,6 +1,6 @@
-# LSP configuration in OMP
+# LSP configuration in GJC
 
-This guide explains how to configure language servers for the OMP coding agent.
+This guide explains how to configure language servers for the GJC coding agent.
 
 Source of truth in code:
 
@@ -10,7 +10,7 @@ Source of truth in code:
 
 ## Auto-detection
 
-When no LSP config file is present, OMP auto-detects servers by intersecting two conditions:
+When no LSP config file is present, GJC auto-detects servers by intersecting two conditions:
 
 1. The project directory contains at least one of the server's `rootMarkers`.
 2. The server binary is available — checked in project-local bin directories first (e.g., `node_modules/.bin/`, `.venv/bin/`), then `$PATH`.
@@ -19,7 +19,7 @@ No configuration is required for common setups. The built-in server list covers 
 
 ## Config file locations
 
-OMP merges LSP config from multiple files, lowest to highest priority:
+GJC merges LSP config from multiple files, lowest to highest priority:
 
 | Priority | Location |
 |----------|----------|
@@ -36,7 +36,7 @@ Each location accepts both `.json` and `.yaml` / `.yml` variants, as well as hid
 - User-wide preferences → `~/.omp/agent/lsp.json`
 - Project-specific overrides → `<project>/.omp/lsp.json`
 
-> **Note:** The presence of any LSP config file disables auto-detection. When at least one file is found, OMP skips the binary-scan phase and loads all servers that have matching `rootMarkers`, an available binary, and are not explicitly `disabled`.
+> **Note:** The presence of any LSP config file disables auto-detection. When at least one file is found, GJC skips the binary-scan phase and loads all servers that have matching `rootMarkers`, an available binary, and are not explicitly `disabled`.
 
 ## File shape
 
@@ -84,7 +84,7 @@ Top-level keys:
 
 ### Capabilities
 
-The `capabilities` object enables optional server-specific features that OMP supports on a per-server basis:
+The `capabilities` object enables optional server-specific features that GJC supports on a per-server basis:
 
 ```json
 {

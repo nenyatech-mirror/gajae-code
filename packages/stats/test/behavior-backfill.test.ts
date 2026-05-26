@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { getAgentDir, getStatsDbPath, setAgentDir, TempDir } from "@oh-my-pi/pi-utils";
+import { getAgentDir, getStatsDbPath, setAgentDir, TempDir } from "@gajae-code/utils";
 import { syncAllSessions } from "../src/aggregator";
 import { closeDb, getBehaviorOverall, getFileOffset, initDb } from "../src/db";
 

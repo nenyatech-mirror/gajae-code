@@ -734,7 +734,7 @@ class Database:
     def processed_issue_keys(self, keys: Iterable[str]) -> set[str]:
         """Return the subset of `keys` that have a row in the `issues` table.
 
-        Membership in `issues` means robomp has at minimum upserted state for the
+        Membership in `issues` means robogjc has at minimum upserted state for the
         issue — i.e. it has been picked up by the dispatcher at least once. Used
         by the browse panel to hide issues we've already started on.
         """

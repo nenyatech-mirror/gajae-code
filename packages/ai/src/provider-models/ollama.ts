@@ -1,4 +1,4 @@
-import { fetchWithRetry } from "@oh-my-pi/pi-utils";
+import { fetchWithRetry } from "@gajae-code/utils";
 import type { ModelManagerOptions } from "../model-manager";
 import { Effort } from "../model-thinking";
 import type { ThinkingConfig } from "../types";

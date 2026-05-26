@@ -3,7 +3,7 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import * as tls from "node:tls";
-import { Effort } from "@oh-my-pi/pi-ai";
+import { Effort } from "@gajae-code/ai";
 import {
 	applyClaudeToolPrefix,
 	buildAnthropicClientOptions,
@@ -16,9 +16,9 @@ import {
 	mapStainlessOs,
 	streamAnthropic,
 	stripClaudeToolPrefix,
-} from "@oh-my-pi/pi-ai/providers/anthropic";
-import { getEnvApiKey } from "@oh-my-pi/pi-ai/stream";
-import type { Context, Model, TJsonSchema, Tool } from "@oh-my-pi/pi-ai/types";
+} from "@gajae-code/ai/providers/anthropic";
+import { getEnvApiKey } from "@gajae-code/ai/stream";
+import type { Context, Model, TJsonSchema, Tool } from "@gajae-code/ai/types";
 import * as z from "zod/v4";
 import { withEnv } from "./helpers";
 

@@ -1,12 +1,12 @@
 """gh-proxy FastAPI app: HMAC-gated GitHub REST + git proxy.
 
-Robomp calls every endpoint with HMAC headers (see `robomp.proxy_hmac`).
+Robogjc calls every endpoint with HMAC headers (see `robogjc.proxy_hmac`).
 Authenticated requests dispatch to a single `GitHubClient` instance holding
-the PAT, or to `robomp.git_ops` for git transport. The PAT never leaves
+the PAT, or to `robogjc.git_ops` for git transport. The PAT never leaves
 this process.
 
 Endpoint payloads are deliberately typed (no generic GitHub passthrough):
-each one names exactly one operation robomp performs.
+each one names exactly one operation robogjc performs.
 """
 
 from __future__ import annotations
@@ -25,27 +25,27 @@ from urllib.parse import urlparse
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.responses import JSONResponse
 
-from robomp.config import Settings
-from robomp.git_ops import (
+from robogjc.config import Settings
+from robogjc.git_ops import (
     GitCommandError,
     HeadDriftError,
 )
-from robomp.git_ops import (
+from robogjc.git_ops import (
     clone as git_clone,
 )
-from robomp.git_ops import (
+from robogjc.git_ops import (
     fetch_prune as git_fetch_prune,
 )
-from robomp.git_ops import (
+from robogjc.git_ops import (
     fetch_ref as git_fetch_ref,
 )
-from robomp.git_ops import (
+from robogjc.git_ops import (
     push as git_push,
 )
-from robomp.github_client import GitHubClient, GitHubError
-from robomp.proxy_hmac import HEADER_SIGNATURE, HEADER_TIMESTAMP, verify
-from robomp.sandbox import _safe_directory_env, _slot_subprocess_kwargs
-from robomp.sandbox import workspace_key as compute_workspace_key
+from robogjc.github_client import GitHubClient, GitHubError
+from robogjc.proxy_hmac import HEADER_SIGNATURE, HEADER_TIMESTAMP, verify
+from robogjc.sandbox import _safe_directory_env, _slot_subprocess_kwargs
+from robogjc.sandbox import workspace_key as compute_workspace_key
 
 log = logging.getLogger(__name__)
 
@@ -143,7 +143,7 @@ def _resolve_token(cfg: Settings) -> str:
 
 def _resolve_hmac_key(cfg: Settings) -> bytes:
     if cfg.gh_proxy_hmac_key is None:
-        raise HTTPException(500, "gh-proxy: ROBOMP_GH_PROXY_HMAC_KEY not configured")
+        raise HTTPException(500, "gh-proxy: ROBGJC_GH_PROXY_HMAC_KEY not configured")
     return cfg.gh_proxy_hmac_key.get_secret_value().encode("utf-8")
 
 
@@ -152,7 +152,7 @@ _ORIGIN_READ_TIMEOUT_SECONDS = 5.0
 
 def _read_origin_url(repo_dir: Path, slot_uid: int | None = None) -> str:
     """Return the worktree's `origin` remote URL, or raise HTTPException."""
-    env = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
+    env = {**os.environ, "GIT_TERMINAL_PRGJCT": "0"}
     env.update(_safe_directory_env(repo_dir))
     try:
         proc = subprocess.run(
@@ -222,7 +222,7 @@ def create_proxy_app(settings: Settings) -> FastAPI:
         app.state.settings = settings
         yield
 
-    app = FastAPI(title="robomp-gh-proxy", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="robogjc-gh-proxy", version="0.1.0", lifespan=lifespan)
 
     def _request_target(request: Request) -> str:
         """Canonical signing target: `path` plus raw query string if any.
@@ -506,7 +506,7 @@ def create_proxy_app(settings: Settings) -> FastAPI:
 
     # ---- git transport ----
     #
-    # The underlying `robomp.git_ops` primitives are blocking `subprocess.run`
+    # The underlying `robogjc.git_ops` primitives are blocking `subprocess.run`
     # calls. Running them directly from an `async def` handler pins the
     # event loop until the subprocess returns; a hung git would freeze the
     # whole proxy. We bridge with `asyncio.to_thread` (work on a threadpool

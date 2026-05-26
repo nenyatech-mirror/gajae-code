@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
-import { type AsyncJob, AsyncJobManager } from "@oh-my-pi/pi-coding-agent/async";
-import type { CustomMessage } from "@oh-my-pi/pi-coding-agent/session/messages";
-import { YieldQueue } from "@oh-my-pi/pi-coding-agent/session/yield-queue";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import { JobTool } from "@oh-my-pi/pi-coding-agent/tools/job";
+import type { AgentMessage } from "@gajae-code/agent-core";
+import { type AsyncJob, AsyncJobManager } from "@gajae-code/coding-agent/async";
+import type { CustomMessage } from "@gajae-code/coding-agent/session/messages";
+import { YieldQueue } from "@gajae-code/coding-agent/session/yield-queue";
+import type { ToolSession } from "@gajae-code/coding-agent/tools";
+import { JobTool } from "@gajae-code/coding-agent/tools/job";
 
 type AsyncEntry = {
 	jobId: string;

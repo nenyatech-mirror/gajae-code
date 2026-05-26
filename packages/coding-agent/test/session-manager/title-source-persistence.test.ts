@@ -6,8 +6,8 @@ import {
 	loadEntriesFromFile,
 	type SessionHeader,
 	SessionManager,
-} from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { getConfigRootDir, setAgentDir } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/coding-agent/session/session-manager";
+import { getConfigRootDir, setAgentDir } from "@gajae-code/utils";
 
 import { makeAssistantMessage } from "./helpers";
 

@@ -12,16 +12,16 @@ import asyncio
 
 import pytest
 
-from robomp.cancellation import (
+from robogjc.cancellation import (
     clear_current_event,
     register_cancel_hook,
     set_current_event,
     unregister_cancel_hook,
 )
-from robomp.config import Settings
-from robomp.db import Database, EventRow
-from robomp.queue import WorkerPool
-from robomp.slot_pool import SlotPool
+from robogjc.config import Settings
+from robogjc.db import Database, EventRow
+from robogjc.queue import WorkerPool
+from robogjc.slot_pool import SlotPool
 
 
 class _StubGitHub:
@@ -230,7 +230,7 @@ async def test_start_reaps_configured_slot_uids(
     settings: Settings, db: Database, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     calls: list[int] = []
-    monkeypatch.setattr("robomp.queue._reap_slot", lambda uid: calls.append(uid))
+    monkeypatch.setattr("robogjc.queue._reap_slot", lambda uid: calls.append(uid))
     pool = WorkerPool(
         settings=settings,
         db=db,
@@ -269,7 +269,7 @@ async def test_run_event_reaps_slot_before_release(
         state="running",
     )
     order: list[tuple[str, int | None]] = []
-    monkeypatch.setattr("robomp.queue._reap_slot", lambda uid: order.append(("reap", uid)))
+    monkeypatch.setattr("robogjc.queue._reap_slot", lambda uid: order.append(("reap", uid)))
     release = slot_pool.release
 
     def record_release(slot_uid: int | None) -> None:

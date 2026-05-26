@@ -13,24 +13,24 @@ from typing import cast
 
 import pytest
 
-from robomp import host_tools
-from robomp.db import Database
-from robomp.github_backend import GitHubBackend
-from robomp.github_client import IssueInfo, RepoInfo
-from robomp.natives_cache import NativesCache
-from robomp.natives_cache import compute_key as natives_compute_key
-from robomp.sandbox import LocalGitTransport, SandboxManager, Workspace
+from robogjc import host_tools
+from robogjc.db import Database
+from robogjc.github_backend import GitHubBackend
+from robogjc.github_client import IssueInfo, RepoInfo
+from robogjc.natives_cache import NativesCache
+from robogjc.natives_cache import compute_key as natives_compute_key
+from robogjc.sandbox import LocalGitTransport, SandboxManager, Workspace
 
 pytestmark = pytest.mark.skipif(
-    os.environ.get("ROBOMP_PERMISSION_E2E") != "1",
-    reason="set ROBOMP_PERMISSION_E2E=1 to run slot-permission e2e tests",
+    os.environ.get("ROBGJC_PERMISSION_E2E") != "1",
+    reason="set ROBGJC_PERMISSION_E2E=1 to run slot-permission e2e tests",
 )
 
 _SLOT_ONE = 2001
 _SLOT_TWO = 2002
-_SHARED_OMP_GID = 2000
-_AUTHOR_NAME = "robomp-bot"
-_AUTHOR_EMAIL = "robomp-bot@example.invalid"
+_SHARED_GJC_GID = 2000
+_AUTHOR_NAME = "robogjc-bot"
+_AUTHOR_EMAIL = "robogjc-bot@example.invalid"
 _REPO = "octo/permission-e2e"
 
 
@@ -96,7 +96,7 @@ def _write_seed_repo(seed: Path) -> None:
 
 @pytest.fixture
 def slot_tmp_path() -> Iterator[Path]:
-    root = Path(tempfile.mkdtemp(prefix="robomp-permission-e2e-", dir="/tmp"))
+    root = Path(tempfile.mkdtemp(prefix="robogjc-permission-e2e-", dir="/tmp"))
     root.chmod(0o755)
     try:
         yield root
@@ -107,16 +107,16 @@ def slot_tmp_path() -> Iterator[Path]:
 def _share_tree_with_slots(path: Path) -> None:
     for root, dirs, files in os.walk(path):
         root_path = Path(root)
-        os.chown(root_path, 0, _SHARED_OMP_GID)
+        os.chown(root_path, 0, _SHARED_GJC_GID)
         root_path.chmod(0o2770)
         for dirname in dirs:
             child = root_path / dirname
-            os.chown(child, 0, _SHARED_OMP_GID)
+            os.chown(child, 0, _SHARED_GJC_GID)
             child.chmod(0o2770)
         for filename in files:
             child = root_path / filename
             executable = child.stat().st_mode & 0o111
-            os.chown(child, 0, _SHARED_OMP_GID)
+            os.chown(child, 0, _SHARED_GJC_GID)
             child.chmod(0o770 if executable else 0o660)
 
 
@@ -241,7 +241,7 @@ def _prepare_shared_cargo_cache(tmp_path: Path, monkeypatch: pytest.MonkeyPatch)
     cargo_target = tmp_path / "shared-cache" / "cargo-target"
     for path in (cargo_home, cargo_target):
         path.mkdir(parents=True)
-        os.chown(path, 0, _SHARED_OMP_GID)
+        os.chown(path, 0, _SHARED_GJC_GID)
         path.chmod(0o2770)
     monkeypatch.setenv("CARGO_HOME", str(cargo_home))
     monkeypatch.setenv("CARGO_TARGET_DIR", str(cargo_target))
@@ -287,7 +287,7 @@ def test_slot_workspace_runs_bun_biome_cargo_and_git_after_root_reentry(
     assert bun_cache.stat().st_uid == _SLOT_ONE
     assert stale_marker.stat().st_uid == _SLOT_ONE
     assert (cargo_target / "debug").is_dir()
-    assert (cargo_target / "debug").stat().st_gid == _SHARED_OMP_GID
+    assert (cargo_target / "debug").stat().st_gid == _SHARED_GJC_GID
 
     _write_as_slot(bindings, "src/slot-generated.ts", "export const generatedBySlot = true;\n")
     _run_ok(bindings, ["git", "add", "src/slot-generated.ts", "Cargo.lock", "bun.lock"])
@@ -341,7 +341,7 @@ def _prepare_shared_natives_cache(slot_tmp_path: Path) -> NativesCache:
     """Provision `/data/cache/pi-natives` shape (root:omp, setgid 2770)."""
     cache_root = slot_tmp_path / "cache" / "pi-natives"
     cache_root.mkdir(parents=True)
-    os.chown(cache_root, 0, _SHARED_OMP_GID)
+    os.chown(cache_root, 0, _SHARED_GJC_GID)
     cache_root.chmod(0o2770)
     return NativesCache(cache_root)
 
@@ -411,8 +411,8 @@ def test_natives_cache_shares_artifacts_across_slot_workspaces(
     cached_companion = stored / "index.d.ts"
     # Cache root is setgid `omp`; new files inherit gid `omp` so any slot
     # with `extra_groups=[omp]` can read them.
-    assert cached_node.stat().st_gid == _SHARED_OMP_GID
-    assert cached_companion.stat().st_gid == _SHARED_OMP_GID
+    assert cached_node.stat().st_gid == _SHARED_GJC_GID
+    assert cached_companion.stat().st_gid == _SHARED_GJC_GID
 
     # --- Workspace 2: a different slot UID gets auto-populated on ensure. ---
     ws2 = manager.ensure_workspace(

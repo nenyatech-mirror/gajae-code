@@ -20,13 +20,13 @@ from typing import Any, NoReturn
 
 from omp_rpc import HostTool, HostToolContext, RpcCommandError, host_tool
 
-from robomp import persona
-from robomp.config import Settings
-from robomp.db import Database, issue_key
-from robomp.git_ops import GitCommandError, HeadDriftError
-from robomp.github_backend import GitHubBackend
-from robomp.github_client import GitHubError, IssueInfo, RepoInfo
-from robomp.sandbox import (
+from robogjc import persona
+from robogjc.config import Settings
+from robogjc.db import Database, issue_key
+from robogjc.git_ops import GitCommandError, HeadDriftError
+from robogjc.github_backend import GitHubBackend
+from robogjc.github_client import GitHubError, IssueInfo, RepoInfo
+from robogjc.sandbox import (
     GitTransport,
     Workspace,
     _prepare_slot_runtime_env,
@@ -45,8 +45,8 @@ _PRE_PR_CHECK_COMMAND = ("bun", "check")
 _REPO_COMMAND_SCRUBBED_ENV_KEYS: tuple[str, ...] = (
     "GITHUB_TOKEN",
     "GITHUB_WEBHOOK_SECRET",
-    "ROBOMP_REPLAY_TOKEN",
-    "ROBOMP_GH_PROXY_HMAC_KEY",
+    "ROBGJC_REPLAY_TOKEN",
+    "ROBGJC_GH_PROXY_HMAC_KEY",
 )
 _AGENT_HOME = Path("/srv/agent-home")
 _PRE_PR_FIX_TIMEOUT_SECONDS = 600.0
@@ -172,7 +172,7 @@ def _repo_command_env(bindings: ToolBindings) -> dict[str, str]:
     env.update(_prepare_slot_runtime_env(bindings.workspace, bindings.slot_uid))
     env.update(_safe_directory_env(bindings.workspace.repo_dir))
     env.update(_git_identity_env(bindings.author_name, bindings.author_email))
-    env["GIT_TERMINAL_PROMPT"] = "0"
+    env["GIT_TERMINAL_PRGJCT"] = "0"
     return env
 
 

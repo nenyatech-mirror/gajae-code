@@ -6,7 +6,7 @@
 
 ### Fixed
 
-- Fixed `matchesKey(data, "ctrl+m")` (and the other named-key collisions: `ctrl+h`/`ctrl+i`/`ctrl+j`/`ctrl+[`) returning true for the bare `\r`/`\x08`/`\t`/`\n`/`\x1b` byte terminals send for Enter/Backspace/Tab/Escape in legacy mode. Binding a command to `Ctrl+M` no longer fires when the user presses Enter — the named key wins, and `ctrl+<colliding-letter>` matches only when the terminal disambiguates via the Kitty keyboard protocol or `modifyOtherKeys`. ([#1354](https://github.com/can1357/oh-my-pi/issues/1354))
+- Fixed `matchesKey(data, "ctrl+m")` (and the other named-key collisions: `ctrl+h`/`ctrl+i`/`ctrl+j`/`ctrl+[`) returning true for the bare `\r`/`\x08`/`\t`/`\n`/`\x1b` byte terminals send for Enter/Backspace/Tab/Escape in legacy mode. Binding a command to `Ctrl+M` no longer fires when the user presses Enter — the named key wins, and `ctrl+<colliding-letter>` matches only when the terminal disambiguates via the Kitty keyboard protocol or `modifyOtherKeys`. ([#1354](https://github.com/can1357/gajae-code/issues/1354))
 
 ## [15.2.3] - 2026-05-22
 ### Added
@@ -21,19 +21,19 @@
 
 ### Fixed
 
-- Fixed terminal probe responses (DA1, kitty keyboard, Mode 2031) leaking into the prompt as keystrokes when the response is split across stdin reads. `ProcessTerminal` now reassembles `\x1b[?<digits>...` private CSI fragments and dispatches the complete response through the existing pattern handlers. ([#1238](https://github.com/can1357/oh-my-pi/issues/1238))
+- Fixed terminal probe responses (DA1, kitty keyboard, Mode 2031) leaking into the prompt as keystrokes when the response is split across stdin reads. `ProcessTerminal` now reassembles `\x1b[?<digits>...` private CSI fragments and dispatches the complete response through the existing pattern handlers. ([#1238](https://github.com/can1357/gajae-code/issues/1238))
 
 ## [15.1.4] - 2026-05-19
 
 ### Fixed
 
-- Fixed `renderInlineMarkdown` crashing with `TypeError: undefined is not an object (evaluating 'e.replace')` when called with a non-string value during streaming — partial JSON parsing leaves option label fields temporarily unpopulated, causing the ask tool renderer to fail. ([#1176](https://github.com/can1357/oh-my-pi/issues/1176))
+- Fixed `renderInlineMarkdown` crashing with `TypeError: undefined is not an object (evaluating 'e.replace')` when called with a non-string value during streaming — partial JSON parsing leaves option label fields temporarily unpopulated, causing the ask tool renderer to fail. ([#1176](https://github.com/can1357/gajae-code/issues/1176))
 
 ## [15.0.2] - 2026-05-15
 
 ### Added
 
-- Restored the `Key` runtime helper on `@oh-my-pi/pi-tui` to mirror upstream `@mariozechner/pi-tui`'s surface. `Key.enter`, `Key.escape`, `Key.tab`, … return the canonical key-name strings; modifier methods (`Key.ctrl(k)`, `Key.shift(k)`, `Key.ctrlShift(k)`, etc.) build precisely-typed `KeyId` literals like `"ctrl+c"`. Pure runtime convenience for typed key-id construction — plugins built against the upstream package surface that import `Key` (e.g. `@plannotator/pi-extension`, `@juicesharp/rpiv-ask-user-question`) load again now that the specifier shim remaps them onto this package.
+- Restored the `Key` runtime helper on `@gajae-code/tui` to mirror upstream `@mariozechner/pi-tui`'s surface. `Key.enter`, `Key.escape`, `Key.tab`, … return the canonical key-name strings; modifier methods (`Key.ctrl(k)`, `Key.shift(k)`, `Key.ctrlShift(k)`, etc.) build precisely-typed `KeyId` literals like `"ctrl+c"`. Pure runtime convenience for typed key-id construction — plugins built against the upstream package surface that import `Key` (e.g. `@plannotator/pi-extension`, `@juicesharp/rpiv-ask-user-question`) load again now that the specifier shim remaps them onto this package.
 
 ## [15.0.1] - 2026-05-14
 ### Breaking Changes
@@ -42,16 +42,16 @@
 - Fixed `TerminalInfo.sendNotification` not delivering desktop notifications on macOS. macOS requires per-app notification permission, which terminal emulators (kitty, ghostty, alacritty, …) almost never have, so OSC 9/99 sequences were silently dropped at the OS layer. `sendNotification` now shells out to `alerter` or `terminal-notifier` when either is on `$PATH` (both register their own LSApplication and ship a "Terminal" / `>_` icon). When neither is installed the dispatch is a deliberate no-op + a single `logger.warn` line on the first miss (subsequent dispatches stay silent) so the user can spot the missing binary in `~/.omp/logs/omp.YYYY-MM-DD.log` and `brew install alerter`. Linux/Windows still go through the OSC/Bell path.
 - Fixed `TerminalInfo.formatNotification` losing OSC 9/99 desktop notifications when running inside tmux. The OSC sequence is now wrapped in tmux's DCS passthrough envelope (`\ePtmux;…\e\\` with embedded ESC bytes doubled) when `TMUX` is set, so notifications reach the parent terminal. `set -g allow-passthrough on` is still required on the tmux side for the wrapped sequence to be forwarded. Bell-only terminals are unchanged.
 - Fixed alerter desktop notifications staying on screen indefinitely. `scripts/mac-alerter.sh` previously passed `--timeout 30` (which makes alerter call `removeDeliveredNotification` after 30 s, also purging the Notification Center entry) and forced Alert-style via `--actions "Open"` (persistent until user click). It now ships Banner-style argv (no `--actions`, no `--timeout`): macOS auto-dismisses the toast after ~10 s and archives the entry to Notification Center for later review. Click-to-focus is preserved through `@CONTENTCLICKED` body clicks. NC archival also requires "Show in Notification Center" enabled for Terminal under macOS System Settings → Notifications.
-- Fixed `composeNotificationSubtitle` showing a stale tmux `pane_title` (typically `π: kitty & tmux` or the cwd prefix written before auto-naming runs) instead of the live OMP session name. The OMP-supplied `fallback` is now consulted first for the pane component; the cached tmux pane title is only used when no session name is available. Window name handling is unchanged.
+- Fixed `composeNotificationSubtitle` showing a stale tmux `pane_title` (typically `π: kitty & tmux` or the cwd prefix written before auto-naming runs) instead of the live GJC session name. The GJC-supplied `fallback` is now consulted first for the pane component; the cached tmux pane title is only used when no session name is available. Window name handling is unchanged.
 - Fixed `sendDesktopNotification` always routing through `alerter` / `terminal-notifier` on darwin, even for terminals (ghostty / iTerm2 / wezterm) that surface OSC 9 / OSC 99 as native notifications through their own bundle. The dispatch now prefers the OSC path on darwin when the terminal advertises native macOS notification capability; the fallback only kicks in for kitty / alacritty / vscode / unknown shells whose host app isn't a notification-capable bundle. This unblocks the user-controlled per-app notification settings flow for ghostty / iTerm2 / wezterm — toast style, NC archival, and click-to-focus all attach to the terminal app's own System Settings entry rather than to `com.apple.Terminal` (which `alerter` would post under).
-- Fixed Korean IME composition leaving a growing horizontal gap between typed jamo and the cursor inside the OMP prompt under tmux + ghostty (and other macOS terminals). `Bun.stringWidth` and the underlying UAX#11 East Asian Width tables classify Hangul Compatibility Jamo (U+3131..U+318E — ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ + filler) as Wide (2 cells), but every macOS terminal we ship to (Ghostty / Terminal.app / iTerm2) actually renders them as a single cell in monospace fonts. `#extractCursorPosition` was computing `col = visibleWidth(beforeMarker)` and feeding the doubled value to `\x1b[(col+1)G`, placing the hardware cursor (and therefore the IME candidate window) `N_jamo` cells past the visible glyph — exactly the gap the user saw growing as they typed. `visibleWidthRaw` now subtracts 1 cell for each Compatibility Jamo character, returning the column count macOS terminals actually use. Hangul Syllables (U+AC00..U+D7A3, e.g. `안`) stay at 2 cells in both Bun and the terminal — unaffected. Other CJK widths (Chinese / Japanese / Halfwidth Hangul) are unchanged. NOTE: the Rust `pi-natives` width tables (used by `sliceWithWidth` / `truncateToWidth` / `wrapTextWithAnsi`) also count Compatibility Jamo as 2 cells; truncation and word-wrap on jamo-heavy lines will still be slightly aggressive. The defect is invisible in normal use because the AI composes Korean as syllables, not jamo, and users type syllables once IME composition completes. A follow-up will reconcile the Rust side.
+- Fixed Korean IME composition leaving a growing horizontal gap between typed jamo and the cursor inside the GJC prompt under tmux + ghostty (and other macOS terminals). `Bun.stringWidth` and the underlying UAX#11 East Asian Width tables classify Hangul Compatibility Jamo (U+3131..U+318E — ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ + filler) as Wide (2 cells), but every macOS terminal we ship to (Ghostty / Terminal.app / iTerm2) actually renders them as a single cell in monospace fonts. `#extractCursorPosition` was computing `col = visibleWidth(beforeMarker)` and feeding the doubled value to `\x1b[(col+1)G`, placing the hardware cursor (and therefore the IME candidate window) `N_jamo` cells past the visible glyph — exactly the gap the user saw growing as they typed. `visibleWidthRaw` now subtracts 1 cell for each Compatibility Jamo character, returning the column count macOS terminals actually use. Hangul Syllables (U+AC00..U+D7A3, e.g. `안`) stay at 2 cells in both Bun and the terminal — unaffected. Other CJK widths (Chinese / Japanese / Halfwidth Hangul) are unchanged. NOTE: the Rust `pi-natives` width tables (used by `sliceWithWidth` / `truncateToWidth` / `wrapTextWithAnsi`) also count Compatibility Jamo as 2 cells; truncation and word-wrap on jamo-heavy lines will still be slightly aggressive. The defect is invisible in normal use because the AI composes Korean as syllables, not jamo, and users type syllables once IME composition completes. A follow-up will reconcile the Rust side.
 - Fixed a brief black-flash flicker in the TUI when streaming long markdown responses inside tmux (especially noticeable in ghostty with multiple panes open). Root cause: when a markdown fence line above the viewport changed between two streaming tokens (e.g. `` ``` `` → `` ```python ``), `#doRender()` would take the `firstChanged < prevViewportTop` branch and emit `\x1b[2J\x1b[H` (full screen clear + cursor home) wrapped in BSU. The BSU envelope can split across PTY reads, leaving tmux briefly displaying a blank pane before the rest of the buffer arrives — multiplied across panes during repaint. The viewport-above branch now calls a new `viewportRefresh()` helper that does cursor-home + per-line `\x1b[2K` + line content (no `\x1b[2J`), so the visible viewport content is repainted without ever clearing the screen. Scrollback above the viewport may briefly show stale rendering, but only of the SAME lines that just changed — invisible during streaming when the user isn't scrolled up. Other full-redraw paths (resize, first render, etc.) keep the hard `fullRender(true)` behavior unchanged.
 
 ### Tests
 
 - Added `test/no-2k-anywhere.test.ts` — lint guard that scans `packages/tui/src/` for `\x1b[2K` string literals outside comments. The earlier streaming-flicker fix re-introduced the BSU-split flash bug by moving `\x1b[2K`-before-content from `fullRender` to `viewportRefresh` (same anti-pattern in a new location). This test catches that class of regression at CI time so future changes can't silently revive it.
 - Added `test/render-emit-snapshot.test.ts` — four scenario-based byte-snapshot guards (single-line mutation, streaming append, above-viewport mutation triggering `viewportRefresh`, trailing-line clear on shrink). Asserts structural invariants on the EMITTED BYTES from `terminal.write(…)`: no `\x1b[2K`, no `\x1b[2J`, the new content appears, the BSU close `\x1b[?2026l` is present. Catches render-path changes that achieve the right final viewport state via a transient blank frame (which is exactly how the typing-flicker bug slipped past `render-regressions.test.ts`).
-- Added `test/ime-jamo-cursor.test.ts` — six cases asserting the Input component's hardware cursor marker column does not grow at 2× per typed Korean compatibility jamo. Before commit `79e3170c6` typing 14 jamo produced a 14-cell gap between the visible text and the IME candidate window; the test caps the cursor column at `PROMPT_WIDTH + N_jamo` and asserts the per-keystroke delta is at most 1. NOTE: the Rust `pi-natives` `sliceWithWidth` still treats jamo as 2 cells (binary package, follow-up); the test guard accepts a small residual offset but flags the doubling regression.
+- Added `test/ime-jamo-cursor.test.ts` — six cases asserting the Input component's hardware cursor marker column does not grow at 2× per typed Korean compatibility jamo. Before commit `79e3170c6` typing 14 jamo produced a 14-cell gap between the visible text and the IME candidate window; the test caps the cursor column at `PRGJCT_WIDTH + N_jamo` and asserts the per-keystroke delta is at most 1. NOTE: the Rust `pi-natives` `sliceWithWidth` still treats jamo as 2 cells (binary package, follow-up); the test guard accepts a small residual offset but flags the doubling regression.
 
 ## [14.9.8] - 2026-05-12
 
@@ -100,7 +100,7 @@
 ## [14.9.5] - 2026-05-12
 ### Fixed
 
-- Fixed rapidly blinking cursor artifact during task execution by consolidating cursor control sequences into the synchronized output buffer ([#992](https://github.com/can1357/oh-my-pi/issues/992))
+- Fixed rapidly blinking cursor artifact during task execution by consolidating cursor control sequences into the synchronized output buffer ([#992](https://github.com/can1357/gajae-code/issues/992))
 
 ## [14.5.7] - 2026-04-29
 
@@ -136,7 +136,7 @@
 - Simplified cache key computation in Box component by removing intermediate hash updates and consolidating hash operations
 - Wrapped native text utility functions (`sliceWithWidth`, `truncateToWidth`, `wrapTextWithAnsi`, `extractSegments`) to automatically pass the current default tab width, simplifying the API for consumers
 - Added `getIndentationNoescape` wrapper that uses `process.cwd()` as the project root for relative file paths
-- Re-export `getDefaultTabWidth`, `getIndentation`, and `setDefaultTabWidth` from `@oh-my-pi/pi-utils`; native text helpers still receive tab width via wrappers that read the JS default
+- Re-export `getDefaultTabWidth`, `getIndentation`, and `setDefaultTabWidth` from `@gajae-code/utils`; native text helpers still receive tab width via wrappers that read the JS default
 
 ## [13.16.1] - 2026-03-27
 
@@ -205,7 +205,7 @@
 
 ### Fixed
 
-- Fixed viewport repaint scrollback accounting during resize oscillation to avoid double-scrolling on height shrink and added exact-row scrollback assertions in overlay regression coverage ([#228](https://github.com/can1357/oh-my-pi/issues/228), [#234](https://github.com/can1357/oh-my-pi/issues/234))
+- Fixed viewport repaint scrollback accounting during resize oscillation to avoid double-scrolling on height shrink and added exact-row scrollback assertions in overlay regression coverage ([#228](https://github.com/can1357/gajae-code/issues/228), [#234](https://github.com/can1357/gajae-code/issues/234))
 ## [13.5.3] - 2026-03-01
 
 ### Fixed
@@ -312,7 +312,7 @@
 
 ### Fixed
 
-- Fixed history-entry navigation anchoring (Up opens at top, Down opens at bottom) and preserved editor scroll context when max-height changes to keep cursor movement visible in long prompts ([#99](https://github.com/can1357/oh-my-pi/issues/99)).
+- Fixed history-entry navigation anchoring (Up opens at top, Down opens at bottom) and preserved editor scroll context when max-height changes to keep cursor movement visible in long prompts ([#99](https://github.com/can1357/gajae-code/issues/99)).
 
 ## [12.11.3] - 2026-02-19
 
@@ -419,15 +419,15 @@
 - Introduced `terminal-capabilities.ts` module consolidating terminal detection and image protocol support
 - Added `TerminalInfo` class with methods for detecting image lines and formatting notifications
 - Added `NotifyProtocol` enum supporting Bell, OSC 99, and OSC 9 notification protocols
-- Added `isNotificationSuppressed()` function to check `OMP_NOTIFICATIONS` environment variable
+- Added `isNotificationSuppressed()` function to check `GJC_NOTIFICATIONS` environment variable
 - Added `TERMINAL` constant providing detected terminal capabilities at runtime
 
 ### Changed
 
-- Changed notification suppression environment variable from `OMP_NOTIFICATIONS` to `PI_NOTIFICATIONS`
-- Changed TUI write log environment variable from `OMP_TUI_WRITE_LOG` to `PI_TUI_WRITE_LOG`
-- Changed hardware cursor environment variable from `OMP_HARDWARE_CURSOR` to `PI_HARDWARE_CURSOR`
-- Updated environment variable access to use `getEnv()` utility function from `@oh-my-pi/pi-utils` for consistent handling
+- Changed notification suppression environment variable from `GJC_NOTIFICATIONS` to `PI_NOTIFICATIONS`
+- Changed TUI write log environment variable from `GJC_TUI_WRITE_LOG` to `PI_TUI_WRITE_LOG`
+- Changed hardware cursor environment variable from `GJC_HARDWARE_CURSOR` to `PI_HARDWARE_CURSOR`
+- Updated environment variable access to use `getEnv()` utility function from `@gajae-code/utils` for consistent handling
 - Renamed `TERMINAL_INFO` export to `TERMINAL` for clearer API semantics
 - Reorganized terminal image exports from `terminal-image` to `terminal-capabilities` module
 - Updated all internal references to use `TERMINAL` instead of `TERMINAL_INFO`
@@ -446,7 +446,7 @@
 
 ### Changed
 
-- Moved `wrapTextWithAnsi` export to `@oh-my-pi/pi-natives` package
+- Moved `wrapTextWithAnsi` export to `@gajae-code/natives` package
 
 ### Fixed
 
@@ -473,7 +473,7 @@
 
 ### Removed
 
-- Removed `truncateToWidth`, `sliceWithWidth`, and `extractSegments` functions from public API (now re-exported directly from @oh-my-pi/pi-natives)
+- Removed `truncateToWidth`, `sliceWithWidth`, and `extractSegments` functions from public API (now re-exported directly from @gajae-code/natives)
 - Removed `ellipsis` property from `SymbolTheme` interface
 - Removed `extractAnsiCode` function from public API
 
@@ -767,7 +767,7 @@
 
 ### Changed
 
-- Forked to @oh-my-pi scope with unified versioning across all packages
+- Forked to @gajae-code scope with unified versioning across all packages
 
 ### Fixed
 
@@ -777,7 +777,7 @@
 
 ## [1.337.0] - 2026-01-02
 
-Initial release under @oh-my-pi scope. See previous releases at [badlogic/pi-mono](https://github.com/badlogic/pi-mono).
+Initial release under @gajae-code scope. See previous releases at [badlogic/pi-mono](https://github.com/badlogic/pi-mono).
 
 ## [0.31.1] - 2026-01-02
 

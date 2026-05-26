@@ -1,4 +1,4 @@
-import { THINKING_EFFORTS } from "@oh-my-pi/pi-ai";
+import { THINKING_EFFORTS } from "@gajae-code/ai";
 import { TASK_SIMPLE_MODES } from "../task/simple-mode";
 import { getThinkingLevelMetadata } from "../thinking";
 import { EDIT_MODES } from "../utils/edit-mode";
@@ -237,7 +237,7 @@ export const SETTINGS_SCHEMA = {
 
 	// Auth broker — credentials proxied through a remote `omp auth-broker serve`
 	// host. Hidden from the UI; populate via env vars or hand-edited config.yml.
-	// Env (`OMP_AUTH_BROKER_URL` / `OMP_AUTH_BROKER_TOKEN`) takes precedence so
+	// Env (`GJC_AUTH_BROKER_URL` / `GJC_AUTH_BROKER_TOKEN`) takes precedence so
 	// per-machine overrides remain trivial.
 	"auth.broker.url": { type: "string", default: undefined },
 	"auth.broker.token": { type: "string", default: undefined },

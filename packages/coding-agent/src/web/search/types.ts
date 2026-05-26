@@ -413,7 +413,7 @@ export interface PerplexityUsageInfo {
 
 export type PerplexityCompletionResponseType = "message" | "info" | "end_of_stream";
 
-export type PerplexityCompletionResponseStatus = "PENDING" | "COMPLETED";
+export type PerplexityCompletionResponseStatus = "PENDING" | "CGJCLETED";
 
 export interface PerplexityChoice {
 	index: number;

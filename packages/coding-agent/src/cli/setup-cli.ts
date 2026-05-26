@@ -4,7 +4,7 @@
  * Handles `omp setup <component>` to install dependencies for optional features.
  */
 import * as path from "node:path";
-import { $which, APP_NAME, getPythonEnvDir } from "@oh-my-pi/pi-utils";
+import { $which, APP_NAME, getPythonEnvDir } from "@gajae-code/utils";
 import { $ } from "bun";
 import chalk from "chalk";
 import { theme } from "../modes/theme/theme";
@@ -19,7 +19,7 @@ export interface SetupCommandArgs {
 	};
 }
 
-const VALID_COMPONENTS: SetupComponent[] = ["python", "stt"];
+const VALID_CGJCONENTS: SetupComponent[] = ["python", "stt"];
 
 const MANAGED_PYTHON_ENV = getPythonEnvDir();
 
@@ -34,14 +34,14 @@ export function parseSetupArgs(args: string[]): SetupCommandArgs | undefined {
 
 	if (args.length < 2) {
 		console.error(chalk.red(`Usage: ${APP_NAME} setup <component>`));
-		console.error(`Valid components: ${VALID_COMPONENTS.join(", ")}`);
+		console.error(`Valid components: ${VALID_CGJCONENTS.join(", ")}`);
 		process.exit(1);
 	}
 
 	const component = args[1];
-	if (!VALID_COMPONENTS.includes(component as SetupComponent)) {
+	if (!VALID_CGJCONENTS.includes(component as SetupComponent)) {
 		console.error(chalk.red(`Unknown component: ${component}`));
-		console.error(`Valid components: ${VALID_COMPONENTS.join(", ")}`);
+		console.error(`Valid components: ${VALID_CGJCONENTS.join(", ")}`);
 		process.exit(1);
 	}
 

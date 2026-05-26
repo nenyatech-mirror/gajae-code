@@ -1,5 +1,5 @@
-import type { AgentToolContext } from "@oh-my-pi/pi-agent-core";
-import { type PtyRunResult, PtySession } from "@oh-my-pi/pi-natives";
+import type { AgentToolContext } from "@gajae-code/agent-core";
+import { type PtyRunResult, PtySession } from "@gajae-code/natives";
 import {
 	type Component,
 	extractPrintableText,
@@ -9,8 +9,8 @@ import {
 	parseKittySequence,
 	truncateToWidth,
 	visibleWidth,
-} from "@oh-my-pi/pi-tui";
-import { sanitizeText } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/tui";
+import { sanitizeText } from "@gajae-code/utils";
 import type { Terminal as XtermTerminalType } from "@xterm/headless";
 import xterm from "@xterm/headless";
 import { Settings } from "../config/settings";

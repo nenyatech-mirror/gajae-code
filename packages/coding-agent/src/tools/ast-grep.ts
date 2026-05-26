@@ -1,9 +1,9 @@
 import * as path from "node:path";
-import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@oh-my-pi/pi-agent-core";
-import { type AstFindMatch, astGrep } from "@oh-my-pi/pi-natives";
-import type { Component } from "@oh-my-pi/pi-tui";
-import { Text } from "@oh-my-pi/pi-tui";
-import { prompt, untilAborted } from "@oh-my-pi/pi-utils";
+import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@gajae-code/agent-core";
+import { type AstFindMatch, astGrep } from "@gajae-code/natives";
+import type { Component } from "@gajae-code/tui";
+import { Text } from "@gajae-code/tui";
+import { prompt, untilAborted } from "@gajae-code/utils";
 import * as z from "zod/v4";
 import type { RenderResultOptions } from "../extensibility/custom-tools/types";
 import type { Theme } from "../modes/theme/theme";

@@ -1,5 +1,5 @@
-import type { AgentTool, AgentToolResult } from "@oh-my-pi/pi-agent-core";
-import { logger, untilAborted } from "@oh-my-pi/pi-utils";
+import type { AgentTool, AgentToolResult } from "@gajae-code/agent-core";
+import { logger, untilAborted } from "@gajae-code/utils";
 import * as z from "zod/v4";
 import { ensureBankMission } from "../hindsight/bank";
 import reflectDescription from "../prompts/tools/reflect.md" with { type: "text" };

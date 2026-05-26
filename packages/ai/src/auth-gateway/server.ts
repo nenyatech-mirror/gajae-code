@@ -17,7 +17,7 @@
  *   POST /v1/messages                      → Anthropic messages in/out
  *   POST /v1/responses                     → OpenAI Responses in/out
  */
-import { logger } from "@oh-my-pi/pi-utils";
+import { logger } from "@gajae-code/utils";
 import type { AuthStorage } from "../auth-storage";
 import { Effort } from "../model-thinking";
 import * as anthropicMessages from "../providers/anthropic-messages-server";

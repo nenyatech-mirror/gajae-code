@@ -1,7 +1,7 @@
-import type { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { Api, Model } from "@oh-my-pi/pi-ai";
-import { completeSimple } from "@oh-my-pi/pi-ai";
-import { prompt } from "@oh-my-pi/pi-utils";
+import type { ThinkingLevel } from "@gajae-code/agent-core";
+import type { Api, Model } from "@gajae-code/ai";
+import { completeSimple } from "@gajae-code/ai";
+import { prompt } from "@gajae-code/utils";
 import reduceSystemPrompt from "../../commit/prompts/reduce-system.md" with { type: "text" };
 import reduceUserPrompt from "../../commit/prompts/reduce-user.md" with { type: "text" };
 import type { ConventionalAnalysis, FileObservation } from "../../commit/types";

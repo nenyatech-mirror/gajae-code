@@ -1,6 +1,6 @@
 # Extension Examples
 
-Example extensions for pi-coding-agent.
+Example extensions for gajae-code.
 
 ## Usage
 
@@ -70,7 +70,7 @@ cp permission-gate.ts ~/.omp/agent/extensions/
 See [docs/extensions.md](../../docs/extensions.md) for full documentation.
 
 ```typescript
-import type { ExtensionAPI } from "@oh-my-pi/pi-coding-agent";
+import type { ExtensionAPI } from "@gajae-code/coding-agent";
 
 export default function (pi: ExtensionAPI) {
 	const z = pi.zod;

@@ -139,7 +139,7 @@ Must define at least one of:
 
 ModelRegistry pipeline (on refresh):
 
-1. Load built-in providers/models from `@oh-my-pi/pi-ai`.
+1. Load built-in providers/models from `@gajae-code/ai`.
 2. Load `models.yml` custom config.
 3. Apply provider overrides (`baseUrl`, `headers`, `disableStrictTools`) to built-in models.
 4. Apply `modelOverrides` (per provider + model id).
@@ -322,9 +322,9 @@ Keyless providers:
 
 ### Broker mode
 
-When `OMP_AUTH_BROKER_URL` (or `auth.broker.url`) is set, the local SQLite credential store is replaced by `RemoteAuthCredentialStore`. Layers 2 and 3 above (stored API key / OAuth in `agent.db`) are served from a broker-supplied snapshot whose `refresh` tokens are redacted; expiry triggers `POST /v1/credential/:id/refresh` on the broker rather than a local refresh.
+When `GJC_AUTH_BROKER_URL` (or `auth.broker.url`) is set, the local SQLite credential store is replaced by `RemoteAuthCredentialStore`. Layers 2 and 3 above (stored API key / OAuth in `agent.db`) are served from a broker-supplied snapshot whose `refresh` tokens are redacted; expiry triggers `POST /v1/credential/:id/refresh` on the broker rather than a local refresh.
 
-`AuthStorage.setConfigApiKey` lets a `models.yml` `apiKey` win over a broker-resolved OAuth token without overriding a runtime `--api-key`. See [`auth-broker-gateway.md`](./auth-broker-gateway.md) for the full broker / gateway design and env surface (`OMP_AUTH_BROKER_URL`, `OMP_AUTH_BROKER_TOKEN`, `auth.broker.url`, `auth.broker.token`).
+`AuthStorage.setConfigApiKey` lets a `models.yml` `apiKey` win over a broker-resolved OAuth token without overriding a runtime `--api-key`. See [`auth-broker-gateway.md`](./auth-broker-gateway.md) for the full broker / gateway design and env surface (`GJC_AUTH_BROKER_URL`, `GJC_AUTH_BROKER_TOKEN`, `auth.broker.url`, `auth.broker.token`).
 
 ## Model availability vs all models
 

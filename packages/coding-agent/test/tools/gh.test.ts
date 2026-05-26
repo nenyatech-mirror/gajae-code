@@ -2,16 +2,16 @@ import { afterEach, describe, expect, it, vi } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
+import { Settings } from "@gajae-code/coding-agent/config/settings";
+import type { ToolSession } from "@gajae-code/coding-agent/tools";
 import {
 	buildSearchDateQualifier,
 	GithubTool,
 	parsePrUnifiedDiff,
 	parseSearchDateBound,
-} from "@oh-my-pi/pi-coding-agent/tools/gh";
-import * as git from "@oh-my-pi/pi-coding-agent/utils/git";
-import { getAgentDir, hashPath, setAgentDir } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/coding-agent/tools/gh";
+import * as git from "@gajae-code/coding-agent/utils/git";
+import { getAgentDir, hashPath, setAgentDir } from "@gajae-code/utils";
 import * as z from "zod/v4";
 
 // Isolate every `git` invocation in this file from the developer's host
@@ -24,12 +24,12 @@ import * as z from "zod/v4";
 // Set these on `process.env` so they apply to both the local `runGit` helper
 // AND the impl's `git.ts::runCommand`, which spreads `process.env` into every
 // spawn. `/dev/null` is the documented way to tell git "use no config from
-// this scope". `GIT_TERMINAL_PROMPT=0` + `GIT_ASKPASS=true` guarantee git
+// this scope". `GIT_TERMINAL_PRGJCT=0` + `GIT_ASKPASS=true` guarantee git
 // never blocks on stdin waiting for credentials or a GPG passphrase.
 process.env.GIT_CONFIG_GLOBAL = "/dev/null";
 process.env.GIT_CONFIG_SYSTEM = "/dev/null";
 process.env.GIT_CONFIG_NOSYSTEM = "1";
-process.env.GIT_TERMINAL_PROMPT = "0";
+process.env.GIT_TERMINAL_PRGJCT = "0";
 process.env.GIT_ASKPASS = "true";
 // `XDG_CONFIG_HOME`, if set, lets git re-discover a global config under
 // `$XDG_CONFIG_HOME/git/config` even after we pin `GIT_CONFIG_GLOBAL`. Clear

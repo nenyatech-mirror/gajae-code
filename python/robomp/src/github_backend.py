@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Protocol
 
-from robomp.github_client import (
+from robogjc.github_client import (
     CommentInfo,
     IssueInfo,
     IssueSummary,
@@ -23,7 +23,7 @@ from robomp.github_client import (
 
 
 class GitHubBackend(Protocol):
-    """Methods every caller in roboomp uses against GitHub."""
+    """Methods every caller in robogjc uses against GitHub."""
 
     # ---- reads ----
     async def get_repo(self, repo: str) -> RepoInfo: ...

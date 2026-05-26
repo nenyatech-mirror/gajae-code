@@ -1,4 +1,4 @@
-"""Logging configuration for roboomp — JSON to file, pretty ANSI to stdout."""
+"""Logging configuration for robogjc — JSON to file, pretty ANSI to stdout."""
 
 from __future__ import annotations
 
@@ -67,7 +67,7 @@ class PrettyFormatter(logging.Formatter):
         color = _LEVEL_COLOR.get(record.levelname, "")
         level = f"{color}{record.levelname:<8}{_RST}"
         # Strip the package prefix to save width; keeps uvicorn.*, httpx, etc.
-        name = record.name.removeprefix("robomp.")
+        name = record.name.removeprefix("robogjc.")
         logger_col = f"{_DIM}{name:<22}{_RST}"
         msg = record.getMessage()
 
@@ -153,7 +153,7 @@ def configure_logging(log_dir: Path | None = None, level: int = logging.INFO) ->
     if log_dir is not None:
         log_dir.mkdir(parents=True, exist_ok=True)
         file_handler = logging.handlers.RotatingFileHandler(
-            log_dir / "robomp.log.jsonl",
+            log_dir / "robogjc.log.jsonl",
             maxBytes=10 * 1024 * 1024,
             backupCount=5,
             encoding="utf-8",

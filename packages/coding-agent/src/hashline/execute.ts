@@ -1,5 +1,5 @@
-import type { AgentToolResult } from "@oh-my-pi/pi-agent-core";
-import { isEnoent } from "@oh-my-pi/pi-utils";
+import type { AgentToolResult } from "@gajae-code/agent-core";
+import { isEnoent } from "@gajae-code/utils";
 import { generateDiffString } from "../edit/diff";
 import { getFileReadCache } from "../edit/file-read-cache";
 import { detectLineEnding, normalizeToLF, restoreLineEndings, stripBom } from "../edit/normalize";

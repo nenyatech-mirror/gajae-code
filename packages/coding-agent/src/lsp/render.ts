@@ -7,9 +7,9 @@
  * - Grouped references and symbols
  * - Collapsible/expandable views
  */
-import type { RenderResultOptions } from "@oh-my-pi/pi-agent-core";
-import { type HighlightColors, highlightCode as nativeHighlightCode, supportsLanguage } from "@oh-my-pi/pi-natives";
-import { type Component, Text } from "@oh-my-pi/pi-tui";
+import type { RenderResultOptions } from "@gajae-code/agent-core";
+import { type HighlightColors, highlightCode as nativeHighlightCode, supportsLanguage } from "@gajae-code/natives";
+import { type Component, Text } from "@gajae-code/tui";
 import { getLanguageFromPath, type Theme } from "../modes/theme/theme";
 import {
 	formatExpandHint,

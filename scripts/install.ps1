@@ -1,12 +1,12 @@
-# OMP Coding Agent Installer for Windows
-# Usage: irm https://raw.githubusercontent.com/can1357/oh-my-pi/main/scripts/install.ps1 | iex
+# GJC Coding Agent Installer for Windows
+# Usage: irm https://raw.githubusercontent.com/can1357/gajae-code/main/scripts/install.ps1 | iex
 #
 # Or with options:
-#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/can1357/oh-my-pi/main/scripts/install.ps1))) -Source
-#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/can1357/oh-my-pi/main/scripts/install.ps1))) -Binary
-#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/can1357/oh-my-pi/main/scripts/install.ps1))) -Source -Ref v3.20.1
-#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/can1357/oh-my-pi/main/scripts/install.ps1))) -Source -Ref main
-#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/can1357/oh-my-pi/main/scripts/install.ps1))) -Binary -Ref v3.20.1
+#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/can1357/gajae-code/main/scripts/install.ps1))) -Source
+#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/can1357/gajae-code/main/scripts/install.ps1))) -Binary
+#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/can1357/gajae-code/main/scripts/install.ps1))) -Source -Ref v3.20.1
+#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/can1357/gajae-code/main/scripts/install.ps1))) -Source -Ref main
+#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/can1357/gajae-code/main/scripts/install.ps1))) -Binary -Ref v3.20.1
 
 param(
     [switch]$Source,
@@ -16,8 +16,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$Repo = "can1357/oh-my-pi"
-$Package = "@oh-my-pi/pi-coding-agent"
+$Repo = "can1357/gajae-code"
+$Package = "@gajae-code/coding-agent"
 $InstallDir = if ($env:PI_INSTALL_DIR) { $env:PI_INSTALL_DIR } else { "$env:LOCALAPPDATA\omp" }
 $BinaryName = "omp-windows-x64.exe"
 $MinimumBunVersion = "1.3.14"
@@ -147,7 +147,7 @@ function Configure-BashShell {
         } else {
             Write-Host ""
             Write-Host "⚠ No bash shell found!" -ForegroundColor Yellow
-            Write-Host "  OMP requires a bash shell on Windows. Options:" -ForegroundColor Yellow
+            Write-Host "  GJC requires a bash shell on Windows. Options:" -ForegroundColor Yellow
             Write-Host "    1. Install Git for Windows: https://git-scm.com/download/win" -ForegroundColor Yellow
             Write-Host "    2. Use WSL, Cygwin, or MSYS2" -ForegroundColor Yellow
             Write-Host ""

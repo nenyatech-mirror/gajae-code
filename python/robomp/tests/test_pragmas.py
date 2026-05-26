@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from robomp.pragmas import (
+from robogjc.pragmas import (
     parse_pragmas,
     pragma_value,
     resolve_model_alias,

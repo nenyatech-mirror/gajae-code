@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7-labs
 ###############################################################################
-# oh-my-pi — pi image
+# gajae-code — pi image
 #
 # Stages:
 #   natives-builder — Rust + Bun → pi_natives.linux-<arch>.node
@@ -10,15 +10,15 @@
 #   pi-runtime      — pi-base + pi source + bun install      (DEFAULT, runnable)
 #
 # Build:
-#     docker build -t oh-my-pi/pi:dev .                          # default = pi-runtime
-#     docker build --target pi-base -t oh-my-pi/pi-base:dev .    # base for derived images
+#     docker build -t gajae-code/pi:dev .                          # default = pi-runtime
+#     docker build --target pi-base -t gajae-code/pi-base:dev .    # base for derived images
 #
 # Run:
-#     docker run --rm oh-my-pi/pi:dev --help
-#     docker run --rm -it -v "$PWD":/work oh-my-pi/pi:dev cli    # interactive omp
+#     docker run --rm gajae-code/pi:dev --help
+#     docker run --rm -it -v "$PWD":/work gajae-code/pi:dev cli    # interactive omp
 #
-# Consume as a base in another Dockerfile (see Dockerfile.robomp):
-#     ARG PI_BASE=oh-my-pi/pi:dev
+# Consume as a base in another Dockerfile (see Dockerfile.robogjc):
+#     ARG PI_BASE=gajae-code/pi:dev
 #     FROM ${PI_BASE} AS pi-base
 ###############################################################################
 
@@ -53,7 +53,7 @@ COPY --parents \
     Cargo.toml Cargo.lock rust-toolchain.toml \
     packages/*/package.json \
     packages/tsconfig.workspace.json \
-    python/robomp/web/package.json \
+    python/robogjc/web/package.json \
     crates/*/Cargo.toml \
     /pi/
 
@@ -78,7 +78,7 @@ RUN --mount=type=cache,target=/root/.cargo/registry \
     cp packages/natives/native/pi_natives.linux-*.node /out/
 
 ############################
-# 2) wheel-builder — omp-rpc wheel
+# 2) wheel-builder — gjc-rpc wheel
 ############################
 FROM python:3.12-slim-bookworm AS wheel-builder
 
@@ -89,13 +89,13 @@ RUN apt-get update \
 RUN pip install --upgrade pip build
 
 WORKDIR /src
-COPY python/omp-rpc /src
+COPY python/gjc-rpc /src
 RUN python -m build --wheel --outdir /out
 
 ############################
 # 3) pi-base — python + bun + rustup + natives + omp_rpc + omp shim
 #
-# Sharable runtime base. Derived images (pi-runtime below, Dockerfile.robomp)
+# Sharable runtime base. Derived images (pi-runtime below, Dockerfile.robogjc)
 # extend this and overlay their own source tree. Default PI_ROOT=/work/pi is
 # friendly to derived images that mount a host pi checkout there; pi-runtime
 # overrides it to /pi because its source is baked in.
@@ -136,7 +136,7 @@ RUN curl -fsSL https://sh.rustup.rs -o /tmp/rustup-init.sh \
 # pi-natives addon: pi's loader probes /opt/bun/bin as a fallback path.
 COPY --from=natives-builder /out/pi_natives.linux-*.node /opt/bun/bin/
 
-# omp-rpc Python wheel.
+# gjc-rpc Python wheel.
 COPY --from=wheel-builder /out/*.whl /tmp/wheels/
 RUN pip install /tmp/wheels/omp_rpc-*.whl && rm -rf /tmp/wheels
 
@@ -157,7 +157,7 @@ RUN printf '%s\n' \
 ############################
 # 4) pi-runtime — pi-base + pi source + bun install (DEFAULT)
 #
-# A self-contained, runnable omp image. `docker run oh-my-pi/pi:dev --help`
+# A self-contained, runnable omp image. `docker run gajae-code/pi:dev --help`
 # Just Works without a host checkout.
 ############################
 FROM pi-base AS pi-runtime
@@ -172,7 +172,7 @@ COPY --parents \
     tsconfig.base.json tsconfig.json \
     packages/*/package.json \
     packages/tsconfig.workspace.json \
-    python/robomp/web/package.json \
+    python/robogjc/web/package.json \
     /pi/
 
 RUN bun install --frozen-lockfile --ignore-scripts

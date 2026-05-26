@@ -7,8 +7,8 @@
  * - API key (`PERPLEXITY_API_KEY`) via `api.perplexity.ai/chat/completions`
  */
 
-import { type AuthStorage, getEnvApiKey } from "@oh-my-pi/pi-ai";
-import { $env, readSseJson } from "@oh-my-pi/pi-utils";
+import { type AuthStorage, getEnvApiKey } from "@gajae-code/ai";
+import { $env, readSseJson } from "@gajae-code/utils";
 import type {
 	PerplexityMessageOutput,
 	PerplexityRequest,
@@ -413,7 +413,7 @@ async function callPerplexityOAuth(
 
 		if (mergedEvent.display_model) model = mergedEvent.display_model;
 		if (mergedEvent.uuid) finalRequestId = mergedEvent.uuid;
-		if (mergedEvent.final || mergedEvent.status === "COMPLETED") {
+		if (mergedEvent.final || mergedEvent.status === "CGJCLETED") {
 			break;
 		}
 	}

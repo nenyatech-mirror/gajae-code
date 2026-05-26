@@ -1,6 +1,6 @@
-import type { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { Api, Model } from "@oh-my-pi/pi-ai";
-import { $env } from "@oh-my-pi/pi-utils";
+import type { ThinkingLevel } from "@gajae-code/agent-core";
+import type { Api, Model } from "@gajae-code/ai";
+import { $env } from "@gajae-code/utils";
 import { parseFileDiffs } from "../../commit/git/diff";
 import type { ConventionalAnalysis } from "../../commit/types";
 import { isExcludedFile } from "../../commit/utils/exclusions";

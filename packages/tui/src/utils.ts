@@ -6,12 +6,12 @@ import {
 	truncateToWidth as nativeTruncateToWidth,
 	wrapTextWithAnsi as nativeWrapTextWithAnsi,
 	type SliceResult,
-} from "@oh-my-pi/pi-natives";
-import { getDefaultTabWidth, getIndentation } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/natives";
+import { getDefaultTabWidth, getIndentation } from "@gajae-code/utils";
 
-export { Ellipsis } from "@oh-my-pi/pi-natives";
+export { Ellipsis } from "@gajae-code/natives";
 
-export { getDefaultTabWidth, getIndentation } from "@oh-my-pi/pi-utils";
+export { getDefaultTabWidth, getIndentation } from "@gajae-code/utils";
 
 export function sliceWithWidth(line: string, startCol: number, length: number, strict?: boolean | null): SliceResult {
 	return nativeSliceWithWidth(line, startCol, length, strict ?? null, getDefaultTabWidth());

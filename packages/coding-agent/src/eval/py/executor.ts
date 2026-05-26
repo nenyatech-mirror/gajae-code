@@ -1,4 +1,4 @@
-import { getProjectDir, logger } from "@oh-my-pi/pi-utils";
+import { getProjectDir, logger } from "@gajae-code/utils";
 import { Settings } from "../../config/settings";
 import { OutputSink } from "../../session/streaming-output";
 import type { ToolSession } from "../../tools";

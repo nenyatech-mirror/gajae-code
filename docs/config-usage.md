@@ -174,7 +174,7 @@ Most non-core config loading flows through the capability registry (`src/capabil
 
 Providers are sorted by numeric priority (higher first). Example priorities:
 
-- Native OMP (`builtin.ts`): `100`
+- Native GJC (`builtin.ts`): `100`
 - Claude: `80`
 - Codex / agents / Claude marketplace: `70`
 - Gemini: `60`

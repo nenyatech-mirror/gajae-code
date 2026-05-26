@@ -2,7 +2,7 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "bun:
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { getConfigRootDir, getProjectDir, setAgentDir, setProjectDir } from "@oh-my-pi/pi-utils";
+import { getConfigRootDir, getProjectDir, setAgentDir, setProjectDir } from "@gajae-code/utils";
 import * as mcpClient from "../src/mcp/client";
 import { MCPCommandController } from "../src/modes/controllers/mcp-command-controller";
 import { initTheme } from "../src/modes/theme/theme";

@@ -1,7 +1,7 @@
-import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@oh-my-pi/pi-agent-core";
-import { instrumentedCompleteSimple, resolveTelemetry } from "@oh-my-pi/pi-agent-core";
-import { type Api, completeSimple, type Model } from "@oh-my-pi/pi-ai";
-import { prompt } from "@oh-my-pi/pi-utils";
+import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@gajae-code/agent-core";
+import { instrumentedCompleteSimple, resolveTelemetry } from "@gajae-code/agent-core";
+import { type Api, completeSimple, type Model } from "@gajae-code/ai";
+import { prompt } from "@gajae-code/utils";
 import * as z from "zod/v4";
 import { extractTextContent } from "../commit/utils";
 import { expandRoleAlias, resolveModelFromString } from "../config/model-resolver";

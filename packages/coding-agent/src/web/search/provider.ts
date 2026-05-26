@@ -8,7 +8,7 @@
 // The `label`/`id` metadata is kept inline so callers needing a display name
 // (error formatting, UI listings) do not force a load.
 
-import type { AuthStorage } from "@oh-my-pi/pi-ai";
+import type { AuthStorage } from "@gajae-code/ai";
 import type { SearchProvider } from "./providers/base";
 import type { SearchProviderId } from "./types";
 

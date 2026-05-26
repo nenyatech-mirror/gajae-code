@@ -13,8 +13,8 @@ import {
 	type AuthStorage,
 	getAntigravityUserAgent,
 	getGeminiCliHeaders,
-} from "@oh-my-pi/pi-ai";
-import { fetchWithRetry } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/ai";
+import { fetchWithRetry } from "@gajae-code/utils";
 
 import type { SearchCitation, SearchResponse, SearchSource } from "../../../web/search/types";
 import { SearchProviderError } from "../../../web/search/types";
@@ -175,7 +175,7 @@ async function callGeminiSearch(
 				requestId: `agent-${crypto.randomUUID()}`,
 			}
 		: {
-				userAgent: "pi-coding-agent",
+				userAgent: "gajae-code",
 				requestId: `pi-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
 			};
 

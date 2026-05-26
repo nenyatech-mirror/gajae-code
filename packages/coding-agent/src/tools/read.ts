@@ -1,12 +1,12 @@
 import { Database } from "bun:sqlite";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@oh-my-pi/pi-agent-core";
-import type { ImageContent, TextContent } from "@oh-my-pi/pi-ai";
-import { glob, type SummaryResult, summarizeCode } from "@oh-my-pi/pi-natives";
-import type { Component } from "@oh-my-pi/pi-tui";
-import { Text } from "@oh-my-pi/pi-tui";
-import { getRemoteDir, logger, prompt, readImageMetadata, untilAborted } from "@oh-my-pi/pi-utils";
+import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@gajae-code/agent-core";
+import type { ImageContent, TextContent } from "@gajae-code/ai";
+import { glob, type SummaryResult, summarizeCode } from "@gajae-code/natives";
+import type { Component } from "@gajae-code/tui";
+import { Text } from "@gajae-code/tui";
+import { getRemoteDir, logger, prompt, readImageMetadata, untilAborted } from "@gajae-code/utils";
 import * as z from "zod/v4";
 import { getFileReadCache } from "../edit/file-read-cache";
 import { isNotebookPath, readEditableNotebookText } from "../edit/notebook";

@@ -6,11 +6,11 @@ import logging
 from collections.abc import Mapping
 from typing import Any
 
-from robomp import persona
-from robomp.config import Settings
-from robomp.db import Database, IssueRow, IssueState, issue_key
-from robomp.github_backend import GitHubBackend
-from robomp.github_client import (
+from robogjc import persona
+from robogjc.config import Settings
+from robogjc.db import Database, IssueRow, IssueState, issue_key
+from robogjc.github_backend import GitHubBackend
+from robogjc.github_client import (
     CommentInfo,
     GitHubError,
     IssueInfo,
@@ -18,8 +18,8 @@ from robomp.github_client import (
     RepoInfo,
     parse_issue_payload,
 )
-from robomp.sandbox import GitTransport, SandboxManager
-from robomp.worker import DirectiveInfo, TaskInputs, ThreadMessage, run_task
+from robogjc.sandbox import GitTransport, SandboxManager
+from robogjc.worker import DirectiveInfo, TaskInputs, ThreadMessage, run_task
 
 log = logging.getLogger(__name__)
 
@@ -37,7 +37,7 @@ def _comment_from_payload(payload: Mapping[str, Any]) -> CommentInfo:
 
 def _directive_from_payload(payload: Mapping[str, Any]) -> DirectiveInfo | None:
     """Extract the maintainer directive the webhook handler stashed, if any."""
-    raw = payload.get("_robomp_directive")
+    raw = payload.get("_robogjc_directive")
     if not isinstance(raw, Mapping):
         return None
     body = raw.get("body")
@@ -590,9 +590,9 @@ async def handle_pr_conversation(
         db.upsert_issue(key=issue_row.key, repo=issue_row.repo, number=issue_row.number, state="reproducing")
         issue_row = db.get_issue(issue_row.key) or issue_row
     # Bare @mention with no request body — the route stashes an empty
-    # _robomp_directive; _directive_from_payload rejects it but the key
+    # _robogjc_directive; _directive_from_payload rejects it but the key
     # being present tells us a mention happened. Reply cheaply without omp.
-    if directive is None and payload.get("_robomp_directive") is not None:
+    if directive is None and payload.get("_robogjc_directive") is not None:
         comment = _comment_from_payload(payload)
         log.info(
             "bare mention, prompting for request", extra={"repo": repo_full, "pr": pr_number, "author": comment.author}

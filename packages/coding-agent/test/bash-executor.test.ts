@@ -2,17 +2,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { executeBash } from "@oh-my-pi/pi-coding-agent/exec/bash-executor";
-import { DEFAULT_MAX_BYTES } from "@oh-my-pi/pi-coding-agent/session/streaming-output";
-import * as shellSnapshot from "@oh-my-pi/pi-coding-agent/utils/shell-snapshot";
-import type { Shell } from "@oh-my-pi/pi-natives";
-import * as piNatives from "@oh-my-pi/pi-natives";
+import { resetSettingsForTest, Settings } from "@gajae-code/coding-agent/config/settings";
+import { executeBash } from "@gajae-code/coding-agent/exec/bash-executor";
+import { DEFAULT_MAX_BYTES } from "@gajae-code/coding-agent/session/streaming-output";
+import * as shellSnapshot from "@gajae-code/coding-agent/utils/shell-snapshot";
+import type { Shell } from "@gajae-code/natives";
+import * as piNatives from "@gajae-code/natives";
 
 // Matches the schema default for `tools.artifactHeadBytes` (20 KB) used by
 // OutputSink when bash-executor pulls settings via resolveOutputSinkHeadBytes.
 const ARTIFACT_HEAD_BYTES_DEFAULT = 20 * 1024;
-const BACKGROUND_COMPLETION_RACE_MS = 750;
+const BACKGROUND_CGJCLETION_RACE_MS = 750;
 const KILL_MARKER_DELAY_SECONDS = "0.4";
 const KILL_MARKER_ASSERTION_WAIT_MS = 900;
 
@@ -72,7 +72,7 @@ describe("executeBash", () => {
 	});
 
 	it("applies non-interactive environment defaults", async () => {
-		const result = await executeBash('echo "$GIT_TERMINAL_PROMPT:$PI_TEST_ENV"', {
+		const result = await executeBash('echo "$GIT_TERMINAL_PRGJCT:$PI_TEST_ENV"', {
 			cwd: tempDir,
 			timeout: 5000,
 			env: { PI_TEST_ENV: "hello" },
@@ -106,7 +106,7 @@ describe("executeBash", () => {
 		});
 		const timed = await Promise.race([
 			runPromise.then(result => ({ type: "result" as const, result })),
-			Bun.sleep(BACKGROUND_COMPLETION_RACE_MS).then(() => ({ type: "timeout" as const })),
+			Bun.sleep(BACKGROUND_CGJCLETION_RACE_MS).then(() => ({ type: "timeout" as const })),
 		]);
 		expect(timed.type).toBe("result");
 		if (timed.type === "result") {
@@ -502,7 +502,7 @@ describe("executeBash", () => {
 		});
 		const timed = await Promise.race([
 			runPromise.then(result => ({ type: "result" as const, result })),
-			Bun.sleep(BACKGROUND_COMPLETION_RACE_MS).then(() => ({ type: "timeout" as const })),
+			Bun.sleep(BACKGROUND_CGJCLETION_RACE_MS).then(() => ({ type: "timeout" as const })),
 		]);
 
 		expect(timed.type).toBe("result");

@@ -13,8 +13,8 @@ import {
 	buildAnthropicSystemBlocks,
 	buildAnthropicUrl,
 	stripClaudeToolPrefix,
-} from "@oh-my-pi/pi-ai";
-import { $env } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/ai";
+import { $env } from "@gajae-code/utils";
 import type {
 	AnthropicApiResponse,
 	AnthropicCitation,

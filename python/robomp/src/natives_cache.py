@@ -64,7 +64,7 @@ CACHE_KEY_PATHS: tuple[str, ...] = (
 # cache-key inputs and travel as a unit. ``.node`` is matched by glob since
 # the basename embeds the target triple + variant.
 _CACHED_NODE_GLOB = "pi_natives.*.node"
-_CACHED_COMPANION_FILES: tuple[str, ...] = (
+_CACHED_CGJCANION_FILES: tuple[str, ...] = (
     "index.d.ts",
     "index.js",
     "embedded-addon.js",
@@ -121,7 +121,7 @@ def _git_safe_directory_env(repo_dir: Path) -> dict[str, str]:
     (see ``SandboxManager._chown_workspace``). Without this whitelist, every
     git invocation from the orchestrator on a slot-owned repo aborts with
     "fatal: detected dubious ownership". Mirrors
-    ``robomp.sandbox._safe_directory_env`` but kept local to avoid a circular
+    ``robogjc.sandbox._safe_directory_env`` but kept local to avoid a circular
     import (sandbox imports this module).
     """
     env = os.environ.copy()
@@ -282,7 +282,7 @@ class NativesCache:
         # A complete entry has a node file plus all companions.
         if not list(entry.glob(_CACHED_NODE_GLOB)):
             return None
-        for name in _CACHED_COMPANION_FILES:
+        for name in _CACHED_CGJCANION_FILES:
             if not (entry / name).exists():
                 return None
         return entry
@@ -316,7 +316,7 @@ class NativesCache:
             dst = native_dir / src.name
             _atomic_link(src, dst)
             copied.append(dst)
-        for name in _CACHED_COMPANION_FILES:
+        for name in _CACHED_CGJCANION_FILES:
             src = entry / name
             dst = native_dir / name
             _atomic_copy(src, dst)
@@ -343,7 +343,7 @@ class NativesCache:
         if not node_files:
             return None
         # Every companion must exist or the entry would be incomplete.
-        for name in _CACHED_COMPANION_FILES:
+        for name in _CACHED_CGJCANION_FILES:
             if not (native_dir / name).exists():
                 return None
 
@@ -370,7 +370,7 @@ class NativesCache:
                 # cache root.
                 for src in node_files:
                     _atomic_copy(src, staging / src.name)
-                for name in _CACHED_COMPANION_FILES:
+                for name in _CACHED_CGJCANION_FILES:
                     _atomic_copy(native_dir / name, staging / name)
                 manifest = {
                     "key": key,

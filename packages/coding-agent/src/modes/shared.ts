@@ -1,4 +1,4 @@
-import type { TabBarTheme } from "@oh-my-pi/pi-tui";
+import type { TabBarTheme } from "@gajae-code/tui";
 import { theme } from "./theme/theme";
 
 // ═══════════════════════════════════════════════════════════════════════════

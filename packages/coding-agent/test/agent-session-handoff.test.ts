@@ -1,17 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as path from "node:path";
-import { Agent } from "@oh-my-pi/pi-agent-core";
-import * as compactionModule from "@oh-my-pi/pi-agent-core/compaction";
-import type { AssistantMessage, ToolCall } from "@oh-my-pi/pi-ai";
-import { getBundledModel } from "@oh-my-pi/pi-ai/models";
-import { createMockModel } from "@oh-my-pi/pi-ai/providers/mock";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { ExtensionRunner, loadExtensions } from "@oh-my-pi/pi-coding-agent/extensibility/extensions";
-import { AgentSession, type AgentSessionEvent } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import { Agent } from "@gajae-code/agent-core";
+import * as compactionModule from "@gajae-code/agent-core/compaction";
+import type { AssistantMessage, ToolCall } from "@gajae-code/ai";
+import { getBundledModel } from "@gajae-code/ai/models";
+import { createMockModel } from "@gajae-code/ai/providers/mock";
+import { ModelRegistry } from "@gajae-code/coding-agent/config/model-registry";
+import { Settings } from "@gajae-code/coding-agent/config/settings";
+import { ExtensionRunner, loadExtensions } from "@gajae-code/coding-agent/extensibility/extensions";
+import { AgentSession, type AgentSessionEvent } from "@gajae-code/coding-agent/session/agent-session";
+import { AuthStorage } from "@gajae-code/coding-agent/session/auth-storage";
+import { SessionManager } from "@gajae-code/coding-agent/session/session-manager";
+import { TempDir } from "@gajae-code/utils";
 
 describe("AgentSession handoff", () => {
 	let tempDir: TempDir;

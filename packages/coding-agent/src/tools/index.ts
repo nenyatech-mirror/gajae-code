@@ -1,6 +1,6 @@
-import type { AgentTelemetryConfig, AgentTool } from "@oh-my-pi/pi-agent-core";
-import type { ToolChoice } from "@oh-my-pi/pi-ai";
-import { $env, $flag, logger } from "@oh-my-pi/pi-utils";
+import type { AgentTelemetryConfig, AgentTool } from "@gajae-code/agent-core";
+import type { ToolChoice } from "@gajae-code/ai";
+import { $env, $flag, logger } from "@gajae-code/utils";
 import type { PromptTemplate } from "../config/prompt-templates";
 import type { Settings } from "../config/settings";
 import { EditTool } from "../edit";

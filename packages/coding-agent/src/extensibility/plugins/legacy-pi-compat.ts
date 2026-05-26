@@ -5,22 +5,22 @@ import * as url from "node:url";
 
 // Canonical scope for in-process pi packages. Plugins published against any of
 // the aliased scopes below (mariozechner's original publish, earendil-works'
-// fork, or the canonical @oh-my-pi scope itself) are remapped to this scope and
+// fork, or the canonical @gajae-code scope itself) are remapped to this scope and
 // resolved against the bundled copy that ships inside the omp binary. This
 // keeps plugins running against the exact runtime state of the host (single
 // module registry, single tool registry, etc.) regardless of which historical
 // scope name they happened to declare in their peerDependencies.
-const CANONICAL_PI_SCOPE = "@oh-my-pi";
+const CANONICAL_PI_SCOPE = "@gajae-code";
 
 // Scopes that have historically been used to publish (or alias) the same set
-// of internal pi-* packages. `@oh-my-pi` is intentionally included so that
+// of internal pi-* packages. `@gajae-code` is intentionally included so that
 // direct imports of the canonical name still flow through `Bun.resolveSync`
 // against the host binary, avoiding a duplicate copy being pulled in from a
 // plugin's own node_modules tree at install time.
-const PI_SCOPE_ALIASES = ["oh-my-pi", "mariozechner", "earendil-works"] as const;
+const PI_SCOPE_ALIASES = ["gajae-code", "mariozechner", "earendil-works"] as const;
 
 // Internal pi-* package basenames bundled inside the omp binary.
-const PI_PACKAGE_NAMES = ["pi-agent-core", "pi-ai", "pi-coding-agent", "pi-natives", "pi-tui", "pi-utils"] as const;
+const PI_PACKAGE_NAMES = ["pi-agent-core", "pi-ai", "gajae-code", "pi-natives", "pi-tui", "pi-utils"] as const;
 
 const PI_SCOPE_ALTERNATION = PI_SCOPE_ALIASES.join("|");
 const PI_PACKAGE_ALTERNATION = PI_PACKAGE_NAMES.join("|");
@@ -247,7 +247,7 @@ function resolveLegacyPiSpecifier(args: { path: string; importer: string }): { p
 		return undefined;
 	}
 
-	// Primary: resolve the canonical @oh-my-pi/* specifier from the host binary
+	// Primary: resolve the canonical @gajae-code/* specifier from the host binary
 	// location. Works in dev mode and in source-link installs.
 	try {
 		return { path: getResolvedSpecifier(remappedSpecifier) };

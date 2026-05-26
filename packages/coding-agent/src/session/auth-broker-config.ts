@@ -2,7 +2,7 @@
  * Resolve auth-broker connection configuration for the local omp client.
  *
  * Precedence (highest first):
- *   1. `OMP_AUTH_BROKER_URL` / `OMP_AUTH_BROKER_TOKEN` env vars.
+ *   1. `GJC_AUTH_BROKER_URL` / `GJC_AUTH_BROKER_TOKEN` env vars.
  *   2. `auth.broker.url` / `auth.broker.token` in `~/.omp/agent/config.yml`
  *      (hidden from the settings UI; `!command` resolution supported).
  *   3. Token file `~/.omp/auth-broker.token` (paired with URL from env or config).
@@ -16,7 +16,7 @@
  * boot without forcing a startup reorder.
  */
 import * as path from "node:path";
-import { getAgentDir, getConfigRootDir, isEnoent, logger } from "@oh-my-pi/pi-utils";
+import { getAgentDir, getConfigRootDir, isEnoent, logger } from "@gajae-code/utils";
 import { YAML } from "bun";
 import { resolveConfigValue } from "../config/resolve-config-value";
 
@@ -72,8 +72,8 @@ async function readConfigYaml(): Promise<ConfigSnapshot> {
  * user explicitly asked to use the broker.
  */
 export async function resolveAuthBrokerConfig(): Promise<AuthBrokerClientConfig | null> {
-	const envUrl = process.env.OMP_AUTH_BROKER_URL;
-	const envToken = process.env.OMP_AUTH_BROKER_TOKEN;
+	const envUrl = process.env.GJC_AUTH_BROKER_URL;
+	const envToken = process.env.GJC_AUTH_BROKER_TOKEN;
 
 	let url = envUrl && envUrl.length > 0 ? envUrl : undefined;
 	let configToken: string | undefined;
@@ -94,8 +94,8 @@ export async function resolveAuthBrokerConfig(): Promise<AuthBrokerClientConfig 
 		(envToken && envToken.length > 0 ? envToken : undefined) ?? configToken ?? (await readTokenFile()) ?? undefined;
 	if (!token) {
 		throw new Error(
-			`OMP_AUTH_BROKER_URL is set (${url}) but no bearer token is available. ` +
-				`Set OMP_AUTH_BROKER_TOKEN, the \`auth.broker.token\` config entry, or place one at ${getAuthBrokerTokenFilePath()}.`,
+			`GJC_AUTH_BROKER_URL is set (${url}) but no bearer token is available. ` +
+				`Set GJC_AUTH_BROKER_TOKEN, the \`auth.broker.token\` config entry, or place one at ${getAuthBrokerTokenFilePath()}.`,
 		);
 	}
 	return { url, token };

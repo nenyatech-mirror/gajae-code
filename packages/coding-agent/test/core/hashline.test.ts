@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
+import { resetSettingsForTest, Settings } from "@gajae-code/coding-agent/config/settings";
 import {
 	applyHashlineEdits,
 	buildCompactHashlineDiffPreview,
@@ -21,8 +21,8 @@ import {
 	splitHashlineInput,
 	splitHashlineInputs,
 	tryRecoverHashlineWithCache,
-} from "@oh-my-pi/pi-coding-agent/edit";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
+} from "@gajae-code/coding-agent/edit";
+import type { ToolSession } from "@gajae-code/coding-agent/tools";
 
 beforeAll(async () => {
 	resetSettingsForTest();

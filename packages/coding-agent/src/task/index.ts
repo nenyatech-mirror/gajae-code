@@ -15,9 +15,9 @@
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import path from "node:path";
-import type { AgentTool, AgentToolResult, AgentToolUpdateCallback } from "@oh-my-pi/pi-agent-core";
-import type { Usage } from "@oh-my-pi/pi-ai";
-import { $env, prompt, Snowflake } from "@oh-my-pi/pi-utils";
+import type { AgentTool, AgentToolResult, AgentToolUpdateCallback } from "@gajae-code/agent-core";
+import type { Usage } from "@gajae-code/ai";
+import { $env, prompt, Snowflake } from "@gajae-code/utils";
 import type { ToolSession } from "..";
 import { AsyncJobManager } from "../async";
 import { resolveAgentModelPatterns } from "../config/model-resolver";

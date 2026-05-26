@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
-import type { AssistantMessage } from "@oh-my-pi/pi-ai";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { EventController } from "@oh-my-pi/pi-coding-agent/modes/controllers/event-controller";
-import type { InteractiveModeContext } from "@oh-my-pi/pi-coding-agent/modes/types";
+import type { AssistantMessage } from "@gajae-code/ai";
+import { resetSettingsForTest, Settings } from "@gajae-code/coding-agent/config/settings";
+import { EventController } from "@gajae-code/coding-agent/modes/controllers/event-controller";
+import type { InteractiveModeContext } from "@gajae-code/coding-agent/modes/types";
 
 function createAssistantMessage(): AssistantMessage {
 	return {

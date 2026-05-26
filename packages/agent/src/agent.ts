@@ -19,7 +19,7 @@ import {
 	type ThinkingBudgets,
 	type ToolChoice,
 	type ToolResultMessage,
-} from "@oh-my-pi/pi-ai";
+} from "@gajae-code/ai";
 import { agentLoop, agentLoopContinue } from "./agent-loop";
 import type { AppendOnlyContextManager } from "./append-only-context";
 import type { HarmonyAuditEvent } from "./harmony-leak";

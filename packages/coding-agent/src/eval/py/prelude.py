@@ -1,5 +1,5 @@
 from __future__ import annotations
-# OMP prelude helpers (loaded once into the runner namespace)
+# GJC prelude helpers (loaded once into the runner namespace)
 if "__omp_prelude_loaded__" not in globals():
     __omp_prelude_loaded__ = True
     from pathlib import Path

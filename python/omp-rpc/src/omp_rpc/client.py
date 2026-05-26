@@ -422,8 +422,8 @@ class RpcClient:
         )
         self._process = process
 
-        self._stdout_thread = threading.Thread(target=self._read_stdout_loop, name="omp-rpc-stdout", daemon=True)
-        self._stderr_thread = threading.Thread(target=self._read_stderr_loop, name="omp-rpc-stderr", daemon=True)
+        self._stdout_thread = threading.Thread(target=self._read_stdout_loop, name="gjc-rpc-stdout", daemon=True)
+        self._stderr_thread = threading.Thread(target=self._read_stderr_loop, name="gjc-rpc-stderr", daemon=True)
         self._stdout_thread.start()
         self._stderr_thread.start()
 
@@ -1093,7 +1093,7 @@ class RpcClient:
             finally:
                 self._pending_host_tool_calls.pop(request_id, None)
 
-        threading.Thread(target=run_tool, name=f"omp-rpc-host-tool:{tool_name}", daemon=True).start()
+        threading.Thread(target=run_tool, name=f"gjc-rpc-host-tool:{tool_name}", daemon=True).start()
 
     def _handle_host_tool_cancel(self, payload: JsonObject) -> None:
         target_id = payload.get("targetId")
@@ -1175,7 +1175,7 @@ class RpcClient:
             finally:
                 self._pending_host_uri_requests.pop(request_id, None)
 
-        threading.Thread(target=run, name=f"omp-rpc-host-uri:{scheme}:{operation}", daemon=True).start()
+        threading.Thread(target=run, name=f"gjc-rpc-host-uri:{scheme}:{operation}", daemon=True).start()
 
     def _handle_host_uri_cancel(self, payload: JsonObject) -> None:
         target_id = payload.get("targetId")

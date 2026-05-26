@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
-import { AgentBusyError, type AgentTelemetryConfig, type Tracer } from "@oh-my-pi/pi-agent-core";
-import { type AssistantMessage, Effort } from "@oh-my-pi/pi-ai";
+import { AgentBusyError, type AgentTelemetryConfig, type Tracer } from "@gajae-code/agent-core";
+import { type AssistantMessage, Effort } from "@gajae-code/ai";
 import { Settings } from "../../src/config/settings";
 import type { ExtensionActions, LoadExtensionsResult } from "../../src/extensibility/extensions/types";
 import type { CreateAgentSessionResult } from "../../src/sdk";

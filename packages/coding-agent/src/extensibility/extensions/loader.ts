@@ -4,10 +4,10 @@
 import type * as fs1 from "node:fs";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import type { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { ImageContent, Model, TextContent } from "@oh-my-pi/pi-ai";
-import type { KeyId } from "@oh-my-pi/pi-tui";
-import { hasFsCode, isEacces, isEnoent, logger } from "@oh-my-pi/pi-utils";
+import type { ThinkingLevel } from "@gajae-code/agent-core";
+import type { ImageContent, Model, TextContent } from "@gajae-code/ai";
+import type { KeyId } from "@gajae-code/tui";
+import { hasFsCode, isEacces, isEnoent, logger } from "@gajae-code/utils";
 import * as Zod from "zod/v4";
 import { type ExtensionModule, extensionModuleCapability } from "../../capability/extension-module";
 import { loadCapability } from "../../discovery";
@@ -128,7 +128,7 @@ class ConcreteExtensionAPI implements ExtensionAPI, IExtensionRuntime {
 	}> = [];
 
 	constructor(
-		public readonly pi: typeof import("@oh-my-pi/pi-coding-agent"),
+		public readonly pi: typeof import("@gajae-code/coding-agent"),
 		private readonly extension: Extension,
 		private readonly runtime: IExtensionRuntime,
 		private readonly cwd: string,
@@ -142,7 +142,7 @@ class ConcreteExtensionAPI implements ExtensionAPI, IExtensionRuntime {
 	}
 
 	registerTool<
-		TParams extends import("@oh-my-pi/pi-ai").TSchema = import("@oh-my-pi/pi-ai").TSchema,
+		TParams extends import("@gajae-code/ai").TSchema = import("@gajae-code/ai").TSchema,
 		TDetails = unknown,
 	>(tool: ToolDefinition<TParams, TDetails>): void {
 		this.extension.tools.set(tool.name, {
@@ -294,7 +294,7 @@ async function loadExtension(
 
 		const extension = createExtension(extensionPath, resolvedPath);
 		const api = new ConcreteExtensionAPI(
-			await import("@oh-my-pi/pi-coding-agent"),
+			await import("@gajae-code/coding-agent"),
 			extension,
 			runtime,
 			cwd,
@@ -320,7 +320,7 @@ export async function loadExtensionFromFactory(
 	name = "<inline>",
 ): Promise<Extension> {
 	const extension = createExtension(name, name);
-	const api = new ConcreteExtensionAPI(await import("@oh-my-pi/pi-coding-agent"), extension, runtime, cwd, eventBus);
+	const api = new ConcreteExtensionAPI(await import("@gajae-code/coding-agent"), extension, runtime, cwd, eventBus);
 	await factory(api);
 	return extension;
 }

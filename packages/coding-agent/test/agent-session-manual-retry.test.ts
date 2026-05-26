@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import * as path from "node:path";
-import { Agent } from "@oh-my-pi/pi-agent-core";
-import { type AssistantMessage, getBundledModel } from "@oh-my-pi/pi-ai";
-import { createMockModel } from "@oh-my-pi/pi-ai/providers/mock";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import { Agent } from "@gajae-code/agent-core";
+import { type AssistantMessage, getBundledModel } from "@gajae-code/ai";
+import { createMockModel } from "@gajae-code/ai/providers/mock";
+import { ModelRegistry } from "@gajae-code/coding-agent/config/model-registry";
+import { Settings } from "@gajae-code/coding-agent/config/settings";
+import { AgentSession } from "@gajae-code/coding-agent/session/agent-session";
+import { AuthStorage } from "@gajae-code/coding-agent/session/auth-storage";
+import { SessionManager } from "@gajae-code/coding-agent/session/session-manager";
+import { TempDir } from "@gajae-code/utils";
 
 function lastAgentMessage(session: AgentSession): AssistantMessage {
 	const message = session.agent.state.messages.at(-1);

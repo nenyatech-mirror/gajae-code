@@ -42,8 +42,8 @@ import {
 	type SetSessionModeResponse,
 	type Usage,
 } from "@agentclientprotocol/sdk";
-import type { AssistantMessage, Model } from "@oh-my-pi/pi-ai";
-import { logger, VERSION } from "@oh-my-pi/pi-utils";
+import type { AssistantMessage, Model } from "@gajae-code/ai";
+import { logger, VERSION } from "@gajae-code/utils";
 import { disableProvider, enableProvider, reset as resetCapabilities } from "../../capability";
 import { Settings } from "../../config/settings";
 import { clearPluginRootsAndCaches, resolveActiveProjectRegistryPath } from "../../discovery/helpers";
@@ -57,7 +57,7 @@ import type { MCPServerConfig } from "../../mcp/types";
 import { loadAllExtensions } from "../../modes/components/extensions/state-manager";
 import { theme } from "../../modes/theme/theme";
 import type { AgentSession, AgentSessionEvent } from "../../session/agent-session";
-import { isSilentAbort, SKILL_PROMPT_MESSAGE_TYPE } from "../../session/messages";
+import { isSilentAbort, SKILL_PRGJCT_MESSAGE_TYPE } from "../../session/messages";
 import {
 	SessionManager,
 	type SessionInfo as StoredSessionInfo,
@@ -396,7 +396,7 @@ export class AcpAgent implements Agent {
 			authMethods.push({
 				type: "terminal",
 				id: "terminal",
-				name: "Set up Oh My Pi in terminal",
+				name: "Set up Gajae Code in terminal",
 				description: "Launch the omp TUI to add provider keys and select models.",
 				args: [ACP_TERMINAL_AUTH_FLAG],
 			});
@@ -404,8 +404,8 @@ export class AcpAgent implements Agent {
 		return {
 			protocolVersion: PROTOCOL_VERSION,
 			agentInfo: {
-				name: "oh-my-pi",
-				title: "Oh My Pi",
+				name: "gajae-code",
+				title: "Gajae Code",
 				version: VERSION,
 			},
 			authMethods,
@@ -706,7 +706,7 @@ export class AcpAgent implements Agent {
 		}
 		const built = await buildSkillPromptMessage(skill, args);
 		await record.session.promptCustomMessage({
-			customType: SKILL_PROMPT_MESSAGE_TYPE,
+			customType: SKILL_PRGJCT_MESSAGE_TYPE,
 			content: built.message,
 			display: true,
 			details: built.details,

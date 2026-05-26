@@ -1,6 +1,6 @@
-import type { TextContent } from "@oh-my-pi/pi-ai";
-import type { Component } from "@oh-my-pi/pi-tui";
-import { Box, Container, Markdown, Spacer, Text } from "@oh-my-pi/pi-tui";
+import type { TextContent } from "@gajae-code/ai";
+import type { Component } from "@gajae-code/tui";
+import { Box, Container, Markdown, Spacer, Text } from "@gajae-code/tui";
 import { getMarkdownTheme, theme } from "../../modes/theme/theme";
 import type { CustomMessage, SkillPromptDetails } from "../../session/messages";
 

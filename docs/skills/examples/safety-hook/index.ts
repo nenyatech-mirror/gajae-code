@@ -1,5 +1,5 @@
-// @ts-nocheck — example file; install @oh-my-pi/pi-coding-agent before running
-import type { ExtensionAPI } from "@oh-my-pi/pi-coding-agent";
+// @ts-nocheck — example file; install @gajae-code/coding-agent before running
+import type { ExtensionAPI } from "@gajae-code/coding-agent";
 
 /**
  * Safety hook: blocks any bash tool call that contains "rm -rf /".

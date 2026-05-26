@@ -5,9 +5,9 @@ import type {
 	AgentToolResult,
 	AgentToolUpdateCallback,
 	RenderResultOptions,
-} from "@oh-my-pi/pi-agent-core";
-import { type Component, Text } from "@oh-my-pi/pi-tui";
-import { isEnoent, prompt } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/agent-core";
+import { type Component, Text } from "@gajae-code/tui";
+import { isEnoent, prompt } from "@gajae-code/utils";
 import * as z from "zod/v4";
 import {
 	type DapBreakpointRecord,

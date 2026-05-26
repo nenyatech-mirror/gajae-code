@@ -1,4 +1,4 @@
-"""`python -m robomp.proxy serve` — run the gh-proxy FastAPI app."""
+"""`python -m robogjc.proxy serve` — run the gh-proxy FastAPI app."""
 
 from __future__ import annotations
 
@@ -7,9 +7,9 @@ import sys
 import click
 import uvicorn
 
-from robomp.config import Settings, load_proxy_settings
-from robomp.logging_config import configure_logging
-from robomp.proxy.server import create_proxy_app
+from robogjc.config import Settings, load_proxy_settings
+from robogjc.logging_config import configure_logging
+from robogjc.proxy.server import create_proxy_app
 
 
 def _settings_or_die() -> Settings:
@@ -17,7 +17,7 @@ def _settings_or_die() -> Settings:
 
     Routes through `load_proxy_settings` (NOT the orchestrator `Settings()`
     ctor) so the gh-proxy container only needs `GITHUB_TOKEN` +
-    `ROBOMP_GH_PROXY_HMAC_KEY` — the orchestrator's webhook secret,
+    `ROBGJC_GH_PROXY_HMAC_KEY` — the orchestrator's webhook secret,
     bot_login, and proxy-URL fields are irrelevant here.
     """
     try:
@@ -44,7 +44,7 @@ def serve() -> None:
         click.echo("gh-proxy: GITHUB_TOKEN is required in proxy mode", err=True)
         sys.exit(2)
     if cfg.gh_proxy_hmac_key is None:
-        click.echo("gh-proxy: ROBOMP_GH_PROXY_HMAC_KEY is required in proxy mode", err=True)
+        click.echo("gh-proxy: ROBGJC_GH_PROXY_HMAC_KEY is required in proxy mode", err=True)
         sys.exit(2)
     app = create_proxy_app(cfg)
     uvicorn.run(

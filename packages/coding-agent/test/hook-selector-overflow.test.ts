@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "bun:test";
-import { HookSelectorComponent } from "@oh-my-pi/pi-coding-agent/modes/components/hook-selector";
-import { getThemeByName, setThemeInstance } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { visibleWidth } from "@oh-my-pi/pi-tui";
+import { HookSelectorComponent } from "@gajae-code/coding-agent/modes/components/hook-selector";
+import { getThemeByName, setThemeInstance } from "@gajae-code/coding-agent/modes/theme/theme";
+import { visibleWidth } from "@gajae-code/tui";
 
 beforeAll(async () => {
 	const theme = await getThemeByName("dark");

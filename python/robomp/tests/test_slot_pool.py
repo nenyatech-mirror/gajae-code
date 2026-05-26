@@ -4,7 +4,7 @@ import asyncio
 
 import pytest
 
-from robomp.slot_pool import SlotPool
+from robogjc.slot_pool import SlotPool
 
 
 @pytest.mark.asyncio

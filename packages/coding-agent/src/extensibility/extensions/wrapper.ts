@@ -1,8 +1,8 @@
 /**
  * Tool wrappers for extensions.
  */
-import type { AgentTool, AgentToolContext, AgentToolUpdateCallback } from "@oh-my-pi/pi-agent-core";
-import type { ImageContent, Static, TextContent, TSchema } from "@oh-my-pi/pi-ai";
+import type { AgentTool, AgentToolContext, AgentToolUpdateCallback } from "@gajae-code/agent-core";
+import type { ImageContent, Static, TextContent, TSchema } from "@gajae-code/ai";
 import type { Theme } from "../../modes/theme/theme";
 import { applyToolProxy } from "../tool-proxy";
 import type { ExtensionRunner } from "./runner";

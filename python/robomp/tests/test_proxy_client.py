@@ -14,9 +14,9 @@ import httpx
 import pytest
 from pydantic import SecretStr
 
-from robomp.config import Settings
-from robomp.git_ops import HeadDriftError
-from robomp.github_client import (
+from robogjc.config import Settings
+from robogjc.git_ops import HeadDriftError
+from robogjc.github_client import (
     CommentInfo,
     GitHubClient,
     GitHubError,
@@ -28,10 +28,10 @@ from robomp.github_client import (
     RepoInfo,
     ReviewCommentInfo,
 )
-from robomp.proxy.server import create_proxy_app
-from robomp.proxy_client import GitHubProxyClient, ProxyGitTransport
-from robomp.proxy_hmac import HEADER_SIGNATURE, HEADER_TIMESTAMP, verify
-from robomp.sandbox import workspace_key
+from robogjc.proxy.server import create_proxy_app
+from robogjc.proxy_client import GitHubProxyClient, ProxyGitTransport
+from robogjc.proxy_hmac import HEADER_SIGNATURE, HEADER_TIMESTAMP, verify
+from robogjc.sandbox import workspace_key
 
 _HMAC = "test-hmac-key-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 _HMAC_BYTES = _HMAC.encode("utf-8")
@@ -45,15 +45,15 @@ def _build_settings(tmp_path: Path) -> Settings:
     cfg = Settings.model_construct(
         github_token=SecretStr(_TOKEN),
         github_webhook_secret=SecretStr("webhook-secret"),
-        bot_login="robomp-bot",
-        git_author_email="robomp-bot@example.invalid",
+        bot_login="robogjc-bot",
+        git_author_email="robogjc-bot@example.invalid",
         repo_allowlist_raw="octo/widget",
         gh_proxy_url=None,
         gh_proxy_hmac_key=SecretStr(_HMAC),
         gh_proxy_bind_host="0.0.0.0",
         gh_proxy_bind_port=8081,
         workspace_root=tmp_path / "workspaces",
-        sqlite_path=tmp_path / "robomp.sqlite",
+        sqlite_path=tmp_path / "robogjc.sqlite",
         log_dir=tmp_path / "logs",
     )
     cfg.ensure_paths()
@@ -290,7 +290,7 @@ def round_trip_app(proxy_settings: Settings):
                 ],
             )
         if path == "/user":
-            return httpx.Response(200, json={"login": "robomp-bot"})
+            return httpx.Response(200, json={"login": "robogjc-bot"})
         if path == "/repos/octo/widget/pulls/4" and req.method == "GET":
             return httpx.Response(
                 200,
@@ -300,7 +300,7 @@ def round_trip_app(proxy_settings: Settings):
                     "head": {"ref": "feat", "repo": {"full_name": "octo/widget"}},
                     "base": {"ref": "main"},
                     "state": "open",
-                    "user": {"login": "robomp-bot"},
+                    "user": {"login": "robogjc-bot"},
                 },
             )
         if path == "/repos/octo/widget/pulls" and req.method == "POST":
@@ -353,12 +353,12 @@ async def test_round_trip_all_endpoints(round_trip_app) -> None:
     prs = await client.list_pr_reviews("octo/widget", 2)
     assert len(prs) == 1 and isinstance(prs[0], PullRequestReviewInfo)
 
-    assert await client.get_authenticated_login() == "robomp-bot"
+    assert await client.get_authenticated_login() == "robogjc-bot"
 
     existing_pr = await client.get_pull_request("octo/widget", 4)
     assert isinstance(existing_pr, PullRequestInfo)
     assert existing_pr.head_ref == "feat"
-    assert existing_pr.author == "robomp-bot"
+    assert existing_pr.author == "robogjc-bot"
 
     posted = await client.post_comment("octo/widget", 1, "hi")
     assert isinstance(posted, CommentInfo)

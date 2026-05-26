@@ -11,13 +11,13 @@ import httpx
 import pytest
 from fastapi.testclient import TestClient
 
-from robomp.config import Settings, reset_settings_cache
-from robomp.dashboard import tail_jsonl
-from robomp.db import Database, close_database, get_database, issue_key
-from robomp.github_client import GitHubClient
-from robomp.manual_triage import InvalidIssueRef, ManualTriageTimeout, await_terminal_state, parse_issue_ref
-from robomp.sandbox import LocalGitTransport
-from robomp.server import create_app
+from robogjc.config import Settings, reset_settings_cache
+from robogjc.dashboard import tail_jsonl
+from robogjc.db import Database, close_database, get_database, issue_key
+from robogjc.github_client import GitHubClient
+from robogjc.manual_triage import InvalidIssueRef, ManualTriageTimeout, await_terminal_state, parse_issue_ref
+from robogjc.sandbox import LocalGitTransport
+from robogjc.server import create_app
 
 
 def _seed_db(settings: Settings) -> None:
@@ -68,18 +68,18 @@ def test_index_serves_dashboard_html(settings: Settings) -> None:
     # Stable anchors only. The Vite bundle hashes its asset filenames on every
     # build, but the structural skeleton (title, mount node, config script)
     # has to stay intact for the SPA to bootstrap.
-    assert "<title>robomp</title>" in resp.text
+    assert "<title>robogjc</title>" in resp.text
     assert 'id="app"' in resp.text
-    assert 'id="robomp-config"' in resp.text
+    assert 'id="robogjc-config"' in resp.text
     # The sentinel must have been substituted — neither the literal sentinel
     # nor an empty script body is acceptable.
-    assert "__ROBOMP_CONFIG__" not in resp.text
+    assert "__ROBGJC_CONFIG__" not in resp.text
     assert '"replayEnabled":' in resp.text
 
 
 def test_index_substitutes_replay_token(env, monkeypatch: pytest.MonkeyPatch) -> None:
     """When a replay token is set, the config blob exposes it to the SPA."""
-    monkeypatch.setenv("ROBOMP_REPLAY_TOKEN", "secret-token-7")
+    monkeypatch.setenv("ROBGJC_REPLAY_TOKEN", "secret-token-7")
     reset_settings_cache()
     cfg = Settings()  # type: ignore[call-arg]
     cfg.ensure_paths()
@@ -105,7 +105,7 @@ def test_api_status_reports_runtime_counts_and_inflight(settings: Settings) -> N
     body = resp.json()
 
     runtime = body["runtime"]
-    assert runtime["bot_login"] == "robomp-bot"
+    assert runtime["bot_login"] == "robogjc-bot"
     assert runtime["repo_allowlist"] == ["octo/widget"]
     assert runtime["max_concurrency"] == settings.max_concurrency
     assert runtime["model"] == settings.model
@@ -207,19 +207,19 @@ def test_api_logs_returns_empty_when_file_missing(settings: Settings) -> None:
 
 
 def test_api_logs_tails_jsonl_file(settings: Settings) -> None:
-    log_path = settings.log_dir / "robomp.log.jsonl"
+    log_path = settings.log_dir / "robogjc.log.jsonl"
     log_path.parent.mkdir(parents=True, exist_ok=True)
     payloads = [
-        {"ts": "2026-05-14T21:28:28Z", "level": "INFO", "logger": "robomp.queue", "msg": "dispatch loop online"},
+        {"ts": "2026-05-14T21:28:28Z", "level": "INFO", "logger": "robogjc.queue", "msg": "dispatch loop online"},
         {
             "ts": "2026-05-14T21:28:54Z",
             "level": "INFO",
-            "logger": "robomp.server",
+            "logger": "robogjc.server",
             "msg": "skip",
             "event": "issues",
             "reason": "issues.labeled ignored",
         },
-        {"ts": "2026-05-14T21:30:00Z", "level": "WARNING", "logger": "robomp.queue", "msg": "tool_end", "ok": False},
+        {"ts": "2026-05-14T21:30:00Z", "level": "WARNING", "logger": "robogjc.queue", "msg": "tool_end", "ok": False},
     ]
     log_path.write_text("\n".join(json.dumps(p) for p in payloads) + "\n", encoding="utf-8")
 
@@ -273,17 +273,17 @@ def test_parse_issue_ref_accepts_owner_repo_hash_number() -> None:
 
 def test_parse_issue_ref_accepts_github_issue_urls() -> None:
     cases = (
-        "https://github.com/can1357/oh-my-pi/issues/1348",
-        "http://github.com/can1357/oh-my-pi/issues/1348",
-        "github.com/can1357/oh-my-pi/issues/1348",
-        "https://www.github.com/can1357/oh-my-pi/issues/1348",
-        "https://github.com/can1357/oh-my-pi/issues/1348/",
-        "https://github.com/can1357/oh-my-pi/issues/1348?foo=bar",
-        "https://github.com/can1357/oh-my-pi/issues/1348#issuecomment-99",
-        "  https://github.com/can1357/oh-my-pi/issues/1348  ",
+        "https://github.com/can1357/gajae-code/issues/1348",
+        "http://github.com/can1357/gajae-code/issues/1348",
+        "github.com/can1357/gajae-code/issues/1348",
+        "https://www.github.com/can1357/gajae-code/issues/1348",
+        "https://github.com/can1357/gajae-code/issues/1348/",
+        "https://github.com/can1357/gajae-code/issues/1348?foo=bar",
+        "https://github.com/can1357/gajae-code/issues/1348#issuecomment-99",
+        "  https://github.com/can1357/gajae-code/issues/1348  ",
     )
     for case in cases:
-        assert parse_issue_ref(case) == ("can1357/oh-my-pi", 1348), case
+        assert parse_issue_ref(case) == ("can1357/gajae-code", 1348), case
 
 
 def test_parse_issue_ref_rejects_garbage() -> None:
@@ -323,7 +323,7 @@ async def test_await_terminal_state_times_out_with_current_state(db: Database) -
 
 def _enable_replay(monkeypatch: pytest.MonkeyPatch) -> str:
     token = "trigger-secret"
-    monkeypatch.setenv("ROBOMP_REPLAY_TOKEN", token)
+    monkeypatch.setenv("ROBGJC_REPLAY_TOKEN", token)
     reset_settings_cache()
     return token
 
@@ -392,7 +392,7 @@ def test_trigger_triage_fetches_and_enqueues(env, monkeypatch: pytest.MonkeyPatc
         resp = client.post(
             "/api/trigger",
             json={"mode": "triage", "issue": "octo/widget#7"},
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
     close_database()
 
@@ -437,7 +437,7 @@ def test_trigger_triage_conflicts_when_manual_delivery_is_active(
         resp = client.post(
             "/api/trigger",
             json={"mode": "triage", "issue": "octo/widget#7"},
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
         row = get_database(cfg.sqlite_path).get_event(delivery)
     close_database()
@@ -496,7 +496,7 @@ def test_trigger_triage_replaces_inactive_manual_delivery(env, monkeypatch: pyte
         resp = client.post(
             "/api/trigger",
             json={"mode": "triage", "issue": "octo/widget#7"},
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
         row = get_database(cfg.sqlite_path).get_event(delivery)
     close_database()
@@ -548,7 +548,7 @@ def test_trigger_triage_rejects_pull_request_issue_payload(env, monkeypatch: pyt
         resp = client.post(
             "/api/trigger",
             json={"mode": "triage", "issue": "octo/widget#7"},
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
         assert get_database(cfg.sqlite_path).get_event("manual-octo__widget-7") is None
     close_database()
@@ -569,11 +569,11 @@ def test_trigger_triage_rejects_repo_not_in_allowlist(env, monkeypatch: pytest.M
         resp = client.post(
             "/api/trigger",
             json={"mode": "triage", "issue": "evil/repo#1"},
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
     close_database()
     assert resp.status_code == 403
-    assert "ROBOMP_REPO_ALLOWLIST" in resp.json()["detail"]
+    assert "ROBGJC_REPO_ALLOWLIST" in resp.json()["detail"]
 
 
 @pytest.mark.parametrize("state", ["queued", "running"])
@@ -599,7 +599,7 @@ def test_trigger_retry_by_delivery_rejects_active_events(
         resp = client.post(
             "/api/trigger",
             json={"mode": "retry", "delivery_id": f"d-{state}"},
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
         assert resp.status_code == 409
         assert state in resp.json()["detail"]
@@ -618,7 +618,7 @@ def test_trigger_triage_surfaces_github_failure(env, monkeypatch: pytest.MonkeyP
         resp = client.post(
             "/api/trigger",
             json={"mode": "triage", "issue": "octo/widget#999"},
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
     close_database()
     assert resp.status_code == 502
@@ -643,7 +643,7 @@ def test_trigger_retry_by_delivery_id_requeues(env, monkeypatch: pytest.MonkeyPa
         resp = client.post(
             "/api/trigger",
             json={"mode": "retry", "delivery_id": "d-old"},
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
         assert resp.status_code == 202
         assert get_database(cfg.sqlite_path).get_event("d-old").state == "queued"
@@ -685,7 +685,7 @@ def test_trigger_retry_by_issue_finds_latest_non_skipped_event(env, monkeypatch:
         resp = client.post(
             "/api/trigger",
             json={"mode": "retry", "issue": "octo/widget#9"},
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
         body = resp.json()
         assert resp.status_code == 202, body
@@ -724,7 +724,7 @@ def test_trigger_retry_by_issue_rejects_active_latest_event(env, monkeypatch: py
         resp = client.post(
             "/api/trigger",
             json={"mode": "retry", "issue": "octo/widget#10"},
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
         assert resp.status_code == 409
         assert "running" in resp.json()["detail"]
@@ -751,10 +751,10 @@ def test_trigger_retry_by_issue_rejects_repo_not_in_allowlist(env, monkeypatch: 
         resp = client.post(
             "/api/trigger",
             json={"mode": "retry", "issue": "evil/repo#1"},
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
         assert resp.status_code == 403
-        assert "ROBOMP_REPO_ALLOWLIST" in resp.json()["detail"]
+        assert "ROBGJC_REPO_ALLOWLIST" in resp.json()["detail"]
         assert get_database(cfg.sqlite_path).get_event("d-evil").state == "failed"
     close_database()
 
@@ -768,7 +768,7 @@ def test_trigger_retry_unknown_delivery_404s(env, monkeypatch: pytest.MonkeyPatc
         resp = client.post(
             "/api/trigger",
             json={"mode": "retry", "delivery_id": "nope"},
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
     close_database()
     assert resp.status_code == 404
@@ -783,7 +783,7 @@ def test_trigger_rejects_bad_mode(env, monkeypatch: pytest.MonkeyPatch) -> None:
         resp = client.post(
             "/api/trigger",
             json={"mode": "explode"},
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
     close_database()
     assert resp.status_code == 400
@@ -860,10 +860,10 @@ def _post_pr_issue_comment(
 
 @pytest.fixture
 def rate_limited_settings(monkeypatch: pytest.MonkeyPatch, env: dict[str, str]) -> Settings:
-    monkeypatch.setenv("ROBOMP_RATE_LIMIT_DEFAULT", "2")
-    monkeypatch.setenv("ROBOMP_RATE_LIMIT_CONTRIBUTOR", "4")
-    monkeypatch.setenv("ROBOMP_RATE_LIMIT_WINDOW_SECONDS", "3600")
-    monkeypatch.setenv("ROBOMP_RATE_LIMIT_UNLIMITED", "can1357")
+    monkeypatch.setenv("ROBGJC_RATE_LIMIT_DEFAULT", "2")
+    monkeypatch.setenv("ROBGJC_RATE_LIMIT_CONTRIBUTOR", "4")
+    monkeypatch.setenv("ROBGJC_RATE_LIMIT_WINDOW_SECONDS", "3600")
+    monkeypatch.setenv("ROBGJC_RATE_LIMIT_UNLIMITED", "can1357")
     cfg = Settings()  # type: ignore[call-arg]
     cfg.ensure_paths()
     return cfg
@@ -1049,7 +1049,7 @@ def test_webhook_rate_limited_event_records_reason(rate_limited_settings: Settin
 
 
 def _allowlist(monkeypatch: pytest.MonkeyPatch, repos: str) -> None:
-    monkeypatch.setenv("ROBOMP_REPO_ALLOWLIST", repos)
+    monkeypatch.setenv("ROBGJC_REPO_ALLOWLIST", repos)
     reset_settings_cache()
 
 
@@ -1129,7 +1129,7 @@ def test_browse_returns_401_with_replay_enabled_without_valid_token(env, monkeyp
         missing = client.get("/api/github/issues")
         wrong = client.get(
             "/api/github/issues",
-            headers={"X-Robomp-Replay-Token": f"{token}-wrong"},
+            headers={"X-Robogjc-Replay-Token": f"{token}-wrong"},
         )
     close_database()
 
@@ -1190,7 +1190,7 @@ def test_browse_fans_out_across_allowlist_and_filters_prs(env, monkeypatch: pyte
         _install_github_mock(app, transport)
         resp = client.get(
             "/api/github/issues?state=open&limit=20",
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
     close_database()
 
@@ -1228,15 +1228,15 @@ def test_browse_reuses_cache_until_forced_refresh(env, monkeypatch: pytest.Monke
         _install_github_mock(app, httpx.MockTransport(handler))
         first = client.get(
             "/api/github/issues?state=open&limit=20",
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
         second = client.get(
             "/api/github/issues?state=open&limit=20",
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
         forced = client.get(
             "/api/github/issues?state=open&limit=20&refresh=1",
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
     close_database()
 
@@ -1269,7 +1269,7 @@ def test_browse_cache_updates_from_issue_webhook(env, monkeypatch: pytest.Monkey
         _install_github_mock(app, httpx.MockTransport(handler))
         first = client.get(
             "/api/github/issues?state=open&limit=20",
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
         assert first.status_code == 200
 
@@ -1292,7 +1292,7 @@ def test_browse_cache_updates_from_issue_webhook(env, monkeypatch: pytest.Monkey
         )
         after = client.get(
             "/api/github/issues?state=open&limit=20",
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
     close_database()
 
@@ -1335,7 +1335,7 @@ def test_browse_per_repo_failure_does_not_take_down_panel(env, monkeypatch: pyte
         _install_github_mock(app, transport)
         resp = client.get(
             "/api/github/issues",
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
     close_database()
 
@@ -1356,7 +1356,7 @@ def test_browse_rejects_bad_state(env, monkeypatch: pytest.MonkeyPatch) -> None:
         _install_github_mock(app, httpx.MockTransport(lambda r: httpx.Response(500)))
         resp = client.get(
             "/api/github/issues?state=garbage",
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
     close_database()
     assert resp.status_code == 400
@@ -1393,7 +1393,7 @@ def test_browse_marks_processed_issues_present_in_db(env, monkeypatch: pytest.Mo
         _install_github_mock(app, transport)
         resp = client.get(
             "/api/github/issues?state=open&limit=20",
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
     close_database()
 
@@ -1423,7 +1423,7 @@ def test_browse_processed_flag_is_recomputed_on_cache_hit(env, monkeypatch: pyte
         _install_github_mock(app, httpx.MockTransport(handler))
         first = client.get(
             "/api/github/issues?state=open&limit=20",
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
         assert first.status_code == 200
         assert first.json()["issues"][0]["processed"] is False
@@ -1438,7 +1438,7 @@ def test_browse_processed_flag_is_recomputed_on_cache_hit(env, monkeypatch: pyte
 
         second = client.get(
             "/api/github/issues?state=open&limit=20",
-            headers={"X-Robomp-Replay-Token": token},
+            headers={"X-Robogjc-Replay-Token": token},
         )
     close_database()
 
@@ -1490,7 +1490,7 @@ def test_webhook_directive_on_unknown_issue_is_queued_with_metadata(env) -> None
             delivery="dir-1",
             user="can1357",
             number=77,
-            body="@robomp-bot please refactor X",
+            body="@robogjc-bot please refactor X",
             association="OWNER",
         )
         assert resp.status_code == 202
@@ -1499,7 +1499,7 @@ def test_webhook_directive_on_unknown_issue_is_queued_with_metadata(env) -> None
     close_database()
     assert row is not None
     assert row.state == "queued"
-    directive = row.payload.get("_robomp_directive")
+    directive = row.payload.get("_robogjc_directive")
     assert directive == {"body": "please refactor X", "author": "can1357", "pragmas": []}
 
 
@@ -1507,8 +1507,8 @@ def test_webhook_maintainer_bypasses_rate_limit(
     rate_limited_settings: Settings,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Login in ROBOMP_MAINTAINER_LOGINS is always unlimited, even with NONE association."""
-    monkeypatch.setenv("ROBOMP_MAINTAINER_LOGINS", "can1357")
+    """Login in ROBGJC_MAINTAINER_LOGINS is always unlimited, even with NONE association."""
+    monkeypatch.setenv("ROBGJC_MAINTAINER_LOGINS", "can1357")
     reset_settings_cache()
     cfg = Settings()  # type: ignore[call-arg]
     cfg.ensure_paths()
@@ -1523,7 +1523,7 @@ def test_webhook_maintainer_bypasses_rate_limit(
                 delivery=f"m-{i}",
                 user="can1357",
                 number=300 + i,
-                body=("@robomp-bot do X" if i == 3 else "comment"),
+                body=("@robogjc-bot do X" if i == 3 else "comment"),
                 association="NONE",
             )
             assert resp.status_code == 202
@@ -1600,7 +1600,7 @@ def stub_run_task(monkeypatch: pytest.MonkeyPatch) -> list[dict]:
         captured.append(kwargs)
         return None
 
-    from robomp import tasks as tasks_module
+    from robogjc import tasks as tasks_module
 
     monkeypatch.setattr(tasks_module, "run_task", _stub)
     return captured
@@ -1609,8 +1609,8 @@ def stub_run_task(monkeypatch: pytest.MonkeyPatch) -> list[dict]:
 async def test_handle_pr_conversation_unmapped_bot_pr_uses_pr_branch(
     settings: Settings, tmp_path: Path, stub_run_task, monkeypatch
 ) -> None:
-    from robomp import tasks
-    from robomp.github_client import CommentInfo, IssueInfo, PullRequestInfo, RepoInfo
+    from robogjc import tasks
+    from robogjc.github_client import CommentInfo, IssueInfo, PullRequestInfo, RepoInfo
 
     sandbox = _RecordingSandbox(tmp_path)
     db = get_database(settings.sqlite_path)
@@ -1711,8 +1711,8 @@ async def test_handle_pr_conversation_unmapped_bot_pr_uses_pr_branch(
 async def test_handle_pr_conversation_repairs_missing_pr_mapping_from_branch(
     settings: Settings, tmp_path: Path, stub_run_task, monkeypatch
 ) -> None:
-    from robomp import tasks
-    from robomp.github_client import CommentInfo, IssueInfo, PullRequestInfo, RepoInfo
+    from robogjc import tasks
+    from robogjc.github_client import CommentInfo, IssueInfo, PullRequestInfo, RepoInfo
 
     sandbox = _RecordingSandbox(tmp_path)
     db = get_database(settings.sqlite_path)
@@ -1827,8 +1827,8 @@ async def test_handle_comment_directive_bootstraps_untriaged_issue(
     settings: Settings, tmp_path: Path, stub_run_task, monkeypatch
 ) -> None:
     """Directive on an unknown issue → DB row created, triage_issue task with directive."""
-    from robomp import tasks
-    from robomp.github_client import GitHubClient, IssueInfo, RepoInfo
+    from robogjc import tasks
+    from robogjc.github_client import GitHubClient, IssueInfo, RepoInfo
 
     sandbox = _RecordingSandbox(tmp_path)
     db = get_database(settings.sqlite_path)
@@ -1856,7 +1856,7 @@ async def test_handle_comment_directive_bootstraps_untriaged_issue(
         "issue": {"number": 88, "user": {"login": "alice"}, "title": "boom"},
         "comment": {"user": {"login": "can1357"}, "body": "do it", "id": 1, "created_at": "2026-05-14T20:00:00Z"},
         "repository": {"full_name": "octo/widget"},
-        "_robomp_directive": {"body": "please refactor X", "author": "can1357"},
+        "_robogjc_directive": {"body": "please refactor X", "author": "can1357"},
     }
     await tasks.handle_comment(
         settings=settings,
@@ -1885,8 +1885,8 @@ async def test_handle_comment_directive_reopens_finalized_issue(
     settings: Settings, tmp_path: Path, stub_run_task, monkeypatch
 ) -> None:
     """Directive on a closed issue → workspace torn down, state reset, no auto-reply."""
-    from robomp import tasks
-    from robomp.github_client import GitHubClient, IssueInfo, RepoInfo
+    from robogjc import tasks
+    from robogjc.github_client import GitHubClient, IssueInfo, RepoInfo
 
     sandbox = _RecordingSandbox(tmp_path)
     db = get_database(settings.sqlite_path)
@@ -1926,7 +1926,7 @@ async def test_handle_comment_directive_reopens_finalized_issue(
         "issue": {"number": 88, "user": {"login": "alice"}, "title": "boom"},
         "comment": {"user": {"login": "can1357"}, "body": "redo", "id": 2, "created_at": "2026-05-14T21:00:00Z"},
         "repository": {"full_name": "octo/widget"},
-        "_robomp_directive": {"body": "redo the fix", "author": "can1357"},
+        "_robogjc_directive": {"body": "redo the fix", "author": "can1357"},
     }
     await tasks.handle_comment(
         settings=settings,
@@ -1955,8 +1955,8 @@ async def test_handle_comment_finalized_without_directive_still_replies(
     settings: Settings, tmp_path: Path, stub_run_task, monkeypatch
 ) -> None:
     """Non-maintainer on a closed issue → original behavior preserved."""
-    from robomp import tasks
-    from robomp.github_client import GitHubClient, IssueInfo, RepoInfo
+    from robogjc import tasks
+    from robogjc.github_client import GitHubClient, IssueInfo, RepoInfo
 
     sandbox = _RecordingSandbox(tmp_path)
     db = get_database(settings.sqlite_path)
@@ -2021,8 +2021,8 @@ async def test_directive_handler_attaches_thread_from_github(
     settings: Settings, tmp_path: Path, stub_run_task, monkeypatch
 ) -> None:
     """When a directive lands, the handler must hydrate the thread before run_task."""
-    from robomp import tasks
-    from robomp.github_client import (
+    from robogjc import tasks
+    from robogjc.github_client import (
         CommentInfo,
         GitHubClient,
         IssueInfo,
@@ -2069,12 +2069,12 @@ async def test_directive_handler_attaches_thread_from_github(
         "issue": {"number": 88, "user": {"login": "alice"}, "title": "boom"},
         "comment": {
             "user": {"login": "can1357"},
-            "body": "@roboomp do X",
+            "body": "@robogjc do X",
             "id": 10,
             "created_at": "2026-05-03T20:00:00Z",
         },
         "repository": {"full_name": "octo/widget"},
-        "_robomp_directive": {"body": "do X", "author": "can1357"},
+        "_robogjc_directive": {"body": "do X", "author": "can1357"},
     }
     # Pre-seed an issue row so we exercise the "existing, non-finalized" path
     # (otherwise we'd hit the bootstrap branch which is covered elsewhere).
@@ -2124,8 +2124,8 @@ async def test_triage_issue_skips_when_a_closing_pr_already_exists(
 ) -> None:
     """An OPEN PR linked via Closes/Fixes/Resolves means another author is on it.
     The bot MUST NOT triage, label, or build a workspace — leave it alone."""
-    from robomp import tasks
-    from robomp.github_client import IssueInfo, RepoInfo
+    from robogjc import tasks
+    from robogjc.github_client import IssueInfo, RepoInfo
 
     sandbox = _RecordingSandbox(tmp_path)
     db = get_database(settings.sqlite_path)
@@ -2169,8 +2169,8 @@ async def test_triage_issue_skips_when_a_closing_pr_already_exists(
 async def test_triage_issue_proceeds_when_no_closing_pr(
     settings: Settings, tmp_path: Path, stub_run_task, monkeypatch
 ) -> None:
-    from robomp import tasks
-    from robomp.github_client import IssueInfo, RepoInfo
+    from robogjc import tasks
+    from robogjc.github_client import IssueInfo, RepoInfo
 
     sandbox = _RecordingSandbox(tmp_path)
     db = get_database(settings.sqlite_path)
@@ -2216,8 +2216,8 @@ async def test_triage_issue_fails_open_when_timeline_fetch_errors(
     settings: Settings, tmp_path: Path, stub_run_task, monkeypatch
 ) -> None:
     """A transient timeline fetch failure MUST NOT block legitimate triage."""
-    from robomp import tasks
-    from robomp.github_client import GitHubError, IssueInfo, RepoInfo
+    from robogjc import tasks
+    from robogjc.github_client import GitHubError, IssueInfo, RepoInfo
 
     sandbox = _RecordingSandbox(tmp_path)
     db = get_database(settings.sqlite_path)
@@ -2261,8 +2261,8 @@ async def test_triage_issue_does_not_recheck_when_issue_row_exists(
 ) -> None:
     """A second triage of the same issue (e.g. retry/replay) MUST NOT re-query the
     timeline — the bot is already committed and the row guards re-entry."""
-    from robomp import tasks
-    from robomp.github_client import IssueInfo, RepoInfo
+    from robogjc import tasks
+    from robogjc.github_client import IssueInfo, RepoInfo
 
     sandbox = _RecordingSandbox(tmp_path)
     db = get_database(settings.sqlite_path)

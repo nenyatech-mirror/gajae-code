@@ -6,20 +6,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { Agent, AgentBusyError, type AgentTool } from "@oh-my-pi/pi-agent-core";
-import { type AssistantMessage, getBundledModel, type Message, type ToolCall } from "@oh-my-pi/pi-ai";
-import { createMockModel } from "@oh-my-pi/pi-ai/providers/mock";
-import { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
-import { AsyncJobManager } from "@oh-my-pi/pi-coding-agent/async";
-import type { Rule } from "@oh-my-pi/pi-coding-agent/capability/rule";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { TtsrManager } from "@oh-my-pi/pi-coding-agent/export/ttsr";
-import { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { convertToLlm } from "@oh-my-pi/pi-coding-agent/session/messages";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { Snowflake } from "@oh-my-pi/pi-utils";
+import { Agent, AgentBusyError, type AgentTool } from "@gajae-code/agent-core";
+import { type AssistantMessage, getBundledModel, type Message, type ToolCall } from "@gajae-code/ai";
+import { createMockModel } from "@gajae-code/ai/providers/mock";
+import { AssistantMessageEventStream } from "@gajae-code/ai/utils/event-stream";
+import { AsyncJobManager } from "@gajae-code/coding-agent/async";
+import type { Rule } from "@gajae-code/coding-agent/capability/rule";
+import { ModelRegistry } from "@gajae-code/coding-agent/config/model-registry";
+import { Settings } from "@gajae-code/coding-agent/config/settings";
+import { TtsrManager } from "@gajae-code/coding-agent/export/ttsr";
+import { AgentSession } from "@gajae-code/coding-agent/session/agent-session";
+import { AuthStorage } from "@gajae-code/coding-agent/session/auth-storage";
+import { convertToLlm } from "@gajae-code/coding-agent/session/messages";
+import { SessionManager } from "@gajae-code/coding-agent/session/session-manager";
+import { Snowflake } from "@gajae-code/utils";
 import * as z from "zod/v4";
 import { createAssistantMessage } from "./helpers/agent-session-setup";
 
@@ -310,7 +310,7 @@ describe("AgentSession concurrent prompt guard", () => {
 	// agent's own `isStreaming` had flipped, but #promptWithMessage's finally had
 	// not yet decremented the prompt-in-flight counter), and the next prompt
 	// threw AgentBusyError. Surfaced as `RpcCommandError: prompt: Agent is
-	// already processing` from omp-rpc clients (robomp triage reminder path).
+	// already processing` from gjc-rpc clients (robogjc triage reminder path).
 	it("subscriber may prompt() synchronously from agent_end without AgentBusyError", async () => {
 		const model = getBundledModel("anthropic", "claude-sonnet-4-5")!;
 		const mock = createMockModel({ handler: () => ({ content: ["Done"] }) });

@@ -1,5 +1,5 @@
-import { type Component, padding, TERMINAL, truncateToWidth, visibleWidth } from "@oh-my-pi/pi-tui";
-import { APP_NAME } from "@oh-my-pi/pi-utils";
+import { type Component, padding, TERMINAL, truncateToWidth, visibleWidth } from "@gajae-code/tui";
+import { APP_NAME } from "@gajae-code/utils";
 import { theme } from "../../modes/theme/theme";
 
 export interface RecentSession {
@@ -14,7 +14,7 @@ export interface LspServerInfo {
 }
 
 /**
- * Premium welcome screen with block-based OMP logo and two-column layout.
+ * Premium welcome screen with block-based GJC logo and two-column layout.
  */
 export class WelcomeComponent implements Component {
 	#animStart: number | null = null;

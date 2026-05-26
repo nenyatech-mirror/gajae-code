@@ -164,7 +164,7 @@ Artifacts and side channels:
   - MCP proxy tools can call existing parent MCP connections with a 60_000 ms timeout.
 - Subprocesses / native bindings
   - `fuse-overlayfs` and `fusermount`/`fusermount3` for FUSE isolation.
-  - ProjFS native bindings via `@oh-my-pi/pi-natives` on Windows.
+  - ProjFS native bindings via `@gajae-code/natives` on Windows.
   - Git operations for baseline capture, patch apply, worktrees, branches, stash, cherry-pick, commits.
 - Session state (transcript, memory, jobs, checkpoints, registries)
   - Creates child `AgentSession` instances with isolated settings snapshots.

@@ -3,12 +3,12 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "robomp"
+name = "robogjc"
 version = "0.1.0"
 description = "Self-hosted GitHub triage/fix bot driving omp --mode rpc"
 readme = "README.md"
 requires-python = ">=3.11"
-authors = [{ name = "robomp" }]
+authors = [{ name = "robogjc" }]
 dependencies = [
   "fastapi>=0.112",
   "uvicorn[standard]>=0.30",
@@ -17,7 +17,7 @@ dependencies = [
   "pydantic-settings>=2.2",
   "python-dotenv>=1.0",
   "click>=8.1",
-  "omp-rpc>=0.1.0",
+  "gjc-rpc>=0.1.0",
 ]
 
 [project.optional-dependencies]
@@ -29,14 +29,14 @@ dev = [
 ]
 
 [project.scripts]
-robomp = "robomp.cli:main"
+robogjc = "robogjc.cli:main"
 
 [tool.setuptools]
-package-dir = { "robomp" = "src" }
-packages = ["robomp", "robomp.proxy"]
+package-dir = { "robogjc" = "src" }
+packages = ["robogjc", "robogjc.proxy"]
 
 [tool.setuptools.package-data]
-robomp = ["prompts/*", "py.typed", "static/*", "static/assets/*"]
+robogjc = ["prompts/*", "py.typed", "static/*", "static/assets/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -70,7 +70,7 @@ ignore = [
 "tests/*" = ["B011"]  # assert False is fine in tests
 
 [tool.ruff.lint.isort]
-known-first-party = ["robomp"]
+known-first-party = ["robogjc"]
 
 [tool.ruff.format]
 quote-style = "double"

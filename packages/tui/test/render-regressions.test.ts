@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
-import { type Component, TUI } from "@oh-my-pi/pi-tui";
+import { type Component, TUI } from "@gajae-code/tui";
 import { VirtualTerminal } from "./virtual-terminal";
 
 class MutableLinesComponent implements Component {

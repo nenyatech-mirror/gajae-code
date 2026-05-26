@@ -1,21 +1,21 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as path from "node:path";
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
+import type { AgentMessage } from "@gajae-code/agent-core";
 import {
 	type CompactionSettings,
 	calculateContextTokens,
 	compact,
-	DEFAULT_COMPACTION_SETTINGS,
+	DEFAULT_CGJCACTION_SETTINGS,
 	findCutPoint,
 	getLastAssistantUsage,
 	prepareCompaction,
 	shouldCompact,
-} from "@oh-my-pi/pi-agent-core/compaction/compaction";
-import * as ai from "@oh-my-pi/pi-ai";
-import { getBundledModel } from "@oh-my-pi/pi-ai/models";
-import { encodeTextSignatureV1 } from "@oh-my-pi/pi-ai/providers/openai-responses-shared";
-import type { AssistantMessage, Model, ProviderPayload, Usage } from "@oh-my-pi/pi-ai/types";
-import { hookFetch } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/agent-core/compaction/compaction";
+import * as ai from "@gajae-code/ai";
+import { getBundledModel } from "@gajae-code/ai/models";
+import { encodeTextSignatureV1 } from "@gajae-code/ai/providers/openai-responses-shared";
+import type { AssistantMessage, Model, ProviderPayload, Usage } from "@gajae-code/ai/types";
+import { hookFetch } from "@gajae-code/utils";
 import {
 	buildSessionContext,
 	type CompactionEntry,
@@ -301,7 +301,7 @@ describe("remote compaction setting", () => {
 			createMessageEntry(createAssistantMessage("Answer 3", createMockUsage(0, 100, 9000, 0))),
 		];
 		const preparation = prepareCompaction(entries, {
-			...DEFAULT_COMPACTION_SETTINGS,
+			...DEFAULT_CGJCACTION_SETTINGS,
 			keepRecentTokens: 1000,
 			remoteEnabled: false,
 		});
@@ -339,7 +339,7 @@ describe("remote compaction setting", () => {
 			createMessageEntry(createAssistantMessage("Answer 3", createMockUsage(0, 100, 9000, 0))),
 		];
 		const preparation = prepareCompaction(entries, {
-			...DEFAULT_COMPACTION_SETTINGS,
+			...DEFAULT_CGJCACTION_SETTINGS,
 			keepRecentTokens: 1000,
 			remoteEnabled: false,
 			remoteEndpoint: "https://compaction.example.test/summarize",
@@ -416,7 +416,7 @@ describe("remote compaction setting", () => {
 		];
 
 		const preparation = prepareCompaction(entries, {
-			...DEFAULT_COMPACTION_SETTINGS,
+			...DEFAULT_CGJCACTION_SETTINGS,
 			keepRecentTokens: 1000,
 			remoteEnabled: true,
 		});
@@ -491,7 +491,7 @@ describe("remote compaction setting", () => {
 			createMessageEntry(createUserMessage("follow-up user")),
 		];
 		const preparation = prepareCompaction(entries, {
-			...DEFAULT_COMPACTION_SETTINGS,
+			...DEFAULT_CGJCACTION_SETTINGS,
 			keepRecentTokens: 1,
 			remoteEnabled: true,
 		});
@@ -534,7 +534,7 @@ describe("remote compaction setting", () => {
 			createMessageEntry(createOpenAiAssistantMessage("Answer 1", model, createMockUsage(0, 100, 9000, 0))),
 		];
 		const preparation = prepareCompaction(entries, {
-			...DEFAULT_COMPACTION_SETTINGS,
+			...DEFAULT_CGJCACTION_SETTINGS,
 			keepRecentTokens: 1,
 			remoteEnabled: true,
 		});
@@ -585,7 +585,7 @@ describe("remote compaction setting", () => {
 
 		const entries: SessionEntry[] = [createMessageEntry(createUserMessage("Turn 1")), createMessageEntry(assistant)];
 		const preparation = prepareCompaction(entries, {
-			...DEFAULT_COMPACTION_SETTINGS,
+			...DEFAULT_CGJCACTION_SETTINGS,
 			keepRecentTokens: 1,
 			remoteEnabled: true,
 		});
@@ -624,7 +624,7 @@ describe("remote compaction setting", () => {
 			createMessageEntry(createOpenAiAssistantMessage("Answer 1", model, createMockUsage(0, 100, 9000, 0))),
 		];
 		const preparation = prepareCompaction(entries, {
-			...DEFAULT_COMPACTION_SETTINGS,
+			...DEFAULT_CGJCACTION_SETTINGS,
 			keepRecentTokens: 1,
 			remoteEnabled: true,
 		});
@@ -700,7 +700,7 @@ describe("remote compaction setting", () => {
 		];
 
 		const preparation = prepareCompaction(entries, {
-			...DEFAULT_COMPACTION_SETTINGS,
+			...DEFAULT_CGJCACTION_SETTINGS,
 			keepRecentTokens: 1000,
 			remoteEnabled: true,
 		});
@@ -873,7 +873,7 @@ describe("buildSessionContext", () => {
 describe("Large session fixture", () => {
 	it("should find cut point in large session", async () => {
 		const entries = await loadLargeSessionEntries();
-		const result = findCutPoint(entries, 0, entries.length, DEFAULT_COMPACTION_SETTINGS.keepRecentTokens);
+		const result = findCutPoint(entries, 0, entries.length, DEFAULT_CGJCACTION_SETTINGS.keepRecentTokens);
 
 		// Cut point should be at a message entry (user or assistant)
 		expect(entries[result.firstKeptEntryIndex].type).toBe("message");
@@ -891,7 +891,7 @@ describe.skipIf(!e2eApiKey("ANTHROPIC_API_KEY"))("LLM summarization", () => {
 		const entries = await loadLargeSessionEntries();
 		const model = getBundledModel("anthropic", "claude-sonnet-4-5")!;
 
-		const preparation = prepareCompaction(entries, DEFAULT_COMPACTION_SETTINGS);
+		const preparation = prepareCompaction(entries, DEFAULT_CGJCACTION_SETTINGS);
 		expect(preparation).toBeDefined();
 
 		const compactionResult = await compact(preparation!, model, e2eApiKey("ANTHROPIC_API_KEY")!);
@@ -912,7 +912,7 @@ describe.skipIf(!e2eApiKey("ANTHROPIC_API_KEY"))("LLM summarization", () => {
 		const loaded = buildSessionContext(entries);
 		const model = getBundledModel("anthropic", "claude-sonnet-4-5")!;
 
-		const preparation = prepareCompaction(entries, DEFAULT_COMPACTION_SETTINGS);
+		const preparation = prepareCompaction(entries, DEFAULT_CGJCACTION_SETTINGS);
 		expect(preparation).toBeDefined();
 
 		const compactionResult = await compact(preparation!, model, e2eApiKey("ANTHROPIC_API_KEY")!);

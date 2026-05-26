@@ -39,7 +39,7 @@ async function main(): Promise<void> {
 					"--no-compile-autoload-package-json",
 					"--keep-names",
 					"--define",
-					'process.env.PI_COMPILED="true"',
+					'process.env.PI_CGJCILED="true"',
 					"--external",
 					"mupdf",
 					"--root",

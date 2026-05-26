@@ -1,9 +1,9 @@
-import { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import { getOAuthProviders } from "@oh-my-pi/pi-ai/utils/oauth";
-import type { OAuthProvider } from "@oh-my-pi/pi-ai/utils/oauth/types";
-import type { Component, OverlayHandle } from "@oh-my-pi/pi-tui";
-import { Input, Loader, Spacer, Text } from "@oh-my-pi/pi-tui";
-import { getAgentDbPath, getProjectDir } from "@oh-my-pi/pi-utils";
+import { ThinkingLevel } from "@gajae-code/agent-core";
+import { getOAuthProviders } from "@gajae-code/ai/utils/oauth";
+import type { OAuthProvider } from "@gajae-code/ai/utils/oauth/types";
+import type { Component, OverlayHandle } from "@gajae-code/tui";
+import { Input, Loader, Spacer, Text } from "@gajae-code/tui";
+import { getAgentDbPath, getProjectDir } from "@gajae-code/utils";
 import { getRoleInfo } from "../../config/model-registry";
 import { formatModelSelectorValue } from "../../config/model-resolver";
 import { settings } from "../../config/settings";

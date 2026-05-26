@@ -3,8 +3,8 @@ import {
 	clearAnthropicFastModeFallback,
 	isAnthropicFastModeUnsupportedError,
 	streamAnthropic,
-} from "@oh-my-pi/pi-ai/providers/anthropic";
-import type { Context, Model, ProviderSessionState, ServiceTier } from "@oh-my-pi/pi-ai/types";
+} from "@gajae-code/ai/providers/anthropic";
+import type { Context, Model, ProviderSessionState, ServiceTier } from "@gajae-code/ai/types";
 
 function makeAnthropicModel(id: string): Model<"anthropic-messages"> {
 	return {

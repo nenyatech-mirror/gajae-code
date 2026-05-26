@@ -2,14 +2,14 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import { AuthStorage, Effort, getBundledModel, type Model } from "@oh-my-pi/pi-ai";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import type { CustomTool } from "@oh-my-pi/pi-coding-agent/extensibility/custom-tools/types";
-import { createAgentSession } from "@oh-my-pi/pi-coding-agent/sdk";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { Snowflake } from "@oh-my-pi/pi-utils";
+import { ThinkingLevel } from "@gajae-code/agent-core";
+import { AuthStorage, Effort, getBundledModel, type Model } from "@gajae-code/ai";
+import { ModelRegistry } from "@gajae-code/coding-agent/config/model-registry";
+import { Settings } from "@gajae-code/coding-agent/config/settings";
+import type { CustomTool } from "@gajae-code/coding-agent/extensibility/custom-tools/types";
+import { createAgentSession } from "@gajae-code/coding-agent/sdk";
+import { SessionManager } from "@gajae-code/coding-agent/session/session-manager";
+import { Snowflake } from "@gajae-code/utils";
 import * as z from "zod/v4";
 
 function createMcpCustomTool(name: string, serverName: string, mcpToolName: string): CustomTool {

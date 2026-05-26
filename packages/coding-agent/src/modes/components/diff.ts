@@ -1,4 +1,4 @@
-import { getIndentation, sanitizeText } from "@oh-my-pi/pi-utils";
+import { getIndentation, sanitizeText } from "@gajae-code/utils";
 import * as Diff from "diff";
 import { getLanguageFromPath, highlightCode, theme } from "../../modes/theme/theme";
 import { type CodeFrameMarker, formatCodeFrameLine, replaceTabs } from "../../tools/render-utils";

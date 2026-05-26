@@ -17,22 +17,22 @@ import {
 	getCodexAccountId,
 	OPENAI_HEADER_VALUES,
 	OPENAI_HEADERS,
-} from "@oh-my-pi/pi-ai/providers/openai-codex/constants";
-import { parseTextSignature } from "@oh-my-pi/pi-ai/providers/openai-responses-shared";
-import { transformMessages } from "@oh-my-pi/pi-ai/providers/transform-messages";
-import type { AssistantMessage, Message, Model } from "@oh-my-pi/pi-ai/types";
+} from "@gajae-code/ai/providers/openai-codex/constants";
+import { parseTextSignature } from "@gajae-code/ai/providers/openai-responses-shared";
+import { transformMessages } from "@gajae-code/ai/providers/transform-messages";
+import type { AssistantMessage, Message, Model } from "@gajae-code/ai/types";
 import {
 	getOpenAIResponsesHistoryItems,
 	getOpenAIResponsesHistoryPayload,
 	normalizeResponsesToolCallId,
-} from "@oh-my-pi/pi-ai/utils";
-import { logger } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/ai/utils";
+import { logger } from "@gajae-code/utils";
 
 // ============================================================================
 // Public types
 // ============================================================================
 
-export const OPENAI_REMOTE_COMPACTION_PRESERVE_KEY = "openaiRemoteCompaction";
+export const OPENAI_REMOTE_CGJCACTION_PRESERVE_KEY = "openaiRemoteCompaction";
 
 export type OpenAiRemoteCompactionItem = {
 	type: "compaction" | "compaction_summary";
@@ -103,7 +103,7 @@ function normalizeOpenAiCompactionToolCallId(id: string): string {
 export function getPreservedOpenAiRemoteCompactionData(
 	preserveData: Record<string, unknown> | undefined,
 ): OpenAiRemoteCompactionPreserveData | undefined {
-	const candidate = preserveData?.[OPENAI_REMOTE_COMPACTION_PRESERVE_KEY];
+	const candidate = preserveData?.[OPENAI_REMOTE_CGJCACTION_PRESERVE_KEY];
 	if (!candidate || typeof candidate !== "object") return undefined;
 	const maybeData = candidate as { provider?: unknown; replacementHistory?: unknown; compactionItem?: unknown };
 	if (!Array.isArray(maybeData.replacementHistory)) return undefined;
@@ -130,15 +130,15 @@ export function withOpenAiRemoteCompactionPreserveData(
 	if (remoteCompaction) {
 		return {
 			...(preserveData ?? {}),
-			[OPENAI_REMOTE_COMPACTION_PRESERVE_KEY]: remoteCompaction,
+			[OPENAI_REMOTE_CGJCACTION_PRESERVE_KEY]: remoteCompaction,
 		};
 	}
 
-	if (!preserveData || !(OPENAI_REMOTE_COMPACTION_PRESERVE_KEY in preserveData)) {
+	if (!preserveData || !(OPENAI_REMOTE_CGJCACTION_PRESERVE_KEY in preserveData)) {
 		return preserveData;
 	}
 
-	const { [OPENAI_REMOTE_COMPACTION_PRESERVE_KEY]: _removed, ...rest } = preserveData;
+	const { [OPENAI_REMOTE_CGJCACTION_PRESERVE_KEY]: _removed, ...rest } = preserveData;
 	return Object.keys(rest).length > 0 ? rest : undefined;
 }
 

@@ -1,6 +1,6 @@
 # Natives Build, Release, and Debugging Runbook
 
-This runbook describes how `@oh-my-pi/pi-natives` produces `.node` addons, generated declarations, and compiled-binary embedded payloads, and how to debug loader/build failures.
+This runbook describes how `@gajae-code/natives` produces `.node` addons, generated declarations, and compiled-binary embedded payloads, and how to debug loader/build failures.
 
 It follows the architecture terms from `docs/natives-architecture.md`:
 
@@ -85,7 +85,7 @@ Runtime x64 candidate order also includes the unsuffixed default filename after 
 ## Runtime flags
 
 - `PI_NATIVE_VARIANT`: x64 runtime override; valid values are `modern` and `baseline`.
-- `PI_COMPILED`: legacy compiled-mode signal. A populated embedded-addon manifest is also a compiled-mode signal and is the authoritative signal for Bun standalone builds that do not preserve `process.env.PI_COMPILED`.
+- `PI_CGJCILED`: legacy compiled-mode signal. A populated embedded-addon manifest is also a compiled-mode signal and is the authoritative signal for Bun standalone builds that do not preserve `process.env.PI_CGJCILED`.
 
 ## Build-time flags/options
 
@@ -145,7 +145,7 @@ Typical local loop:
 
 ## Shipped/compiled binary workflow
 
-In compiled mode (`PI_COMPILED`, Bun embedded URL markers, or populated embedded manifest):
+In compiled mode (`PI_CGJCILED`, Bun embedded URL markers, or populated embedded manifest):
 
 1. Loader computes versioned cache dir: `<getNativesDir()>/<packageVersion>`.
 2. If embedded manifest matches current platform+version, loader may extract the selected embedded file into that versioned dir.
@@ -216,9 +216,9 @@ bun --cwd=packages/natives run embed:native
 bun --cwd=packages/natives run embed:native -- --reset
 ```
 
-## Orchestrator-side content-addressed build cache (robomp)
+## Orchestrator-side content-addressed build cache (robogjc)
 
-When `pi-natives` is built inside the robomp orchestrator (`python/robomp/`), workspaces share built artifacts through a content-addressed cache instead of rebuilding from scratch in every per-issue worktree. The cache is **orchestrator-side only** — `bun --cwd=packages/natives run build` itself is unchanged; the cache lives outside the build pipeline and is populated/captured around `ensure_workspace` and post-task success in `python/robomp/src/natives_cache.py`.
+When `pi-natives` is built inside the robogjc orchestrator (`python/robogjc/`), workspaces share built artifacts through a content-addressed cache instead of rebuilding from scratch in every per-issue worktree. The cache is **orchestrator-side only** — `bun --cwd=packages/natives run build` itself is unchanged; the cache lives outside the build pipeline and is populated/captured around `ensure_workspace` and post-task success in `python/robogjc/src/natives_cache.py`.
 
 ### What is cached
 
@@ -268,15 +268,15 @@ A periodic GC loop runs in `WorkerPool` with two caps per repo. When either cap 
 
 Workspaces that hardlinked a `.node` before GC retain access via the kernel inode refcount — `rmtree` of the cache entry does not delete the file from the workspace.
 
-### Configuration (settings on `robomp.config.Settings`)
+### Configuration (settings on `robogjc.config.Settings`)
 
 | Env var                                      | Default                  | Effect                                                        |
 | -------------------------------------------- | ------------------------ | ------------------------------------------------------------- |
-| `ROBOMP_NATIVES_CACHE_ENABLED`               | `true`                   | Master switch. When false the populate/capture hooks no-op and every workspace builds from scratch. |
-| `ROBOMP_NATIVES_CACHE_ROOT`                  | `/data/cache/pi-natives` | Cache root directory. Must be `root:omp 02770` for cross-slot reads.                                  |
-| `ROBOMP_NATIVES_CACHE_MAX_ENTRIES_PER_REPO`  | `8`                      | LRU entry-count cap, per repo slug.                                                                  |
-| `ROBOMP_NATIVES_CACHE_MAX_BYTES`             | `4294967296` (4 GiB)     | LRU byte cap, per repo slug.                                                                          |
-| `ROBOMP_NATIVES_CACHE_GC_INTERVAL_SECONDS`   | `3600`                   | Period of the background GC loop in `WorkerPool`.                                                    |
+| `ROBGJC_NATIVES_CACHE_ENABLED`               | `true`                   | Master switch. When false the populate/capture hooks no-op and every workspace builds from scratch. |
+| `ROBGJC_NATIVES_CACHE_ROOT`                  | `/data/cache/pi-natives` | Cache root directory. Must be `root:omp 02770` for cross-slot reads.                                  |
+| `ROBGJC_NATIVES_CACHE_MAX_ENTRIES_PER_REPO`  | `8`                      | LRU entry-count cap, per repo slug.                                                                  |
+| `ROBGJC_NATIVES_CACHE_MAX_BYTES`             | `4294967296` (4 GiB)     | LRU byte cap, per repo slug.                                                                          |
+| `ROBGJC_NATIVES_CACHE_GC_INTERVAL_SECONDS`   | `3600`                   | Period of the background GC loop in `WorkerPool`.                                                    |
 
 ### Manual invalidation
 

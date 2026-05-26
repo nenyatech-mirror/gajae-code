@@ -1,12 +1,12 @@
 /**
- * Centralized path helpers for omp config directories.
+ * Centralized path helpers for gajae-code config directories.
  *
- * Uses PI_CONFIG_DIR (default ".omp") for the config root and
- * PI_CODING_AGENT_DIR to override the agent directory.
+ * Uses GJC_CONFIG_DIR (default ".gjc") for the config root and
+ * GJC_CODING_AGENT_DIR to override the agent directory.
  *
  * On Linux, if XDG_DATA_HOME / XDG_STATE_HOME / XDG_CACHE_HOME environment
  * variables are set, paths are redirected to XDG-compliant locations under
- * $XDG_*_HOME/omp/. This requires running `omp config migrate` first to
+ * $XDG_*_HOME/gjc/. This requires running `gjc config migrate` first to
  * move data to the new locations. No filesystem existence checks are performed
  * — if the env var is set, omp trusts that the migration has been done.
  */
@@ -17,10 +17,10 @@ import * as path from "node:path";
 import { engines, version } from "../package.json" with { type: "json" };
 
 /** App name (e.g. "omp") */
-export const APP_NAME: string = "omp";
+export const APP_NAME: string = "gjc";
 
 /** Config directory name (e.g. ".omp") */
-export const CONFIG_DIR_NAME: string = ".omp";
+export const CONFIG_DIR_NAME: string = ".gjc";
 
 /** Version (e.g. "1.0.0") */
 export const VERSION: string = version;
@@ -91,7 +91,7 @@ export function setProjectDir(dir: string): void {
 
 /** Get the config directory name relative to home (e.g. ".omp" or PI_CONFIG_DIR override). */
 export function getConfigDirName(): string {
-	return process.env.PI_CONFIG_DIR || CONFIG_DIR_NAME;
+	return process.env.GJC_CONFIG_DIR ?? process.env.PI_CONFIG_DIR || CONFIG_DIR_NAME;
 }
 
 /** Get the config agent directory name relative to home (e.g. ".omp/agent" or PI_CONFIG_DIR + "/agent"). */
@@ -107,7 +107,7 @@ type XdgCategory = "data" | "state" | "cache";
 
 /**
  * Resolves and caches all omp directory paths. On Linux, when XDG environment
- * variables are set, paths are redirected under $XDG_*_HOME/omp/. A new
+ * variables are set, paths are redirected under $XDG_*_HOME/gjc/. A new
  * instance is created whenever the agent directory changes, which naturally
  * invalidates all cached paths.
  */
@@ -116,7 +116,7 @@ class DirResolver {
 	readonly agentDir: string;
 
 	// Per-category base dirs. Without XDG, all three equal configRoot / agentDir.
-	// With XDG on Linux, they point to $XDG_*_HOME/omp/.
+	// With XDG on Linux, they point to $XDG_*_HOME/gjc/.
 	readonly #rootDirs: Record<XdgCategory, string>;
 	readonly #agentDirs: Record<XdgCategory, string>;
 
@@ -190,7 +190,7 @@ class DirResolver {
 	}
 }
 
-let dirs = new DirResolver(process.env.PI_CODING_AGENT_DIR);
+let dirs = new DirResolver(process.env.GJC_CODING_AGENT_DIR);
 
 // Anchor home for the resolver. Captured at module load to stay stable across
 // test mocks of `os.homedir()`. `getPluginsDir(home)` compares against this so
@@ -210,7 +210,7 @@ export function getConfigRootDir(): string {
 /** Set the coding agent directory. Creates a fresh resolver, invalidating all cached paths. */
 export function setAgentDir(dir: string): void {
 	dirs = new DirResolver(dir);
-	process.env.PI_CODING_AGENT_DIR = dir;
+	process.env.GJC_CODING_AGENT_DIR = dir;
 }
 
 /** Get the agent config directory (~/.omp/agent). */
@@ -271,7 +271,7 @@ export function getPluginsPackageJson(): string {
 
 /** Plugin lock file (~/.omp/plugins/omp-plugins.lock.json). */
 export function getPluginsLockfile(): string {
-	return path.join(getPluginsDir(), "omp-plugins.lock.json");
+	return path.join(getPluginsDir(), "gjc-plugins.lock.json");
 }
 
 /** Get the remote mount directory (~/.omp/remote). */
@@ -334,11 +334,11 @@ export function getGpuCachePath(): string {
 
 /**
  * Get the GitHub view cache database path (~/.omp/cache/github-cache.db).
- * Honors the `OMP_GITHUB_CACHE_DB` env var when set so tests can isolate the
+ * Honors the `GJC_GITHUB_CACHE_DB` env var when set so tests can isolate the
  * cache file without touching the rest of the config root.
  */
 export function getGithubCacheDbPath(): string {
-	const override = process.env.OMP_GITHUB_CACHE_DB;
+	const override = process.env.GJC_GITHUB_CACHE_DB;
 	if (override) return override;
 	return dirs.rootSubdir(path.join("cache", "github-cache.db"), "cache");
 }

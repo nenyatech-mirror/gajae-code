@@ -73,13 +73,13 @@ for pkg in utils natives ai agent tui stats coding-agent; do
 	)
 done
 
-utils_tgz="$(find_tarball "$TARBALL_DIR"/oh-my-pi-pi-utils-*.tgz)"
-natives_tgz="$(find_tarball "$TARBALL_DIR"/oh-my-pi-pi-natives-*.tgz)"
-ai_tgz="$(find_tarball "$TARBALL_DIR"/oh-my-pi-pi-ai-*.tgz)"
-agent_tgz="$(find_tarball "$TARBALL_DIR"/oh-my-pi-pi-agent-core-*.tgz)"
-tui_tgz="$(find_tarball "$TARBALL_DIR"/oh-my-pi-pi-tui-*.tgz)"
-stats_tgz="$(find_tarball "$TARBALL_DIR"/oh-my-pi-omp-stats-*.tgz)"
-coding_agent_tgz="$(find_tarball "$TARBALL_DIR"/oh-my-pi-pi-coding-agent-*.tgz)"
+utils_tgz="$(find_tarball "$TARBALL_DIR"/gajae-code-pi-utils-*.tgz)"
+natives_tgz="$(find_tarball "$TARBALL_DIR"/gajae-code-pi-natives-*.tgz)"
+ai_tgz="$(find_tarball "$TARBALL_DIR"/gajae-code-pi-ai-*.tgz)"
+agent_tgz="$(find_tarball "$TARBALL_DIR"/gajae-code-pi-agent-core-*.tgz)"
+tui_tgz="$(find_tarball "$TARBALL_DIR"/gajae-code-pi-tui-*.tgz)"
+stats_tgz="$(find_tarball "$TARBALL_DIR"/gajae-code-gjc-stats-*.tgz)"
+coding_agent_tgz="$(find_tarball "$TARBALL_DIR"/gajae-code-gajae-code-*.tgz)"
 
 TARBALL_APP_DIR="$WORK_DIR/tarball-install"
 mkdir -p "$TARBALL_APP_DIR"
@@ -92,13 +92,13 @@ mkdir -p "$TARBALL_APP_DIR"
 	node -e "
 		const pkg = JSON.parse(require('fs').readFileSync('package.json', 'utf8'));
 		pkg.overrides = {
-			'@oh-my-pi/pi-utils': '$utils_tgz',
-			'@oh-my-pi/pi-natives': '$natives_tgz',
-			'@oh-my-pi/pi-ai': '$ai_tgz',
-			'@oh-my-pi/pi-agent-core': '$agent_tgz',
-			'@oh-my-pi/pi-tui': '$tui_tgz',
-			'@oh-my-pi/omp-stats': '$stats_tgz',
-			'@oh-my-pi/pi-coding-agent': '$coding_agent_tgz'
+			'@gajae-code/utils': '$utils_tgz',
+			'@gajae-code/natives': '$natives_tgz',
+			'@gajae-code/ai': '$ai_tgz',
+			'@gajae-code/agent-core': '$agent_tgz',
+			'@gajae-code/tui': '$tui_tgz',
+			'@gajae-code/stats': '$stats_tgz',
+			'@gajae-code/coding-agent': '$coding_agent_tgz'
 		};
 		require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2));
 	"

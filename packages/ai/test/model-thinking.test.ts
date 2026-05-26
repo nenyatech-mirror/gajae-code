@@ -8,8 +8,8 @@ import {
 	mapEffortToAnthropicAdaptiveEffort,
 	mapEffortToGoogleThinkingLevel,
 	requireSupportedEffort,
-} from "@oh-my-pi/pi-ai/model-thinking";
-import type { Api, Model, Provider } from "@oh-my-pi/pi-ai/types";
+} from "@gajae-code/ai/model-thinking";
+import type { Api, Model, Provider } from "@gajae-code/ai/types";
 
 function createModel<TApi extends Api>(overrides: {
 	id: string;

@@ -1,7 +1,7 @@
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
-import type { CompactionOutcome } from "@oh-my-pi/pi-agent-core/compaction";
-import type { AssistantMessage, ImageContent, Message, UsageReport } from "@oh-my-pi/pi-ai";
-import type { Component, Container, EditorTheme, Loader, Spacer, Text, TUI } from "@oh-my-pi/pi-tui";
+import type { AgentMessage } from "@gajae-code/agent-core";
+import type { CompactionOutcome } from "@gajae-code/agent-core/compaction";
+import type { AssistantMessage, ImageContent, Message, UsageReport } from "@gajae-code/ai";
+import type { Component, Container, EditorTheme, Loader, Spacer, Text, TUI } from "@gajae-code/tui";
 import type { KeybindingsManager } from "../config/keybindings";
 import type { Settings } from "../config/settings";
 import type {

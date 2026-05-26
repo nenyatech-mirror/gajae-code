@@ -19,7 +19,7 @@ const PRESERVED_FILES: ReadonlySet<string> = new Set([".gitkeep"]);
 
 function syncStaticBundle(): Plugin {
   return {
-    name: "robomp-sync-static",
+    name: "robogjc-sync-static",
     apply: "build",
     closeBundle() {
       if (!existsSync(staticDir)) {

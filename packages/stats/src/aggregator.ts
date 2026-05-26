@@ -1,5 +1,5 @@
 import * as fs from "node:fs";
-import { isCompiledBinary } from "@oh-my-pi/pi-utils";
+import { isCompiledBinary } from "@gajae-code/utils";
 import {
 	getRecentErrors as dbGetRecentErrors,
 	getRecentRequests as dbGetRecentRequests,

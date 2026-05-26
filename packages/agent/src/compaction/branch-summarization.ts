@@ -5,8 +5,8 @@
  * a summary of the branch being left so context isn't lost.
  */
 
-import type { Model } from "@oh-my-pi/pi-ai";
-import { prompt } from "@oh-my-pi/pi-utils";
+import type { Model } from "@gajae-code/ai";
+import { prompt } from "@gajae-code/utils";
 import { type AgentTelemetry, instrumentedCompleteSimple } from "../telemetry";
 import type { AgentMessage } from "../types";
 import { estimateTokens } from "./compaction";
@@ -25,7 +25,7 @@ import {
 	createFileOps,
 	extractFileOpsFromMessage,
 	type FileOperations,
-	SUMMARIZATION_SYSTEM_PROMPT,
+	SUMMARIZATION_SYSTEM_PRGJCT,
 	serializeConversation,
 	upsertFileOperations,
 } from "./utils";
@@ -262,7 +262,7 @@ export function prepareBranchEntries(entries: SessionEntry[], tokenBudget: numbe
 
 const BRANCH_SUMMARY_PREAMBLE = prompt.render(branchSummaryPreamble);
 
-const BRANCH_SUMMARY_PROMPT = prompt.render(branchSummaryPrompt);
+const BRANCH_SUMMARY_PRGJCT = prompt.render(branchSummaryPrompt);
 
 /**
  * Generate a summary of abandoned branch entries.
@@ -292,7 +292,7 @@ export async function generateBranchSummary(
 	const conversationText = serializeConversation(llmMessages);
 
 	// Build prompt
-	const instructions = customInstructions || BRANCH_SUMMARY_PROMPT;
+	const instructions = customInstructions || BRANCH_SUMMARY_PRGJCT;
 	const promptText = `<conversation>\n${conversationText}\n</conversation>\n\n${instructions}`;
 
 	const summarizationMessages = [
@@ -306,7 +306,7 @@ export async function generateBranchSummary(
 	// Call LLM for summarization
 	const response = await instrumentedCompleteSimple(
 		model,
-		{ systemPrompt: [SUMMARIZATION_SYSTEM_PROMPT], messages: summarizationMessages },
+		{ systemPrompt: [SUMMARIZATION_SYSTEM_PRGJCT], messages: summarizationMessages },
 		{ apiKey, signal, maxTokens: 2048, metadata },
 		{ telemetry: options.telemetry, oneshotKind: "branch_summary" },
 	);

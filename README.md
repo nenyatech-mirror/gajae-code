@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/can1357/oh-my-pi/blob/main/assets/hero.png?raw=true" alt="omp">
+  <img src="https://github.com/can1357/gajae-code/blob/main/assets/hero.png?raw=true" alt="omp">
 </p>
 
 <p align="center">
@@ -8,10 +8,10 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent"><img src="https://img.shields.io/npm/v/@oh-my-pi/pi-coding-agent?style=flat&colorA=222222&colorB=CB3837" alt="npm version"></a>
-  <a href="https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-keep-E05735?style=flat&colorA=222222" alt="Changelog"></a>
-  <a href="https://github.com/can1357/oh-my-pi/actions"><img src="https://img.shields.io/github/actions/workflow/status/can1357/oh-my-pi/ci.yml?style=flat&colorA=222222&colorB=3FB950" alt="CI"></a>
-  <a href="https://github.com/can1357/oh-my-pi/blob/main/LICENSE"><img src="https://img.shields.io/github/license/can1357/oh-my-pi?style=flat&colorA=222222&colorB=58A6FF" alt="License"></a>
+  <a href="https://www.npmjs.com/package/@gajae-code/coding-agent"><img src="https://img.shields.io/npm/v/@gajae-code/coding-agent?style=flat&colorA=222222&colorB=CB3837" alt="npm version"></a>
+  <a href="https://github.com/can1357/gajae-code/blob/main/packages/coding-agent/CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-keep-E05735?style=flat&colorA=222222" alt="Changelog"></a>
+  <a href="https://github.com/can1357/gajae-code/actions"><img src="https://img.shields.io/github/actions/workflow/status/can1357/gajae-code/ci.yml?style=flat&colorA=222222&colorB=3FB950" alt="CI"></a>
+  <a href="https://github.com/can1357/gajae-code/blob/main/LICENSE"><img src="https://img.shields.io/github/license/can1357/gajae-code?style=flat&colorA=222222&colorB=58A6FF" alt="License"></a>
   <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat&colorA=222222&logo=typescript&logoColor=white" alt="TypeScript"></a>
   <a href="https://www.rust-lang.org"><img src="https://img.shields.io/badge/Rust-DEA584?style=flat&colorA=222222&logo=rust&logoColor=white" alt="Rust"></a>
   <a href="https://bun.sh"><img src="https://img.shields.io/badge/runtime-Bun-f472b6?style=flat&colorA=222222" alt="Bun"></a>
@@ -37,7 +37,7 @@ curl -fsSL https://omp.sh/install | sh
 **Bun (recommended)**
 
 ```sh
-bun install -g @oh-my-pi/pi-coding-agent
+bun install -g @gajae-code/coding-agent
 ```
 
 **Windows (PowerShell)**
@@ -49,7 +49,7 @@ irm https://omp.sh/install.ps1 | iex
 **Pinned versions (mise)**
 
 ```sh
-mise use -g github:can1357/oh-my-pi
+mise use -g github:can1357/gajae-code
 ```
 
 macOS · Linux · Windows · bun ≥ 1.3.14
@@ -156,7 +156,7 @@ omp reads the working tree through git-overview, git-file-diff, and git-hunk, th
 
 Ten internal schemes — `pr://`, `issue://`, `agent://`, `skill://`, `rule://`, and the rest — resolve transparently inside every FS-shaped tool the agent already calls. `read pr://1428` returns the same shape as `read src/foo.ts`. `search` walks a diff like a directory. `agent://<id>/findings.0.path` pulls a field out of a subagent's output by path.
 
-![omp TUI reading pr://can1357/oh-my-pi/1063 and then /diff/1, showing hunk headers, added lines, and a [MODIFIED] (+12 -0) summary.](https://omp.sh/captures/pr.webp)
+![omp TUI reading pr://can1357/gajae-code/1063 and then /diff/1, showing hunk headers, added lines, and a [MODIFIED] (+12 -0) summary.](https://omp.sh/captures/pr.webp)
 
 ### 16 · Conflict resolution, made easy.
 
@@ -370,12 +370,12 @@ The same prompt cards surface over ACP, so editors get the picker without writin
 
 ### SDK — embed in Node
 
-`@oh-my-pi/pi-coding-agent`
+`@gajae-code/coding-agent`
 
 Node and TypeScript hosts pull the engine in directly. The package exposes `ModelRegistry`, `SessionManager`, `createAgentSession`, and `discoverAuthStorage`; the session emits typed events you subscribe to.
 
 ```ts
-import { ModelRegistry, SessionManager, createAgentSession, discoverAuthStorage } from "@oh-my-pi/pi-coding-agent";
+import { ModelRegistry, SessionManager, createAgentSession, discoverAuthStorage } from "@gajae-code/coding-agent";
 
 const auth = await discoverAuthStorage();
 const models = new ModelRegistry(auth);
@@ -422,7 +422,7 @@ Full reference: [omp.sh/docs/sdk](https://omp.sh/docs/sdk).
 
 Pick it up at **[omp.sh](https://omp.sh)**.
 
-omp is a fork of [Pi](https://github.com/badlogic/pi-mono) by [Mario Zechner](https://github.com/mariozechner), rewritten as a coding-first surface: sessions, subagents, slash commands, extensions — all TypeScript, all MIT, all on [GitHub](https://github.com/can1357/oh-my-pi). Shape it from config, hook it from outside, or read the source when you need to.
+omp is a fork of [Pi](https://github.com/badlogic/pi-mono) by [Mario Zechner](https://github.com/mariozechner), rewritten as a coding-first surface: sessions, subagents, slash commands, extensions — all TypeScript, all MIT, all on [GitHub](https://github.com/can1357/gajae-code). Shape it from config, hook it from outside, or read the source when you need to.
 
 ### Primitives
 
@@ -462,20 +462,20 @@ For architecture and contribution guidelines, see [packages/coding-agent/DEVELOP
 
 | Package                                                   | Description                                                                |
 | --------------------------------------------------------- | -------------------------------------------------------------------------- |
-| **[@oh-my-pi/pi-ai](packages/ai)**                        | Multi-provider LLM client with streaming and model/provider integration    |
-| **[@oh-my-pi/pi-agent-core](packages/agent)**             | Agent runtime with tool calling and state management                       |
-| **[@oh-my-pi/pi-coding-agent](packages/coding-agent)**    | Interactive coding agent CLI and SDK                                       |
-| **[@oh-my-pi/pi-tui](packages/tui)**                      | Terminal UI library with differential rendering                            |
-| **[@oh-my-pi/pi-natives](packages/natives)**              | N-API bindings for grep, shell, image, text, syntax highlighting, and more |
-| **[@oh-my-pi/omp-stats](packages/stats)**                 | Local observability dashboard for AI usage statistics                      |
-| **[@oh-my-pi/pi-utils](packages/utils)**                  | Shared utilities (logging, streams, dirs/env/process helpers)              |
-| **[@oh-my-pi/swarm-extension](packages/swarm-extension)** | Swarm orchestration extension package                                      |
+| **[@gajae-code/ai](packages/ai)**                        | Multi-provider LLM client with streaming and model/provider integration    |
+| **[@gajae-code/agent-core](packages/agent)**             | Agent runtime with tool calling and state management                       |
+| **[@gajae-code/coding-agent](packages/coding-agent)**    | Interactive coding agent CLI and SDK                                       |
+| **[@gajae-code/tui](packages/tui)**                      | Terminal UI library with differential rendering                            |
+| **[@gajae-code/natives](packages/natives)**              | N-API bindings for grep, shell, image, text, syntax highlighting, and more |
+| **[@gajae-code/stats](packages/stats)**                 | Local observability dashboard for AI usage statistics                      |
+| **[@gajae-code/utils](packages/utils)**                  | Shared utilities (logging, streams, dirs/env/process helpers)              |
+| **[@gajae-code/swarm-extension](packages/swarm-extension)** | Swarm orchestration extension package                                      |
 
 ### Rust Crates
 
 | Crate                                                         | Description                                                                                         |
 | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| **[pi-natives](crates/pi-natives)**                           | Core Rust native addon (N-API `cdylib`) used by `@oh-my-pi/pi-natives`; aggregates the crates below |
+| **[pi-natives](crates/pi-natives)**                           | Core Rust native addon (N-API `cdylib`) used by `@gajae-code/natives`; aggregates the crates below |
 | **[pi-shell](crates/pi-shell)**                               | Embedded shell / PTY / process management split out of `pi-natives` (wraps `brush-*`)               |
 | **[pi-ast](crates/pi-ast)**                                   | tree-sitter-based code summarizer and AST utilities (50+ language grammars)                         |
 | **[pi-iso](crates/pi-iso)**                                   | Task isolation backend resolver: APFS clones, btrfs/zfs reflinks, overlayfs, projfs, rcopy          |
@@ -494,8 +494,8 @@ MIT. See [LICENSE](LICENSE).
 _made for terminals that stay open_
 
 - [omp.sh](https://omp.sh)
-- [GitHub](https://github.com/can1357/oh-my-pi)
-- [Changelog](https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/CHANGELOG.md)
-- [npm](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent)
+- [GitHub](https://github.com/can1357/gajae-code)
+- [Changelog](https://github.com/can1357/gajae-code/blob/main/packages/coding-agent/CHANGELOG.md)
+- [npm](https://www.npmjs.com/package/@gajae-code/coding-agent)
 - [Discord](https://discord.gg/4NMW9cdXZa)
-- [MIT](https://github.com/can1357/oh-my-pi/blob/main/LICENSE)
+- [MIT](https://github.com/can1357/gajae-code/blob/main/LICENSE)

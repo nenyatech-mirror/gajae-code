@@ -1,14 +1,14 @@
 /**
  * Simple chat interface demo using tui.ts
  */
-import { CombinedAutocompleteProvider } from "@oh-my-pi/pi-tui/autocomplete";
-import { Editor } from "@oh-my-pi/pi-tui/components/editor";
-import { Loader } from "@oh-my-pi/pi-tui/components/loader";
-import { Markdown } from "@oh-my-pi/pi-tui/components/markdown";
-import { Text } from "@oh-my-pi/pi-tui/components/text";
-import { ProcessTerminal } from "@oh-my-pi/pi-tui/terminal";
-import { TUI } from "@oh-my-pi/pi-tui/tui";
-import { getProjectDir } from "@oh-my-pi/pi-utils";
+import { CombinedAutocompleteProvider } from "@gajae-code/tui/autocomplete";
+import { Editor } from "@gajae-code/tui/components/editor";
+import { Loader } from "@gajae-code/tui/components/loader";
+import { Markdown } from "@gajae-code/tui/components/markdown";
+import { Text } from "@gajae-code/tui/components/text";
+import { ProcessTerminal } from "@gajae-code/tui/terminal";
+import { TUI } from "@gajae-code/tui/tui";
+import { getProjectDir } from "@gajae-code/utils";
 import chalk from "chalk";
 import { defaultEditorTheme, defaultMarkdownTheme } from "./test-themes";
 

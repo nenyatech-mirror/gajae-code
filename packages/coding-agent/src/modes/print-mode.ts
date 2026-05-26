@@ -5,8 +5,8 @@
  * - `omp -p "prompt"` - text output
  * - `omp --mode json "prompt"` - JSON event stream
  */
-import type { AssistantMessage, ImageContent } from "@oh-my-pi/pi-ai";
-import { logger, sanitizeText } from "@oh-my-pi/pi-utils";
+import type { AssistantMessage, ImageContent } from "@gajae-code/ai";
+import { logger, sanitizeText } from "@gajae-code/utils";
 import type { AgentSession } from "../session/agent-session";
 import { isSilentAbort } from "../session/messages";
 import { initializeExtensions } from "./runtime-init";

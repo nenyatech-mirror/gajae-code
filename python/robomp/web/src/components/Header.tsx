@@ -19,7 +19,7 @@ export function Header(): JSX.Element {
       <div class="flex flex-wrap items-end gap-x-6 gap-y-3 justify-between">
         <div class="flex items-baseline gap-3">
           <h1 class="text-[26px] font-semibold tracking-tight leading-none">
-            <span class="text-ink-50">robomp</span>
+            <span class="text-ink-50">robogjc</span>
             <span class="inline-block ml-2 size-[7px] rounded-full align-middle bg-accent shadow-[0_0_10px_rgba(10,132,255,0.7)]" />
           </h1>
           <span class="eyebrow">triage · fix · ship</span>

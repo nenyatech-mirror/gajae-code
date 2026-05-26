@@ -1,5 +1,5 @@
 // Configuration injected by FastAPI at request time. The server replaces the
-// `__ROBOMP_CONFIG__` sentinel in `static/index.html` with a JSON blob so the
+// `__ROBGJC_CONFIG__` sentinel in `static/index.html` with a JSON blob so the
 // SPA never needs to make an extra round-trip just to learn whether the
 // trigger surface is enabled.
 
@@ -9,9 +9,9 @@ export interface AppConfig {
 }
 
 function readConfig(): AppConfig {
-  const node = document.getElementById("robomp-config");
+  const node = document.getElementById("robogjc-config");
   const text = node?.textContent?.trim();
-  if (!text || text === "__ROBOMP_CONFIG__") {
+  if (!text || text === "__ROBGJC_CONFIG__") {
     return { replayEnabled: false, replayToken: "" };
   }
   try {
@@ -32,7 +32,7 @@ function readConfig(): AppConfig {
 export const CONFIG: AppConfig = readConfig();
 
 export const AUTH_HEADERS: Readonly<Record<string, string>> = CONFIG.replayEnabled
-  ? Object.freeze({ "X-Robomp-Replay-Token": CONFIG.replayToken })
+  ? Object.freeze({ "X-Robogjc-Replay-Token": CONFIG.replayToken })
   : Object.freeze({});
 
 export const POLL_INTERVAL_MS = 3000;

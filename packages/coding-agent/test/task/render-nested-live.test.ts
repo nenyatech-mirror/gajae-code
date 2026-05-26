@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "bun:test";
-import { getThemeByName, setThemeInstance } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { AgentProgress, SingleResult, TaskToolDetails } from "@oh-my-pi/pi-coding-agent/task";
-import { taskToolRenderer } from "@oh-my-pi/pi-coding-agent/task/render";
+import { getThemeByName, setThemeInstance } from "@gajae-code/coding-agent/modes/theme/theme";
+import type { AgentProgress, SingleResult, TaskToolDetails } from "@gajae-code/coding-agent/task";
+import { taskToolRenderer } from "@gajae-code/coding-agent/task/render";
 
 // Defends the live-rendering contract for the `task` tool: while a Level-1
 // subagent is still mid-flight, any nested `task` activity it has produced

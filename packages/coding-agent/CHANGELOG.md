@@ -21,7 +21,7 @@
 
 ### Fixed
 
-- Fixed built-in `explore` agent failing every invocation with `schema_violation: files.0.ref: must not be present` on releases prior to 15.3.2 by renaming the `files[].ref` property to `files[].path` in the agent's output schema; `ref` is a JTD-reserved keyword (RFC 8927) and collides with JSON Type Definition's schema-reference form, so the converter previously dropped it from the generated JSON Schema. Defense-in-depth alongside the 15.3.2 converter fix ([#1379](https://github.com/can1357/oh-my-pi/issues/1379)).
+- Fixed built-in `explore` agent failing every invocation with `schema_violation: files.0.ref: must not be present` on releases prior to 15.3.2 by renaming the `files[].ref` property to `files[].path` in the agent's output schema; `ref` is a JTD-reserved keyword (RFC 8927) and collides with JSON Type Definition's schema-reference form, so the converter previously dropped it from the generated JSON Schema. Defense-in-depth alongside the 15.3.2 converter fix ([#1379](https://github.com/can1357/gajae-code/issues/1379)).
 
 ## [15.3.2] - 2026-05-25
 ### Added
@@ -40,18 +40,18 @@
 
 ### Added
 
-- Added `OMP_NO_WEBP` environment variable to disable WebP encoding in image resize, fixing HTTP 400 errors when attaching browser snapshots to vision models running on local llama.cpp (which uses STB library that lacks WebP support)
-- Fixed loop mode submitting the next prompt while a background async-job delivery turn (idle flush) was still pending, which could cause the job result to be silently dropped and make the session appear to keep firing while work was ongoing ([#1294](https://github.com/can1357/oh-my-pi/issues/1294))
-- Fixed clipboard image paste (Ctrl+V) silently failing on WSL2 by routing image reads through a `powershell.exe` bridge when WSL interop is detected, since `arboard` returns `ContentNotAvailable` under WSLg ([#1280](https://github.com/can1357/oh-my-pi/issues/1280))
-- Fixed `bash` tool timeout and ESC cancellation getting stuck when native shell cleanup stalls; the JavaScript-side deadline now returns the tool result on schedule while native cleanup continues in the background ([#1347](https://github.com/can1357/oh-my-pi/issues/1347))
-- Fixed reviewer agent always failing JTD validation with `findings.0.priority: expected number, received string` whenever `report_finding` surfaced a finding; the tool's `"P0"`-`"P3"` priority is now coerced to its numeric ordinal before populating the auto-injected `findings[]` ([#1350](https://github.com/can1357/oh-my-pi/issues/1350))
-- Fixed config-only marketplace LSP plugins such as `csharp-lsp` not registering servers with the CLI when the plugin cache has only marketplace metadata and no package code ([#1352](https://github.com/can1357/oh-my-pi/issues/1352)).
-- Fixed JTD-to-JSON-Schema conversion treating user-named properties as nested JTD forms when their keys collided with JTD keywords like `ref`, which broke the built-in explore agent's output validator with `schema_violation: files.0.ref: must not be present` ([#1345](https://github.com/can1357/oh-my-pi/issues/1345))
-- Fixed extension `ctx.ui.notify()` messages emitted during `session_start` being cleared before the first interactive render ([#1316](https://github.com/can1357/oh-my-pi/issues/1316)).
+- Added `GJC_NO_WEBP` environment variable to disable WebP encoding in image resize, fixing HTTP 400 errors when attaching browser snapshots to vision models running on local llama.cpp (which uses STB library that lacks WebP support)
+- Fixed loop mode submitting the next prompt while a background async-job delivery turn (idle flush) was still pending, which could cause the job result to be silently dropped and make the session appear to keep firing while work was ongoing ([#1294](https://github.com/can1357/gajae-code/issues/1294))
+- Fixed clipboard image paste (Ctrl+V) silently failing on WSL2 by routing image reads through a `powershell.exe` bridge when WSL interop is detected, since `arboard` returns `ContentNotAvailable` under WSLg ([#1280](https://github.com/can1357/gajae-code/issues/1280))
+- Fixed `bash` tool timeout and ESC cancellation getting stuck when native shell cleanup stalls; the JavaScript-side deadline now returns the tool result on schedule while native cleanup continues in the background ([#1347](https://github.com/can1357/gajae-code/issues/1347))
+- Fixed reviewer agent always failing JTD validation with `findings.0.priority: expected number, received string` whenever `report_finding` surfaced a finding; the tool's `"P0"`-`"P3"` priority is now coerced to its numeric ordinal before populating the auto-injected `findings[]` ([#1350](https://github.com/can1357/gajae-code/issues/1350))
+- Fixed config-only marketplace LSP plugins such as `csharp-lsp` not registering servers with the CLI when the plugin cache has only marketplace metadata and no package code ([#1352](https://github.com/can1357/gajae-code/issues/1352)).
+- Fixed JTD-to-JSON-Schema conversion treating user-named properties as nested JTD forms when their keys collided with JTD keywords like `ref`, which broke the built-in explore agent's output validator with `schema_violation: files.0.ref: must not be present` ([#1345](https://github.com/can1357/gajae-code/issues/1345))
+- Fixed extension `ctx.ui.notify()` messages emitted during `session_start` being cleared before the first interactive render ([#1316](https://github.com/can1357/gajae-code/issues/1316)).
 - Fixed append-only context mode not being recomputed after model switches — the mode was frozen at session construction time using the initial model's provider, so `provider.appendOnlyContext=auto` left append-only enabled after switching away from DeepSeek (or disabled after switching to DeepSeek) for the rest of the session
 
 ### Fixed
-- Fixed clipboard image paste (Ctrl+V) silently failing on WSL2 by routing image reads through a `powershell.exe` bridge when WSL interop is detected, since `arboard` returns `ContentNotAvailable` under WSLg ([#1280](https://github.com/can1357/oh-my-pi/issues/1280))
+- Fixed clipboard image paste (Ctrl+V) silently failing on WSL2 by routing image reads through a `powershell.exe` bridge when WSL interop is detected, since `arboard` returns `ContentNotAvailable` under WSLg ([#1280](https://github.com/can1357/gajae-code/issues/1280))
 ## [15.2.4] - 2026-05-22
 ### Breaking Changes
 
@@ -104,7 +104,7 @@
 
 ### Fixed
 
-- Fixed `RULES.md` not being injected. The documented sticky-rules file at `~/.omp/agent/RULES.md` and `<repo>/.omp/RULES.md` was never read by any discovery provider; only `.omp/rules/*.md` was scanned. The native provider now loads both as always-apply rules so they re-attach every turn as documented ([#1266](https://github.com/can1357/oh-my-pi/issues/1266)).
+- Fixed `RULES.md` not being injected. The documented sticky-rules file at `~/.omp/agent/RULES.md` and `<repo>/.omp/RULES.md` was never read by any discovery provider; only `.omp/rules/*.md` was scanned. The native provider now loads both as always-apply rules so they re-attach every turn as documented ([#1266](https://github.com/can1357/gajae-code/issues/1266)).
 
 ## [15.2.1] - 2026-05-21
 
@@ -114,7 +114,7 @@
 
 ### Fixed
 
-- Fixed context overflow not being detected when the session's model (e.g. `hf:zai-org/GLM-5.1` via `synthetic` provider) returns a 400 with the upstream "400 status code (no body)" message wrapped inside a JSON envelope. The `isContextOverflow` check now matches the no-body status phrase anywhere in the error string rather than requiring it at the very start, so auto-compaction fires correctly instead of leaving the session silently stuck ([#1251](https://github.com/can1357/oh-my-pi/issues/1251)).
+- Fixed context overflow not being detected when the session's model (e.g. `hf:zai-org/GLM-5.1` via `synthetic` provider) returns a 400 with the upstream "400 status code (no body)" message wrapped inside a JSON envelope. The `isContextOverflow` check now matches the no-body status phrase anywhere in the error string rather than requiring it at the very start, so auto-compaction fires correctly instead of leaving the session silently stuck ([#1251](https://github.com/can1357/gajae-code/issues/1251)).
 - Fixed `formatCapturedHttpError` not extracting the error text from `{"error":"string"}` response bodies (only object-valued `error` fields were previously handled), resulting in raw JSON in error messages instead of the human-readable string.
 
 ## [15.2.0] - 2026-05-21
@@ -129,33 +129,33 @@
 
 ### Fixed
 
-- Fixed goal state machine: `get` now returns paused goals (was returning null for `enabled=false`), `complete` now works on paused goals after interrupts, `create` is allowed after a previous goal reaches `complete` status, and the goal tool is re-added to the active tool set on session reload when a paused goal is persisted. Added `resume` and `drop` ops to the goal tool so the agent can re-engage or discard a paused goal without requiring user slash commands. ([#1249](https://github.com/can1357/oh-my-pi/issues/1249))
+- Fixed goal state machine: `get` now returns paused goals (was returning null for `enabled=false`), `complete` now works on paused goals after interrupts, `create` is allowed after a previous goal reaches `complete` status, and the goal tool is re-added to the active tool set on session reload when a paused goal is persisted. Added `resume` and `drop` ops to the goal tool so the agent can re-engage or discard a paused goal without requiring user slash commands. ([#1249](https://github.com/can1357/gajae-code/issues/1249))
 
 ## [15.1.9] - 2026-05-21
 
 ### Fixed
 
-- Fixed `disabledProviders` still probing local discovery endpoints for Ollama, llama.cpp, and LM Studio during background model refresh. Disabled providers are now excluded before implicit and built-in discovery managers are created. ([#1232](https://github.com/can1357/oh-my-pi/issues/1232))
+- Fixed `disabledProviders` still probing local discovery endpoints for Ollama, llama.cpp, and LM Studio during background model refresh. Disabled providers are now excluded before implicit and built-in discovery managers are created. ([#1232](https://github.com/can1357/gajae-code/issues/1232))
 
 ### Fixed
 
-- Fixed `omp acp` auto-discovering host `.mcp.json` servers in parallel with the ACP client's `session/new.mcpServers`, which shadowed client-supplied MCP tools in `search_tool_bm25` and the session tool registry. The ACP session factory now forces `enableMCP: false`, so MCP ownership stays with `AcpAgent#configureMcpServers`. Non-ACP modes keep on-disk discovery. ([#1234](https://github.com/can1357/oh-my-pi/issues/1234))
+- Fixed `omp acp` auto-discovering host `.mcp.json` servers in parallel with the ACP client's `session/new.mcpServers`, which shadowed client-supplied MCP tools in `search_tool_bm25` and the session tool registry. The ACP session factory now forces `enableMCP: false`, so MCP ownership stays with `AcpAgent#configureMcpServers`. Non-ACP modes keep on-disk discovery. ([#1234](https://github.com/can1357/gajae-code/issues/1234))
 
 ### Fixed
 
-- Fixed binary `omp update` rollbacks so a downloaded replacement that fails post-install version verification no longer remains installed over the previous working binary. ([#1240](https://github.com/can1357/oh-my-pi/issues/1240))
+- Fixed binary `omp update` rollbacks so a downloaded replacement that fails post-install version verification no longer remains installed over the previous working binary. ([#1240](https://github.com/can1357/gajae-code/issues/1240))
 
 ### Fixed
 
-- Fixed `/force <tool>` rejecting Ollama/local models before the requested tool could run; Ollama now receives a named forced choice that the provider transport narrows to the selected tool. ([#1236](https://github.com/can1357/oh-my-pi/issues/1236))
+- Fixed `/force <tool>` rejecting Ollama/local models before the requested tool could run; Ollama now receives a named forced choice that the provider transport narrows to the selected tool. ([#1236](https://github.com/can1357/gajae-code/issues/1236))
 
 ### Fixed
 
-- Fixed `web_search` freezing the session when an upstream provider stalled. Bun's WinHTTP backend on Windows can silently drop `AbortSignal` once a TCP/TLS connection hangs (oven-sh/bun#15275, oven-sh/bun#18536), so Esc never reached the in-flight fetch and the only recovery was Ctrl+C + `omp --resume`. Every web-search provider's outbound `fetch` (anthropic, brave, codex, exa, gemini, jina, kagi, kimi, parallel, perplexity, searxng, synthetic, tavily, z.ai) now composes the caller signal with a 60s hard timeout via a shared `withHardTimeout` helper, guaranteeing the request settles within a minute even when Bun's abort fails to propagate. Independently, `executeSearch`'s provider-fallback loop was masking real cancellations as ordinary provider errors and returning "All web search providers failed"; it now re-throws as `ToolAbortError` the moment the caller's signal aborts, so the session sees a clean cancel on every platform. ([#1221](https://github.com/can1357/oh-my-pi/issues/1221))
+- Fixed `web_search` freezing the session when an upstream provider stalled. Bun's WinHTTP backend on Windows can silently drop `AbortSignal` once a TCP/TLS connection hangs (oven-sh/bun#15275, oven-sh/bun#18536), so Esc never reached the in-flight fetch and the only recovery was Ctrl+C + `omp --resume`. Every web-search provider's outbound `fetch` (anthropic, brave, codex, exa, gemini, jina, kagi, kimi, parallel, perplexity, searxng, synthetic, tavily, z.ai) now composes the caller signal with a 60s hard timeout via a shared `withHardTimeout` helper, guaranteeing the request settles within a minute even when Bun's abort fails to propagate. Independently, `executeSearch`'s provider-fallback loop was masking real cancellations as ordinary provider errors and returning "All web search providers failed"; it now re-throws as `ToolAbortError` the moment the caller's signal aborts, so the session sees a clean cancel on every platform. ([#1221](https://github.com/can1357/gajae-code/issues/1221))
 
 ### Added
 
-- Added OSC 8 terminal hyperlink support for file paths in tool output. When the terminal supports hyperlinks (kitty, Ghostty, WezTerm, iTerm2, Alacritty, VS Code) and the new `tui.hyperlinks` setting is `auto` (default) or `always`, OMP wraps file paths emitted by `read`, `find`, `search`, `edit`, `ast_grep`, and `ast_edit` renderers in `file:///abs/path` hyperlinks. `local://` and other fs-backed internal URLs resolve to their backing path. Set `tui.hyperlinks: off` to disable. ([#1244](https://github.com/can1357/oh-my-pi/issues/1244))
+- Added OSC 8 terminal hyperlink support for file paths in tool output. When the terminal supports hyperlinks (kitty, Ghostty, WezTerm, iTerm2, Alacritty, VS Code) and the new `tui.hyperlinks` setting is `auto` (default) or `always`, GJC wraps file paths emitted by `read`, `find`, `search`, `edit`, `ast_grep`, and `ast_edit` renderers in `file:///abs/path` hyperlinks. `local://` and other fs-backed internal URLs resolve to their backing path. Set `tui.hyperlinks: off` to disable. ([#1244](https://github.com/can1357/gajae-code/issues/1244))
 
 ## [15.1.8] - 2026-05-20
 
@@ -166,15 +166,15 @@
 
 ### Fixed
 
-- Fixed `legacy-pi-compat` failing to load plugin extensions (e.g. `pi-schedule-prompt@0.3.0`) that import `@mariozechner/pi-ai` when running from a compiled binary. `getResolvedSpecifier` called `Bun.resolveSync` against `import.meta.dir` inside `/$bunfs/root`, where the virtual FS exposes no resolvable `node_modules` tree at runtime; the throw silently dropped the plugin. The fix lets `rewriteLegacyPiImports` fall back gracefully on resolution failure so that `rewriteBareImportsForLegacyExtension` — which already runs immediately after — can resolve the original specifier against the plugin's own installed peer deps instead. The same fallback is applied to `resolveLegacyPiSpecifier` (the Bun plugin shim's `onResolve` handler) for tool/hook files loaded directly via Bun's import system. ([#1215](https://github.com/can1357/oh-my-pi/issues/1215))
+- Fixed `legacy-pi-compat` failing to load plugin extensions (e.g. `pi-schedule-prompt@0.3.0`) that import `@mariozechner/pi-ai` when running from a compiled binary. `getResolvedSpecifier` called `Bun.resolveSync` against `import.meta.dir` inside `/$bunfs/root`, where the virtual FS exposes no resolvable `node_modules` tree at runtime; the throw silently dropped the plugin. The fix lets `rewriteLegacyPiImports` fall back gracefully on resolution failure so that `rewriteBareImportsForLegacyExtension` — which already runs immediately after — can resolve the original specifier against the plugin's own installed peer deps instead. The same fallback is applied to `resolveLegacyPiSpecifier` (the Bun plugin shim's `onResolve` handler) for tool/hook files loaded directly via Bun's import system. ([#1215](https://github.com/can1357/gajae-code/issues/1215))
 
 ## [15.1.7] - 2026-05-19
 
 ### Fixed
 
-- Fixed `debug` launch/attach failures so `configurationDone` no longer masks the underlying DAP launch error, early stop-outcome watchers cannot emit unhandled rejections, and directory-valued launch programs are rejected before adapter selection. ([#1187](https://github.com/can1357/oh-my-pi/issues/1187))
-- Fixed hashline edit payloads that use a readability space after `~` by warning on separator-padding-shaped payload blocks and tightening the model prompt. ([#1166](https://github.com/can1357/oh-my-pi/issues/1166))
-- Fixed ACP bash permission requests to include execute tool metadata and command content so clients can render command approval prompts consistently. ([#1189](https://github.com/can1357/oh-my-pi/issues/1189))
+- Fixed `debug` launch/attach failures so `configurationDone` no longer masks the underlying DAP launch error, early stop-outcome watchers cannot emit unhandled rejections, and directory-valued launch programs are rejected before adapter selection. ([#1187](https://github.com/can1357/gajae-code/issues/1187))
+- Fixed hashline edit payloads that use a readability space after `~` by warning on separator-padding-shaped payload blocks and tightening the model prompt. ([#1166](https://github.com/can1357/gajae-code/issues/1166))
+- Fixed ACP bash permission requests to include execute tool metadata and command content so clients can render command approval prompts consistently. ([#1189](https://github.com/can1357/gajae-code/issues/1189))
 - Fixed the status-line fast-mode indicator (`⚡`) rendering for scoped service tiers (`openai-only`, `claude-only`) even when the active model's provider didn't realize them — e.g. `serviceTier: "openai-only"` would still show the indicator next to a Claude model the wire request couldn't apply fast mode to. The indicator now consults a new `AgentSession.isFastModeActive()` predicate that runs the configured tier through `resolveServiceTier(tier, model.provider)` and only lights up when the result is `"priority"` for the current model. `isFastModeEnabled()` keeps its scope-aware semantics so `/fast on|off|toggle` and `/fast status` continue to reflect the user's configured intent.
 ### Fixed
 
@@ -192,7 +192,7 @@
 
 ### Fixed
 
-- Fixed plan-mode `resolve` looping when grammar-constrained models (e.g. Qwen3.6-35B-MTP via llama.cpp) emit `extra: { title: {} }` instead of a string — the open `Record<string, unknown>` schema for `extra` lets such models drop in an empty object, and the apply guard then hard-threw on every retry. Plan approval now derives the title from `extra.title` when usable, falling back to the plan's first `# Heading`, then the plan filename stem (`local://PLAN.md` → `PLAN`), then the literal `"plan"`. Prompt language relaxed from "MUST" to "SHOULD" for `extra.title`. ([#1179](https://github.com/can1357/oh-my-pi/issues/1179))
+- Fixed plan-mode `resolve` looping when grammar-constrained models (e.g. Qwen3.6-35B-MTP via llama.cpp) emit `extra: { title: {} }` instead of a string — the open `Record<string, unknown>` schema for `extra` lets such models drop in an empty object, and the apply guard then hard-threw on every retry. Plan approval now derives the title from `extra.title` when usable, falling back to the plan's first `# Heading`, then the plan filename stem (`local://PLAN.md` → `PLAN`), then the literal `"plan"`. Prompt language relaxed from "MUST" to "SHOULD" for `extra.title`. ([#1179](https://github.com/can1357/gajae-code/issues/1179))
 
 ## [15.1.5] - 2026-05-19
 
@@ -204,43 +204,43 @@
 
 ### Fixed
 
-- Fixed `normalizePlanTitle` rejecting plan titles that contain spaces or common punctuation (e.g. "My Feature Plan") — spaces are now converted to hyphens and other invalid characters are dropped, so models that produce natural-language plan titles no longer loop forever trying to call `resolve`. ([#1176](https://github.com/can1357/oh-my-pi/issues/1176))
-- Fixed `ask` tool prompt example showing the legacy `question`/`options` top-level format instead of the current `questions: [{id, question, options}]` array format; models that closely followed the example generated calls that always failed schema validation. ([#1176](https://github.com/can1357/oh-my-pi/issues/1176))
+- Fixed `normalizePlanTitle` rejecting plan titles that contain spaces or common punctuation (e.g. "My Feature Plan") — spaces are now converted to hyphens and other invalid characters are dropped, so models that produce natural-language plan titles no longer loop forever trying to call `resolve`. ([#1176](https://github.com/can1357/gajae-code/issues/1176))
+- Fixed `ask` tool prompt example showing the legacy `question`/`options` top-level format instead of the current `questions: [{id, question, options}]` array format; models that closely followed the example generated calls that always failed schema validation. ([#1176](https://github.com/can1357/gajae-code/issues/1176))
 
 - Fixed ACP command and custom tool-call notifications to carry the original tool arguments in replayed and final updates, so command text is preserved and raw input is no longer wrapped
 - Fixed ACP async-job draining to be scoped by session owner so `getAsyncJobSnapshot` and `drainAsyncJobDeliveriesForAcp` no longer consume or expose jobs from other sessions
 - Fixed async job status reporting to include in-flight completions so queued/delivering indicators remain accurate while callbacks are still running
 - Fixed `deferAgentInitiatedTurns` handling during ACP async-job draining so background completion follow-up turns are delivered even when agent-initiated turns are deferred
-- Fixed ACP ordinary file-editing calls (`edit`, `write`, `ast_edit`) incorrectly requesting `session/request_permission` before every call, while keeping permission prompts for edit operations that delete or move files; permission requests now report the gated tool call as `pending` so clients can render the approval UI instead of returning `Permission request cancelled` without a visible prompt. ([#1134](https://github.com/can1357/oh-my-pi/pull/1134) by [@jiwangyihao](https://github.com/jiwangyihao))
-- Fixed the session tree selector to preserve a readable message column when deeply nested branch gutters would otherwise consume the viewport. ([#1144](https://github.com/can1357/oh-my-pi/issues/1144))
-- Fixed the TUI model selector to keep provider tab labels separate from provider ids, so the human-readable Ollama Cloud tab refreshes and filters `ollama-cloud` models correctly. ([#1153](https://github.com/can1357/oh-my-pi/issues/1153))
+- Fixed ACP ordinary file-editing calls (`edit`, `write`, `ast_edit`) incorrectly requesting `session/request_permission` before every call, while keeping permission prompts for edit operations that delete or move files; permission requests now report the gated tool call as `pending` so clients can render the approval UI instead of returning `Permission request cancelled` without a visible prompt. ([#1134](https://github.com/can1357/gajae-code/pull/1134) by [@jiwangyihao](https://github.com/jiwangyihao))
+- Fixed the session tree selector to preserve a readable message column when deeply nested branch gutters would otherwise consume the viewport. ([#1144](https://github.com/can1357/gajae-code/issues/1144))
+- Fixed the TUI model selector to keep provider tab labels separate from provider ids, so the human-readable Ollama Cloud tab refreshes and filters `ollama-cloud` models correctly. ([#1153](https://github.com/can1357/gajae-code/issues/1153))
 
 ## [15.1.3] - 2026-05-17
 ### Breaking Changes
 
 - Renamed the embedded-documentation internal URL scheme from `pi://` to `omp://`. `OmpProtocolHandler` replaces `PiProtocolHandler`; update any external references accordingly.
-- Removed the `StringEnum` re-export from `@oh-my-pi/pi-coding-agent`. Custom tools and extensions should use `z.enum([...])` directly via the injected `pi.zod`.
+- Removed the `StringEnum` re-export from `@gajae-code/coding-agent`. Custom tools and extensions should use `z.enum([...])` directly via the injected `pi.zod`.
 - Replaced the `eval` tool's LARK-grammar `input` string with a structured `cells` array. Each cell is `{ language: "py" | "js", code, title?, timeout?, reset? }`. Removed the implicit/sniffed language path, the `*** Cell` / `*** End` / `*** Abort` markers, and the per-cell `t:<duration>` unit suffixes — `timeout` is now seconds (1-600).
 
 ### Added
 
-- Added `providers.<name>.transport: "pi-native"` to `models.yml`. When set, every model under that provider routes its streaming dispatch through the auth-gateway's `POST /v1/pi/stream` endpoint instead of the per-provider SDK. The provider's `baseUrl` must point at a compatible `omp auth-gateway` and `apiKey` must carry the gateway bearer. The slot's `models.json` still resolves locally for pricing/capabilities/thinking config; only the wire dispatch is redirected. Use case: containerized omp installs (robomp slots, swarm extension) where the slot must stay credential-free and a sidecar gateway holds the real provider tokens. Also surfaced as `transport` on `ProviderConfigInput` for extension-registered providers.
-- Added optional backend push for the auto-QA grievance database (`dev.autoqaPush.enabled`, `dev.autoqaPush.endpoint`, `dev.autoqaPush.token`; env overrides `PI_AUTO_QA_PUSH`, `PI_AUTO_QA_PUSH_URL`, `PI_AUTO_QA_PUSH_TOKEN`). When enabled, every `report_tool_issue` call schedules a background flush that `POST`s pending rows to the configured endpoint and deletes them on HTTP 2xx. Each push carries a stable per-install UUID (`installId`) generated on first use and persisted at `~/.omp/install-id` via `getInstallId()` (new export from `@oh-my-pi/pi-utils`), so the receiver can dedup retries across host renames and `autoqa.db` wipes. Single-flight, 5s request timeout, 30s in-memory cooldown after failure, and a row-id watermark so rows inserted during an in-flight push survive and ship next time. Tool execution remains non-blocking and never throws.
+- Added `providers.<name>.transport: "pi-native"` to `models.yml`. When set, every model under that provider routes its streaming dispatch through the auth-gateway's `POST /v1/pi/stream` endpoint instead of the per-provider SDK. The provider's `baseUrl` must point at a compatible `omp auth-gateway` and `apiKey` must carry the gateway bearer. The slot's `models.json` still resolves locally for pricing/capabilities/thinking config; only the wire dispatch is redirected. Use case: containerized omp installs (robogjc slots, swarm extension) where the slot must stay credential-free and a sidecar gateway holds the real provider tokens. Also surfaced as `transport` on `ProviderConfigInput` for extension-registered providers.
+- Added optional backend push for the auto-QA grievance database (`dev.autoqaPush.enabled`, `dev.autoqaPush.endpoint`, `dev.autoqaPush.token`; env overrides `PI_AUTO_QA_PUSH`, `PI_AUTO_QA_PUSH_URL`, `PI_AUTO_QA_PUSH_TOKEN`). When enabled, every `report_tool_issue` call schedules a background flush that `POST`s pending rows to the configured endpoint and deletes them on HTTP 2xx. Each push carries a stable per-install UUID (`installId`) generated on first use and persisted at `~/.omp/install-id` via `getInstallId()` (new export from `@gajae-code/utils`), so the receiver can dedup retries across host renames and `autoqa.db` wipes. Single-flight, 5s request timeout, 30s in-memory cooldown after failure, and a row-id watermark so rows inserted during an in-flight push survive and ship next time. Tool execution remains non-blocking and never throws.
 - `ModelRegistry` now promotes `models.yml` `providers.<name>.apiKey` entries to `AuthStorage`'s new config-override tier (above OAuth, below `--api-key`). Pinning a bearer in `models.yml` was previously a no-op when the broker had an OAuth credential for the same provider — the OAuth access token won and got sent unmodified to whatever `baseUrl` you redirected to, which an auth-gateway in front of that endpoint rightly rejected with 401. The override is now honored, and is cleared/repopulated atomically on `models.yml` reload (`#reloadStaticModels` calls `clearConfigApiKeys` before re-parsing). Use case: route `anthropic` / `openai-codex` to `http://llm-gateway.internal:4000` with the gateway's own bearer.
 - Added `omp auth-broker` subcommand for running and consuming a hosted credential vault.
 - `serve [--bind=host:port]` — boots a local broker against the SQLite store at `$AGENT_DB_PATH`.
 - `token [--regenerate]` — prints (and rotates) the bearer token stored at `~/.omp/auth-broker.token`.
 - `login <provider> [--via=user@host] [--dry-run]` — drives the OAuth flow locally or via SSH `-L` tunnel into a remote broker (callback ports pinned per provider).
 - `logout <provider>` — disables every credential for the given provider in the local SQLite store.
-- `import <file|dir> [--provider=<id>] [--include-disabled] [--dry-run]` — imports CLIProxyAPI-style JSON credential dumps (`~/.cliproxy/auth/*.json`). When `OMP_AUTH_BROKER_URL` is configured, credentials are uploaded to the remote broker via `POST /v1/credential`; otherwise they go into the local SQLite store. JSON `type` is mapped to omp providers (`claude` → `anthropic`, `codex` → `openai-codex`, `gemini[-cli]` → `google-gemini-cli`, `antigravity` → `google-antigravity`); `--provider` overrides the mapping for unrecognized types.
-- `status` — pings the configured remote broker (`OMP_AUTH_BROKER_URL`).
-- Added remote credential vault support to `discoverAuthStorage`. Configure via env (`OMP_AUTH_BROKER_URL` / `OMP_AUTH_BROKER_TOKEN`) or by setting `auth.broker.url` and `auth.broker.token` in `~/.omp/agent/config.yml` (hidden from the settings UI; supports `!command` resolution). Falls back to `~/.omp/auth-broker.token` when no token is provided inline. Otherwise behavior is unchanged.
+- `import <file|dir> [--provider=<id>] [--include-disabled] [--dry-run]` — imports CLIProxyAPI-style JSON credential dumps (`~/.cliproxy/auth/*.json`). When `GJC_AUTH_BROKER_URL` is configured, credentials are uploaded to the remote broker via `POST /v1/credential`; otherwise they go into the local SQLite store. JSON `type` is mapped to omp providers (`claude` → `anthropic`, `codex` → `openai-codex`, `gemini[-cli]` → `google-gemini-cli`, `antigravity` → `google-antigravity`); `--provider` overrides the mapping for unrecognized types.
+- `status` — pings the configured remote broker (`GJC_AUTH_BROKER_URL`).
+- Added remote credential vault support to `discoverAuthStorage`. Configure via env (`GJC_AUTH_BROKER_URL` / `GJC_AUTH_BROKER_TOKEN`) or by setting `auth.broker.url` and `auth.broker.token` in `~/.omp/agent/config.yml` (hidden from the settings UI; supports `!command` resolution). Falls back to `~/.omp/auth-broker.token` when no token is provided inline. Otherwise behavior is unchanged.
 - Added `omp auth-broker migrate --from-local [--include-env] [--include-oauth] [--dry-run]` — uploads local SQLite credentials (and optionally env-var API keys) to the configured broker. Skips anything already on the broker via identity-key matching. OAuth is skipped by default (handled via `cliproxy` import). Idempotent on re-runs.
 - Added `omp auth-gateway` subcommand for running a forward-proxy that hides access tokens from less-trusted clients:
 - `serve [--bind=…]` — boots the gateway against the configured broker. Listens on `127.0.0.1:4000` by default.
 - `token [--regenerate]` — manages the gateway bearer token at `~/.omp/auth-gateway.token` (separate from the broker bearer).
 - `status` — verifies gateway config and authenticated broker readiness.
-- One wire surface: `POST /v1/chat/completions` (OpenAI chat-completions), `POST /v1/messages` (Anthropic messages), `POST /v1/responses` (OpenAI Responses), `GET /v1/usage` (aggregated, 5-min per-credential cache), `GET /v1/models` (catalog). Model id in the request body selects which omp provider/model services it; the gateway translates wire format ↔ omp canonical `Context` and dispatches through `pi-ai` `streamSimple()`. Container deployments (robomp, etc.) get inference auth without ever holding access tokens or the broker bearer.
+- One wire surface: `POST /v1/chat/completions` (OpenAI chat-completions), `POST /v1/messages` (Anthropic messages), `POST /v1/responses` (OpenAI Responses), `GET /v1/usage` (aggregated, 5-min per-credential cache), `GET /v1/models` (catalog). Model id in the request body selects which omp provider/model services it; the gateway translates wire format ↔ omp canonical `Context` and dispatches through `pi-ai` `streamSimple()`. Container deployments (robogjc, etc.) get inference auth without ever holding access tokens or the broker bearer.
 
 ### Changed
 
@@ -267,7 +267,7 @@
 - Fixed SSH host additions/removals made inside a running session not refreshing the live `ssh` tool. `/ssh add` and `/ssh remove` now update the model-visible host list immediately, while `/reload-plugins` and `/move` refresh SSH discovery for external or project-scope config changes without restart.
 - Fixed loose object output schemas in `YieldTool` so non-strict schemas (for example `additionalProperties: true`) are preserved and accepted instead of being forced into strict mode
 - Fixed unconstrained output schema modes (`outputSchema: true` or absent/non-strict schemas) to run in loose mode for successful results
-- Fixed bash tool calls with `pty: true` hanging indefinitely on Windows by falling back to the non-PTY executor instead of entering the ConPTY-backed interactive path. ([#1103](https://github.com/can1357/oh-my-pi/issues/1103))
+- Fixed bash tool calls with `pty: true` hanging indefinitely on Windows by falling back to the non-PTY executor instead of entering the ConPTY-backed interactive path. ([#1103](https://github.com/can1357/gajae-code/issues/1103))
 
 ### Changed
 
@@ -276,7 +276,7 @@
 ## [15.1.0] - 2026-05-15
 ### Breaking Changes
 
-- Changed the extension and hook runtime API by moving schema typing from direct TypeBox imports to `TSchema` from `@oh-my-pi/pi-ai`, requiring callers who use TypeScript imports of `Type` to migrate via provided injected modules
+- Changed the extension and hook runtime API by moving schema typing from direct TypeBox imports to `TSchema` from `@gajae-code/ai`, requiring callers who use TypeScript imports of `Type` to migrate via provided injected modules
 
 ### Added
 
@@ -344,26 +344,26 @@
 
 - Changed bash command preprocessing to strip trailing `| head` and `| tail` pipelines (including `|&`) from each top-level segment in command chains separated by `;`, `&&`, `||`, or `&`
 - Changed bash fixup notices to state that stderr is already merged into stdout and to reflect that fixes were applied for multiple stripped segments when several transforms fire
-- Changed shell-minimizer per-line truncation marker from a bare `…` to `…[+N]`, where `N` is the count of dropped Unicode scalars. The bracketed tally disambiguates minimizer-driven cuts from genuine `…` characters in the source (paths, JSON, stack traces, etc.) and gives the agent an exact count so it can decide whether the missing tail is recoverable inline or warrants reading the `[raw output: artifact://<id>]` footer the bash wrapper already emits when the minimizer rewrites output. Affects pipeline Stage 5 (`truncate_lines_at` in `defs/*.toml`) and the internal callers in `filters/git.rs`, `filters/listing.rs`, and `filters/lint.rs`. ([#1046](https://github.com/can1357/oh-my-pi/issues/1046))
+- Changed shell-minimizer per-line truncation marker from a bare `…` to `…[+N]`, where `N` is the count of dropped Unicode scalars. The bracketed tally disambiguates minimizer-driven cuts from genuine `…` characters in the source (paths, JSON, stack traces, etc.) and gives the agent an exact count so it can decide whether the missing tail is recoverable inline or warrants reading the `[raw output: artifact://<id>]` footer the bash wrapper already emits when the minimizer rewrites output. Affects pipeline Stage 5 (`truncate_lines_at` in `defs/*.toml`) and the internal callers in `filters/git.rs`, `filters/listing.rs`, and `filters/lint.rs`. ([#1046](https://github.com/can1357/gajae-code/issues/1046))
 - Changed bash command preprocessing to use the real `brush-parser` AST via `pi-natives` `applyBashFixups` instead of a hand-rolled top-level mask scanner. The previous regex/character-walking implementation reimplemented quote/heredoc/`$(...)` tracking with conservative bail-outs (notably refusing to fixup commands containing here-strings); the AST-driven version inherits the full shell parser, so semantics-preserving rewrites like stripping `| head -5` off `cat <<<'content' | head -5` now succeed instead of being skipped. No public API change — `applyBashFixups(command)` returns the same `{ command, stripped }` shape.
 
 ### Fixed
 
-- Fixed hashline pure inserts to drop a single echoed anchor line when `edit.hashlineAutoDropPureInsertDuplicates` is enabled and `+ ANCHOR` payloads start with the anchor line or `< ANCHOR` payloads end with it, while preserving intentional single-line duplicates by default. ([#1090](https://github.com/can1357/oh-my-pi/issues/1090))
+- Fixed hashline pure inserts to drop a single echoed anchor line when `edit.hashlineAutoDropPureInsertDuplicates` is enabled and `+ ANCHOR` payloads start with the anchor line or `< ANCHOR` payloads end with it, while preserving intentional single-line duplicates by default. ([#1090](https://github.com/can1357/gajae-code/issues/1090))
 - Fixed bash command fixups to remove a redundant standalone trailing `2>&1` redirect when no other pipe or redirection remains
 - Fixed command-fixup notices to list all stripped segments instead of reporting only one
-- Fixed summarized `read` output stalling agents on elided regions by appending an explicit footer like `[NN lines across MM elided regions; read <path>:raw or a line range like <path>:1-9999 for verbatim content]`. The footer fires whenever the structural summarizer elided at least one span, so the model gets a concrete recovery selector instead of having to guess from a bare `...` / `{ .. }` marker. Surfaces `elidedLines` on `ReadToolDetails.summary` alongside the existing `elidedSpans`. ([#1046](https://github.com/can1357/oh-my-pi/issues/1046))
+- Fixed summarized `read` output stalling agents on elided regions by appending an explicit footer like `[NN lines across MM elided regions; read <path>:raw or a line range like <path>:1-9999 for verbatim content]`. The footer fires whenever the structural summarizer elided at least one span, so the model gets a concrete recovery selector instead of having to guess from a bare `...` / `{ .. }` marker. Surfaces `elidedLines` on `ReadToolDetails.summary` alongside the existing `elidedSpans`. ([#1046](https://github.com/can1357/gajae-code/issues/1046))
 - Updated the `read` tool prompt to describe the new elision footer and instruct the model to follow `:raw` (or an explicit line range) when the elided body is actually needed, rather than guessing.
-- Fixed plugin extensions failing to load when their `peerDependencies` reference internal `pi-*` packages under any scope other than `@mariozechner` (e.g. `Cannot find module '@earendil-works/pi-tui'` from `@juicesharp/rpiv-ask-user-question`, or `Cannot find module '@oh-my-pi/pi-utils'` from `@oh-my-pi/swarm-extension`). The legacy-pi specifier shim now treats `@mariozechner`, `@earendil-works`, **and** the canonical `@oh-my-pi` itself as aliases for the same set of bundled in-process packages (`pi-agent-core`, `pi-ai`, `pi-coding-agent`, `pi-natives`, `pi-tui`, `pi-utils`), and additionally rewrites the upstream-only `pi-ai/oauth` subpath onto our `pi-ai/utils/oauth` layout. Restored the `Key` runtime helper export on `@oh-my-pi/pi-tui` to match upstream — plugins using `Key.enter` / `Key.ctrl("c")` (e.g. `@plannotator/pi-extension`, `@juicesharp/rpiv-ask-user-question`) no longer fail with `Export named 'Key' not found`. End-to-end verified against `@juicesharp/rpiv-ask-user-question`, `@oh-my-pi/swarm-extension`, and `@plannotator/pi-extension` — each now loads cleanly with all of its tools/commands/handlers registered. Plugins importing any of those scopes are remapped to the omp binary's own copy at load time, so peer deps are no longer dragged in from npm and there is exactly one module instance per package regardless of which scope name the plugin's manifest happened to declare.
-- Fixed `omp commit` hanging after a successful commit instead of returning to the shell. The command now mirrors the `runPrintMode` exit pattern and calls `postmortem.quit(0)` once the pipeline resolves so lingering HTTP/2 keep-alive sockets, the Settings autosave timer, and other AgentSession background handles don't keep the event loop pinned. ([#1041](https://github.com/can1357/oh-my-pi/issues/1041))
+- Fixed plugin extensions failing to load when their `peerDependencies` reference internal `pi-*` packages under any scope other than `@mariozechner` (e.g. `Cannot find module '@earendil-works/pi-tui'` from `@juicesharp/rpiv-ask-user-question`, or `Cannot find module '@gajae-code/utils'` from `@gajae-code/swarm-extension`). The legacy-pi specifier shim now treats `@mariozechner`, `@earendil-works`, **and** the canonical `@gajae-code` itself as aliases for the same set of bundled in-process packages (`pi-agent-core`, `pi-ai`, `gajae-code`, `pi-natives`, `pi-tui`, `pi-utils`), and additionally rewrites the upstream-only `pi-ai/oauth` subpath onto our `pi-ai/utils/oauth` layout. Restored the `Key` runtime helper export on `@gajae-code/tui` to match upstream — plugins using `Key.enter` / `Key.ctrl("c")` (e.g. `@plannotator/pi-extension`, `@juicesharp/rpiv-ask-user-question`) no longer fail with `Export named 'Key' not found`. End-to-end verified against `@juicesharp/rpiv-ask-user-question`, `@gajae-code/swarm-extension`, and `@plannotator/pi-extension` — each now loads cleanly with all of its tools/commands/handlers registered. Plugins importing any of those scopes are remapped to the omp binary's own copy at load time, so peer deps are no longer dragged in from npm and there is exactly one module instance per package regardless of which scope name the plugin's manifest happened to declare.
+- Fixed `omp commit` hanging after a successful commit instead of returning to the shell. The command now mirrors the `runPrintMode` exit pattern and calls `postmortem.quit(0)` once the pipeline resolves so lingering HTTP/2 keep-alive sockets, the Settings autosave timer, and other AgentSession background handles don't keep the event loop pinned. ([#1041](https://github.com/can1357/gajae-code/issues/1041))
 - Fixed hashline payload parsing to silently treat truly-blank lines as empty `~`-prefixed payload lines when more payload follows in the same run. The previous behavior broke at the blank ("payload line has no preceding +, <, or = operation.") even though the intent is obvious — the only ambiguity is between in-payload blanks and end-of-section blanks, and a one-line lookahead resolves it: blanks that precede a non-payload op still end the run cleanly as section separators. Recovers the common case of forgetting the leading separator on a blank inserted line without changing how trailing blanks between ops behave.
 - Rewrote the hashline edit prompt examples to use an ASCII-only `TITLE = "Mr"` → `"Mrs"` / `"Dr"` motif instead of the previous `" • "` and `"·"` separators. Some agents had been copying the middle-dot literal characters into real edits as if they were format scaffolding (e.g. emitting payload lines like `~	·`), since the demo inserts were near-twins of the existing string. The new example keeps every original op shape (single-line replace, multiline replace, insert AFTER/BEFORE, append, delete, blank, plus both anti-patterns) but uses content that is obviously domain-specific and clearly distinct from any payload separator. Pure prompt change; no parser, schema, or runtime behavior is affected.
-- Fixed startup fallback-chain validation to recognize cached runtime-discovered standard provider models, including Ollama Cloud models listed by `--list-models`, so `retry.fallbackChains` no longer warns that valid `ollama-cloud/<model>` selectors are unknown. ([#1052](https://github.com/can1357/oh-my-pi/issues/1052))
-- Fixed `discoverAgents()` ignoring `disabledProviders` for the `claude-plugins` provider. Plugin roots from `~/.claude/plugins/` were scanned unconditionally, so agents from Claude Code marketplace plugins continued to appear in `/agents` and the Agent Control Center even when `disabledProviders: [claude-plugins]` was set. The discovery path now checks `isProviderEnabled("claude-plugins")` before calling `listClaudePluginRoots()`, matching how every other capability respects the disabled-providers set. ([#1075](https://github.com/can1357/oh-my-pi/issues/1075))
+- Fixed startup fallback-chain validation to recognize cached runtime-discovered standard provider models, including Ollama Cloud models listed by `--list-models`, so `retry.fallbackChains` no longer warns that valid `ollama-cloud/<model>` selectors are unknown. ([#1052](https://github.com/can1357/gajae-code/issues/1052))
+- Fixed `discoverAgents()` ignoring `disabledProviders` for the `claude-plugins` provider. Plugin roots from `~/.claude/plugins/` were scanned unconditionally, so agents from Claude Code marketplace plugins continued to appear in `/agents` and the Agent Control Center even when `disabledProviders: [claude-plugins]` was set. The discovery path now checks `isProviderEnabled("claude-plugins")` before calling `listClaudePluginRoots()`, matching how every other capability respects the disabled-providers set. ([#1075](https://github.com/can1357/gajae-code/issues/1075))
 
 ### Fixed
 
-- Fixed `$env:VAR` PowerShell variables being mangled on Windows when commands invoked PowerShell as a subprocess (e.g. `powershell -Command "Write-Host $env:SystemRoot"`). Brush-core applied POSIX parameter expansion to `$env` before spawning the child, leaving a dangling `:NAME`. The fix lives in `pi-shell` at env-var application time: every brush session now defines `env=$env` as an internal shell variable so `$env:NAME` expands to the literal `$env:NAME` token that PowerShell expects. The fallback is not exported, only influences brush's own expansion, and is shadowed by any user assignment to `env` (e.g. `env=prod; echo "$env:8080"` still prints `prod:8080`), so the POSIX bash contract is preserved. ([#1079](https://github.com/can1357/oh-my-pi/issues/1079))
+- Fixed `$env:VAR` PowerShell variables being mangled on Windows when commands invoked PowerShell as a subprocess (e.g. `powershell -Command "Write-Host $env:SystemRoot"`). Brush-core applied POSIX parameter expansion to `$env` before spawning the child, leaving a dangling `:NAME`. The fix lives in `pi-shell` at env-var application time: every brush session now defines `env=$env` as an internal shell variable so `$env:NAME` expands to the literal `$env:NAME` token that PowerShell expects. The fallback is not exported, only influences brush's own expansion, and is shadowed by any user assignment to `env` (e.g. `env=prod; echo "$env:8080"` still prints `prod:8080`), so the POSIX bash contract is preserved. ([#1079](https://github.com/can1357/gajae-code/issues/1079))
 
 
 ## [15.0.1] - 2026-05-14
@@ -375,7 +375,7 @@
 
 - Added optional `extra` metadata object to the `resolve` tool so callers can pass context-specific payloads, including plan approval titles
 - Added `hide: true` frontmatter option for skill `SKILL.md` files. Hidden skills are still loaded and remain reachable via `skill://<name>` URLs and (when enabled) `/skill:<name>` slash commands, but are omitted from the rendered system prompt's `<skills>` listing so the model won't auto-discover them. Use for skills the user opts into explicitly rather than ones the model should pick up from descriptions.
-- Added middle elision for streaming tool outputs (bash, ssh, python, js eval) and post-execution tool result spill. When `tools.artifactHeadBytes` is set (default 20 KB), large outputs now keep both the first N KB and the last N KB with an inline `[… N lines elided (M KB) …]` marker between them, instead of dropping everything before the trailing tail. Setting `tools.artifactHeadBytes = 0` reverts to the previous tail-only behavior. The full output is still mirrored to the session artifact (`artifact://<id>`) regardless of elision mode. Exposes `truncateMiddle` and `formatMiddleElisionMarker` from `@oh-my-pi/pi-coding-agent/session/streaming-output`, extends `OutputSinkOptions` with `headBytes`, and adds `direction: "middle"` plus `headRange` / `tailRange` / `elidedLines` / `elidedBytes` to `TruncationMeta`.
+- Added middle elision for streaming tool outputs (bash, ssh, python, js eval) and post-execution tool result spill. When `tools.artifactHeadBytes` is set (default 20 KB), large outputs now keep both the first N KB and the last N KB with an inline `[… N lines elided (M KB) …]` marker between them, instead of dropping everything before the trailing tail. Setting `tools.artifactHeadBytes = 0` reverts to the previous tail-only behavior. The full output is still mirrored to the session artifact (`artifact://<id>`) regardless of elision mode. Exposes `truncateMiddle` and `formatMiddleElisionMarker` from `@gajae-code/coding-agent/session/streaming-output`, extends `OutputSinkOptions` with `headBytes`, and adds `direction: "middle"` plus `headRange` / `tailRange` / `elidedLines` / `elidedBytes` to `TruncationMeta`.
 - Added per-line column cap shared across streaming tool outputs (`bash`, `ssh`, `python`, `js eval`) and the `read` tool. Lines wider than `tools.outputMaxColumns` bytes (default **768**) are ellipsis-truncated at write time and remaining bytes up to the next `\n` are dropped — bounded memory even on multi-MB single-line outputs (e.g. `cat /dev/urandom`). The cap lives on `OutputSink` as the new `maxColumns` option, persists state across chunk boundaries so split-mid-line writes still respect the budget, and exposes `columnDroppedBytes` / `columnTruncatedLines` on `OutputSummary`. Middle-elision byte math subtracts column drops so the "elided from middle" count stays honest. `read` reuses the same setting but trims its already-collected lines via `truncateLine`. Skipped when the read selector is `:raw`. The artifact file (`artifact://<id>`) keeps the full uncapped stream. Set `tools.outputMaxColumns = 0` to disable.
 - Added Bun HTTP/2 fetch opt-in. Dev scripts (`bun run dev`, `bun run stats`) now pass `bun --experimental-http2-fetch` so every `fetch()` advertises `h2` in the TLS ALPN list and falls back to HTTP/1.1 when the server doesn't select it. Multiplexing collapses parallel requests to the same origin onto one TLS connection. For the installed `omp` binary, export `BUN_FEATURE_FLAG_EXPERIMENTAL_HTTP2_CLIENT=1` in your shell to enable the same behavior (the flag has to be set before Bun starts; `process.env` from inside JS is too late). Requires Bun **1.3.14**.
 - Added per-subagent cost display (`$X.XX` in the task progress tree and the session-observer stats line). Cost is accumulated incrementally from `message_end` events and shown only when non-zero, using the `statusLineCost` theme color. Providers that do not report per-turn cost data (e.g. subscription/OAuth usage) continue to show nothing.
@@ -406,7 +406,7 @@
 - Fixed headless `browser.open` tab startup on slow Chromium target enumeration by making worker-side stealth user-agent target setup selective, bounded, and best-effort for non-active targets. Worker startup errors are now surfaced directly instead of degrading into the generic tab worker initialization timeout.
 - Fixed token display for sessions and subagents inflating far beyond the context window. `token_total` status-line segment and the subagent overlay token counter now show `input + output + cacheWrite` instead of `input + output + cacheRead + cacheWrite`. With prompt caching, `cacheRead` per turn equals the full cached context — summing it across all turns produces a cumulative total that is N×context_size (e.g. a 5-turn session with a 1 M-token context reported ~5 M tokens). Cache activity is still visible via the dedicated `cache_read`/`cache_write` status-line segments; billing cost is unaffected.
 - Fixed ACP clients missing `config_option_update` notifications when the thinking level changed via any path other than the client's own `session/set_session_config_option` call (slash commands, model auto-adjust, extension UI). `AgentSession` now emits a `thinking_level_changed` event from `setThinkingLevel`, and `AcpAgent` subscribes to each managed session for the session's lifetime and pushes a fresh `config_option_update` whenever the effective level changes — independent of any active prompt turn. The subscription is installed inside `#scheduleBootstrapUpdates`'s 50 ms timer so it shares the same race guard that prevents Zed's `Received session notification for unknown session` drop when notifications fire before `session/new` (or fork) returns; the pre-bootstrap thinking level is reported in the response's `configOptions`. The `session/set_session_config_option` handler keeps its own push only when the subscription has not yet been installed, so client-driven thinking changes still notify pre-bootstrap, post-bootstrap they flow through the subscription exactly once. Subscriptions are released in `#disposeSessionRecord`.
-- Fixed MCP OAuth refresh failing with `HTTP 401 invalid_client` for servers that require Dynamic Client Registration (RFC 7591) and have no `oauth.clientId` configured (e.g. `mcp.linear.app`). `MCPOAuthFlow` registered a fresh public PKCE client on each authorize and discarded the issued `client_id` once the flow object went out of scope; refresh then called the provider's `/token` endpoint without a `client_id`. The flow now exposes `resolvedClientId` / `registeredClientSecret` getters, `MCPCommandController#handleOAuthFlow` returns them alongside `credentialId`, and both the initial-connect and `/mcp reauth` paths persist them into `auth.{clientId,clientSecret}` (used at refresh) and `oauth.{clientId,clientSecret}` (used by subsequent `/mcp reauth` to skip re-registration). The `MCPAddWizard` `onOAuth` callback type is now `Promise<MCPAddWizardOAuthResult>` and `#launchOAuthFlow` folds the registered credentials into wizard state. Servers with a statically-configured `oauth.clientId` (Notion, Slack, Datadog) are unaffected — `#tryRegisterClient` short-circuits and the write-back is a no-op. ([#1061](https://github.com/can1357/oh-my-pi/pull/1061) by [@ldx](https://github.com/ldx)).
+- Fixed MCP OAuth refresh failing with `HTTP 401 invalid_client` for servers that require Dynamic Client Registration (RFC 7591) and have no `oauth.clientId` configured (e.g. `mcp.linear.app`). `MCPOAuthFlow` registered a fresh public PKCE client on each authorize and discarded the issued `client_id` once the flow object went out of scope; refresh then called the provider's `/token` endpoint without a `client_id`. The flow now exposes `resolvedClientId` / `registeredClientSecret` getters, `MCPCommandController#handleOAuthFlow` returns them alongside `credentialId`, and both the initial-connect and `/mcp reauth` paths persist them into `auth.{clientId,clientSecret}` (used at refresh) and `oauth.{clientId,clientSecret}` (used by subsequent `/mcp reauth` to skip re-registration). The `MCPAddWizard` `onOAuth` callback type is now `Promise<MCPAddWizardOAuthResult>` and `#launchOAuthFlow` folds the registered credentials into wizard state. Servers with a statically-configured `oauth.clientId` (Notion, Slack, Datadog) are unaffected — `#tryRegisterClient` short-circuits and the write-back is a no-op. ([#1061](https://github.com/can1357/gajae-code/pull/1061) by [@ldx](https://github.com/ldx)).
 
 ## [15.0.0] - 2026-05-13
 ### Breaking Changes
@@ -419,9 +419,9 @@
 
 - Added markdown rendering for `read` results when content type is `text/markdown`, so GitHub internal-URL outputs are shown as formatted markdown instead of plain code blocks
 - Added `pr://<N>/diff`, `pr://<N>/diff/<i>`, and `pr://<N>/diff/all` internal-URL shapes covering changed-file listings, per-file slices, and the full unified diff. They share one `pr-diff` SQLite cache row with the same TTL knobs as `pr://<N>` views (`github.cache.softTtlSec` / `github.cache.hardTtlSec` / `github.cache.enabled`). Single PR views now advertise the diff entry point via a `Diff: pr://<owner>/<repo>/<N>/diff` note. Cache schema bumped to `user_version = 3`; older rows are dropped on first open to add credential-scoped keys and relax the `kind` CHECK constraint.
-- Added `issue://` / `pr://` internal-URL schemes that share a SQLite-backed cache with the rest of the `github` tool. Single-item reads (`issue://<N>`, `issue://<owner>/<repo>/<N>`) return rendered markdown and within `github.cache.softTtlSec` (default 5 minutes) skip the `gh` round-trip entirely; within `github.cache.hardTtlSec` (default 7 days) the cached row is returned and a background refresh is scheduled. Root and repo-scoped reads (`issue://`, `pr://owner/repo`) issue a live `gh issue list` / `gh pr list` for browsing, supporting `?state=open|closed|all` for issues, `?state=open|closed|merged|all` for PRs, and `?limit=`, `?author=`, `?label=` query params. Rendered output lands in `~/.omp/cache/github-cache.db` (override via `OMP_GITHUB_CACHE_DB`); disable the cache entirely with `github.cache.enabled = false`. Cwd→default-repo lookups (`gh repo view`) are memoized per-process.
+- Added `issue://` / `pr://` internal-URL schemes that share a SQLite-backed cache with the rest of the `github` tool. Single-item reads (`issue://<N>`, `issue://<owner>/<repo>/<N>`) return rendered markdown and within `github.cache.softTtlSec` (default 5 minutes) skip the `gh` round-trip entirely; within `github.cache.hardTtlSec` (default 7 days) the cached row is returned and a background refresh is scheduled. Root and repo-scoped reads (`issue://`, `pr://owner/repo`) issue a live `gh issue list` / `gh pr list` for browsing, supporting `?state=open|closed|all` for issues, `?state=open|closed|merged|all` for PRs, and `?limit=`, `?author=`, `?label=` query params. Rendered output lands in `~/.omp/cache/github-cache.db` (override via `GJC_GITHUB_CACHE_DB`); disable the cache entirely with `github.cache.enabled = false`. Cwd→default-repo lookups (`gh repo view`) are memoized per-process.
 - Added new `Approve and compact context` choice to the ExitPlanMode approval selector. Sits between `Approve and execute` (purge session) and `Approve and keep context` (full transcript) — runs `/compact` on the plan-mode transcript with a planning-specific summarization hint, then dispatches the plan-approved execution turn so it lands on a fresh cache anchor with the summarized rationale carried over. Cancelling the compaction (Esc or any other abort source) defers the execution dispatch and surfaces a warning so the operator can resubmit manually; non-abort failures proceed best-effort.
-- Added `CompactionCancelledError` typed sentinel and `CompactionOutcome` (`"ok" | "cancelled" | "failed"`) return type to `@oh-my-pi/pi-agent-core/compaction`. `CommandController.executeCompaction` and `handleCompactCommand` now return the outcome instead of `void` so callers can discriminate user-driven aborts from generic failures without inspecting error messages.
+- Added `CompactionCancelledError` typed sentinel and `CompactionOutcome` (`"ok" | "cancelled" | "failed"`) return type to `@gajae-code/agent-core/compaction`. `CommandController.executeCompaction` and `handleCompactCommand` now return the outcome instead of `void` so callers can discriminate user-driven aborts from generic failures without inspecting error messages.
 - Added a `credential_disabled` extension event so extensions can subscribe via `pi.on("credential_disabled", handler)` and react when `AuthStorage` automatically soft-disables a credential (e.g. OAuth `invalid_grant`). Replaces the current `agent_end` errorMessage regex pattern downstream extensions have to match against. Handler payload is `{ type, provider, disabledCause }`. `createAgentSession()` subscribes the per-session extension runner to the shared `AuthStorage` via `authStorage.onCredentialDisabled(...)` at the very top of session creation — before any startup model probes run — so events fire on every disable regardless of whether the embedder also has a constructor `onCredentialDisabled` handler attached. The SDK forwards through `ExtensionRunner.emitCredentialDisabled(event)`, which buffers events until `runner.initialize(...)` runs in the mode controller and then flushes them through `emit()` so extension handlers see populated UI/runtime context (rather than the constructor's no-op default with `hasUI=false`, an unset model, and no-op runtime actions). On `session.dispose()` the subscription is unsubscribed; the embedder's constructor-attached listener keeps firing through its own permanent subscription. The outer `createAgentSession()` catch also releases the subscription if startup throws before the dispose-wrap is wired, so repeated retries don't accumulate dead listeners.
 - Added `omp acp` subcommand for launching as an ACP (Agent Client Protocol) server over stdio
 - Added explicit `type` discriminators to ACP `initialize` auth methods, including a `terminal` setup method gated on `clientCapabilities.auth.terminal`
@@ -610,23 +610,23 @@
 
 ### Fixed
 
-- Added `ModelRegistry.hasConfiguredAuth(model)` to mirror the upstream `@mariozechner/pi-coding-agent` API surface; external plugins and downstream wrappers that pre-flight auth before launching a subagent no longer crash with `this._modelRegistry.hasConfiguredAuth is not a function` on the direct agent-launch path. ([#993](https://github.com/can1357/oh-my-pi/issues/993))
+- Added `ModelRegistry.hasConfiguredAuth(model)` to mirror the upstream `@mariozechner/gajae-code` API surface; external plugins and downstream wrappers that pre-flight auth before launching a subagent no longer crash with `this._modelRegistry.hasConfiguredAuth is not a function` on the direct agent-launch path. ([#993](https://github.com/can1357/gajae-code/issues/993))
 - Fixed an ESM circular-import TDZ that crashed test suites when modules from the `task/` and `tools/` graphs were evaluated together (e.g. `executor-warnings.test.ts` + `task-simple-mode.test.ts`) by deferring `BUILTIN_TOOLS.task`'s `TaskTool.create` dereference to factory-call time and sourcing `truncateTail` from `session/streaming-output` instead of the `tools/` barrel
-- Treat keyless-by-design providers (llama.cpp, ollama, lm-studio) as authenticated in subagent model resolution; fixes silent fallback to parent remote model when a local model is configured. ([#1008](https://github.com/can1357/oh-my-pi/issues/1008))
+- Treat keyless-by-design providers (llama.cpp, ollama, lm-studio) as authenticated in subagent model resolution; fixes silent fallback to parent remote model when a local model is configured. ([#1008](https://github.com/can1357/gajae-code/issues/1008))
 - Fixed subagent disposal and session transitions that previously canceled all running async jobs, preventing inadvertent termination of a parent agent’s background work
 - Fixed multi-entry edits silently rendering a fake success when every entry failed (e.g. all hit the auto-generated guard), by surfacing `isError: true` from the single-path edit orchestrator so the renderer takes the error branch instead of falling through to the streaming-preview fallback that displays the *proposed* diff
 - Fixed the auto-generated streaming guard being gated behind `edit.streamingAbort` (default false), so it now pre-empts streaming edit tool calls targeting auto-generated files regardless of that setting
 - Fixed subagents launched in the same parallel batch not seeing each other in their initial `# IRC Peers` system-prompt block by pre-registering the agent in the global `AgentRegistry` before `rebuildSystemPrompt` runs and attaching the live session afterwards
 - Fixed plugin manifest extensions whose entry points at a directory (e.g. `pi-goal`'s `"pi": { "extensions": [".pi/extensions/pi-goal"] }`) failing to load with `Failed to load extension: Directories cannot be read like files`. The plugin path resolver now resolves directory entries to their `index.{ts,js,mjs,cjs}` file, matching the behavior of native auto-discovery via `resolveExtensionEntries`.
-- Fixed the SSH tool on native Windows by avoiding OpenSSH ControlMaster multiplexing, which Win32-OpenSSH does not support and reports as `getsockname failed` ([#154](https://github.com/can1357/oh-my-pi/issues/154)).
-- Fixed `/export` and `/tree` not showing developer-role messages (including the plan content injected after `/plan` approval) so the HTML export and TUI session tree now render developer messages dimmed with their actual content instead of hiding them entirely ([#753](https://github.com/can1357/oh-my-pi/issues/753))
-- Fixed `Timed out initializing browser tab worker` on prebuilt binaries by rewriting `spawnTabWorker` to import the worker entry with `with { type: "file" }` so Bun's `--compile` bundler statically discovers and embeds `tab-worker-entry.ts` in the single-file binary ([#1011](https://github.com/can1357/oh-my-pi/issues/1011))
+- Fixed the SSH tool on native Windows by avoiding OpenSSH ControlMaster multiplexing, which Win32-OpenSSH does not support and reports as `getsockname failed` ([#154](https://github.com/can1357/gajae-code/issues/154)).
+- Fixed `/export` and `/tree` not showing developer-role messages (including the plan content injected after `/plan` approval) so the HTML export and TUI session tree now render developer messages dimmed with their actual content instead of hiding them entirely ([#753](https://github.com/can1357/gajae-code/issues/753))
+- Fixed `Timed out initializing browser tab worker` on prebuilt binaries by rewriting `spawnTabWorker` to import the worker entry with `with { type: "file" }` so Bun's `--compile` bundler statically discovers and embeds `tab-worker-entry.ts` in the single-file binary ([#1011](https://github.com/can1357/gajae-code/issues/1011))
 
 ## [14.9.3] - 2026-05-10
 ### Breaking Changes
 
 - Changed the `eval` tool input format to canonical `*** Begin <LANG>` ... `*** End <LANG>` cells with `*** Title`, `*** Timeout`, and `*** Reset` directives, so legacy `===== ... =====` eval inputs are no longer accepted for execution
-- Removed the `sectionSeparator` re-export from `config/prompt-templates`, so existing imports from `@oh-my-pi/pi-coding-agent/config/prompt-templates` now need to resolve `sectionSeparator` from its utility package
+- Removed the `sectionSeparator` re-export from `config/prompt-templates`, so existing imports from `@gajae-code/coding-agent/config/prompt-templates` now need to resolve `sectionSeparator` from its utility package
 
 ### Added
 
@@ -679,13 +679,13 @@
 ### Fixed
 
 - Fixed AGENTS.md context discovery to include AGENTS.md files that are explicitly gitignored while still excluding AGENTS.md files under ignored directories
-- Fixed task tool renderer spamming `Tool renderer failed: undefined is not an object (evaluating 'args.tasks.length')` warnings while a `task` call was streaming in (the `tasks` array is undefined until the partial JSON parser closes it); the renderer now tolerates an absent `tasks` field and shows `0 agents` until the array arrives ([#985](https://github.com/can1357/oh-my-pi/issues/985)).
+- Fixed task tool renderer spamming `Tool renderer failed: undefined is not an object (evaluating 'args.tasks.length')` warnings while a `task` call was streaming in (the `tasks` array is undefined until the partial JSON parser closes it); the renderer now tolerates an absent `tasks` field and shows `0 agents` until the array arrives ([#985](https://github.com/can1357/gajae-code/issues/985)).
 - Fixed MCP HTTP streamable transport spamming `HTTP SSE stream error: ReadableStream already has a controller` after every JSON-RPC request whose response was returned as `text/event-stream`. The transport used to break out of the SSE iterator once the matching response was captured and then re-open `response.body` for a background drain, but the body had already been piped through a `TransformStream` and could not be re-read. The drain now runs from a single iterator that resolves the response promise inline and continues to dispatch piggybacked notifications on the same stream.
 
 ## [14.9.0] - 2026-05-10
 ### Breaking Changes
 
-- Moved hashline APIs to the dedicated `@oh-my-pi/pi-coding-agent/hashline` module, moved hash helpers to `@oh-my-pi/pi-coding-agent/hashline/hash`, and removed the legacy `edit/modes/hashline` and `edit/line-hash` source subpaths.
+- Moved hashline APIs to the dedicated `@gajae-code/coding-agent/hashline` module, moved hash helpers to `@gajae-code/coding-agent/hashline/hash`, and removed the legacy `edit/modes/hashline` and `edit/line-hash` source subpaths.
 
 ### Removed
 
@@ -693,17 +693,17 @@
 
 ### Fixed
 
-- Fixed compaction crashing with `auth_unavailable` when the current model's provider has no credentials configured; compaction now falls back to an available model role (or fails fast with a clear error) instead of attempting a doomed provider call ([#986](https://github.com/can1357/oh-my-pi/issues/986)).
+- Fixed compaction crashing with `auth_unavailable` when the current model's provider has no credentials configured; compaction now falls back to an available model role (or fails fast with a clear error) instead of attempting a doomed provider call ([#986](https://github.com/can1357/gajae-code/issues/986)).
 - Fixed top-level static import rewriting in JS evaluation to use parser-based detection so only real import declarations are rewritten and `import` text inside strings, comments, or template literals is preserved
 - Fixed `import ... with` attribute handling in rewritten ESM imports so static imports with module attributes now become dynamic imports with matching `with` options
-- Fixed model resolution silently falling back to a different provider (e.g. Amazon Bedrock) when `modelRoles` specified a fully-qualified `<provider>/<id>` whose exact pair was not in the bundled catalog. Explicit provider prefixes are now honored or surface a clear error ([#980](https://github.com/can1357/oh-my-pi/issues/980)).
+- Fixed model resolution silently falling back to a different provider (e.g. Amazon Bedrock) when `modelRoles` specified a fully-qualified `<provider>/<id>` whose exact pair was not in the bundled catalog. Explicit provider prefixes are now honored or surface a clear error ([#980](https://github.com/can1357/gajae-code/issues/980)).
 - Fixed session count inflation on Anthropic backend caused by a fresh random `metadata.user_id` being generated on every API request; all requests within one conversation now share a stable `metadata.user_id` derived from the session ID, matching the expected one-session-per-conversation counting
 - Fixed plan mode review resubmits to append each refreshed `local://PLAN.md` preview to the chat history, preserving the full refined plan in terminal scrollback.
 - Fixed compaction requests (manual and auto) not carrying `metadata.user_id`, leaving them unattributed on the backend
 - Fixed direct session-bound LLM calls (`/btw` ephemeral turns via `runEphemeralTurn`, branch summarization, session title generation) bypassing the agent and emitting a fresh random `metadata.user_id` per request on Anthropic OAuth: the session-level `prepareSimpleStreamOptions` helper now stamps the agent's session metadata onto direct calls, and `generateBranchSummary` plus `generateSessionTitle` accept and forward an explicit `metadata` option from the call site
 - Fixed `metadata.user_id` lacking the authenticated `account_uuid` on Anthropic OAuth requests; sessions now install a dynamic resolver via `Agent#setMetadataResolver` that builds `{ session_id, account_uuid? }` per request, looking the live OAuth account UUID up from `AuthStorage` so it stays in sync with token refreshes and login/logout transitions instead of stranding a stale value
-- Fixed multi-file legacy Pi extensions failing to load when sibling `.ts` files import each other via relative paths ([#983](https://github.com/can1357/oh-my-pi/issues/983)).
-- Fixed sub-agent dispatch silently routing to a model whose provider has no working credentials (e.g. an unqualified `modelRoles.task` id like `qwen3.6-plus-free` resolving to a provider the user is not authenticated against). Task dispatch now falls back to the parent session's active model — which by definition has working auth — when the resolved subagent model has none ([#985](https://github.com/can1357/oh-my-pi/issues/985)).
+- Fixed multi-file legacy Pi extensions failing to load when sibling `.ts` files import each other via relative paths ([#983](https://github.com/can1357/gajae-code/issues/983)).
+- Fixed sub-agent dispatch silently routing to a model whose provider has no working credentials (e.g. an unqualified `modelRoles.task` id like `qwen3.6-plus-free` resolving to a provider the user is not authenticated against). Task dispatch now falls back to the parent session's active model — which by definition has working auth — when the resolved subagent model has none ([#985](https://github.com/can1357/gajae-code/issues/985)).
 
 ### Added
 
@@ -711,7 +711,7 @@
 
 ### Fixed
 
-- Fixed legacy Pi plugin extensions failing to load on Windows when their entry path contains a drive letter ([#990](https://github.com/can1357/oh-my-pi/pull/990) by [@jiwangyihao](https://github.com/jiwangyihao)).
+- Fixed legacy Pi plugin extensions failing to load on Windows when their entry path contains a drive letter ([#990](https://github.com/can1357/gajae-code/pull/990) by [@jiwangyihao](https://github.com/jiwangyihao)).
 
 ### Added
 
@@ -737,7 +737,7 @@
 
 ### Fixed
 
-- Fixed indefinite startup hang on large repos introduced in 14.7.6 ([#975](https://github.com/can1357/oh-my-pi/issues/975)) on two fronts: (1) `createAgentSession` was awaiting `buildAgentsMdSearch` and `buildWorkspaceTree` directly in its blocking `Promise.all`, bypassing the existing 5s preparation deadline that previously protected startup — both scans are now raced against a 5s deadline and fall back to the system-prompt fallback path on timeout; (2) `buildWorkspaceTree` now derives its listing from `git ls-files --cached --others --exclude-standard` when the workspace is a git worktree, which is O(index size) and avoids the per-call full-tree gitignore-aware native scan that the previous implementation triggered. Repos without git, or where the call fails / times out, transparently fall back to the previous native-glob path.
+- Fixed indefinite startup hang on large repos introduced in 14.7.6 ([#975](https://github.com/can1357/gajae-code/issues/975)) on two fronts: (1) `createAgentSession` was awaiting `buildAgentsMdSearch` and `buildWorkspaceTree` directly in its blocking `Promise.all`, bypassing the existing 5s preparation deadline that previously protected startup — both scans are now raced against a 5s deadline and fall back to the system-prompt fallback path on timeout; (2) `buildWorkspaceTree` now derives its listing from `git ls-files --cached --others --exclude-standard` when the workspace is a git worktree, which is O(index size) and avoids the per-call full-tree gitignore-aware native scan that the previous implementation triggered. Repos without git, or where the call fails / times out, transparently fall back to the previous native-glob path.
 
 ## [14.7.6] - 2026-05-07
 ### Changed
@@ -935,11 +935,11 @@
 
 ### Added
 
-- Added `statusLine.sessionAccent` to disable session-name accent coloring for the editor border and status line gap ([#918](https://github.com/can1357/oh-my-pi/issues/918))
+- Added `statusLine.sessionAccent` to disable session-name accent coloring for the editor border and status line gap ([#918](https://github.com/can1357/gajae-code/issues/918))
 
 ### Fixed
 
-- Disabled repeated OSC 11 background-color polling under WSL to avoid Windows terminal tab crashes while keeping initial and event-driven appearance detection ([#914](https://github.com/can1357/oh-my-pi/issues/914))
+- Disabled repeated OSC 11 background-color polling under WSL to avoid Windows terminal tab crashes while keeping initial and event-driven appearance detection ([#914](https://github.com/can1357/gajae-code/issues/914))
 
 - Fixed SSH ControlMaster socket paths to use OpenSSH's connection hash (`%C`) so connections to the same host with different users, ports, or jump hosts do not share a master session.
 
@@ -1462,8 +1462,8 @@
 
 ### Fixed
 
-- Fixed startup crashes on Linux systems where Bun's `os.cpus()` fails on non-contiguous CPU numbering ([#779](https://github.com/can1357/oh-my-pi/issues/779))
-- Fixed `gh_pr_push` so branches without `gh_pr_checkout` metadata fail instead of falling back to the tracked merge branch, and updated the GitHub tool setting copy to stop calling the tool group read-only ([#778](https://github.com/can1357/oh-my-pi/issues/778))
+- Fixed startup crashes on Linux systems where Bun's `os.cpus()` fails on non-contiguous CPU numbering ([#779](https://github.com/can1357/gajae-code/issues/779))
+- Fixed `gh_pr_push` so branches without `gh_pr_checkout` metadata fail instead of falling back to the tracked merge branch, and updated the GitHub tool setting copy to stop calling the tool group read-only ([#778](https://github.com/can1357/gajae-code/issues/778))
 - Fixed session list metadata extraction to better populate session titles and first-user summaries from partial session data when full JSONL parsing is unavailable
 - Fixed shell execution output to replace raw streamed bash output with the minimizer’s rewritten text before final output while still preserving the full original output as artifact metadata
 - Fixed bash command minimization to save the full unminimized output as a `bash-original` artifact during AgentSession shell execution, enabling `artifact://` access to complete command output
@@ -1481,7 +1481,7 @@
 - Fixed Markdown root writes to preserve fenced-code indentation verbatim.
 - Fixed Rust enum-variant replacement matching so trailing commas are included consistently with whole-variant writes.
 - Fixed streaming edit call headers to keep showing the target file path while the edit arguments are still arriving
-- Fixed Mermaid fenced markdown rendering in assistant messages on terminals without image protocol support ([#650](https://github.com/can1357/oh-my-pi/issues/650))
+- Fixed Mermaid fenced markdown rendering in assistant messages on terminals without image protocol support ([#650](https://github.com/can1357/gajae-code/issues/650))
 - Fixed chunk edit path parsing so plan-mode edits to section-addressed `local://PLAN.md:<selector>` paths are classified as writes to the plan file
 - Fixed SQLite `read` helper queries to reject `where=` clauses with SQL control syntax that could override the structured selector's pagination; raw SQL remains available through `q=SELECT ...`
 - Fixed `models` provider transport overrides so `headers`-only entries apply without requiring `baseUrl`, including runtime `registerProvider()` overrides that now persist across `refresh()` / `refreshProvider()`, preserve existing `baseUrl` on subsequent headers-only updates, clear stale transport overrides when a provider is re-registered under a different extension source, and keep runtime transport headers authoritative when `modelOverrides` set overlapping header keys
@@ -1505,7 +1505,7 @@
 - Fixed compiled `omp` binaries to ignore project-local `bunfig.toml` and `.env` autoloading at startup, preventing unrelated project config from crashing or preloading code into the CLI
 - Fixed edit tool diff and replace operations to report missing-file failures as `File not found: <path>` errors instead of raw filesystem ENOENT errors
 - Fixed `local://` URL path leak on Linux where `//` collapsing to `/` produced `local:/path` forms that bypassed the internal protocol handler and leaked as filesystem paths, breaking plan mode file resolution
-- Fixed Darwin compiled binaries failing to start under Bun 1.3.12 by ad-hoc signing local and release binary builds after applying Bun's no-codesign workaround ([#754](https://github.com/can1357/oh-my-pi/issues/754))
+- Fixed Darwin compiled binaries failing to start under Bun 1.3.12 by ad-hoc signing local and release binary builds after applying Bun's no-codesign workaround ([#754](https://github.com/can1357/gajae-code/issues/754))
 - Fixed Tavily web search silently returning off-topic news articles when `--recency` was set. The provider was unconditionally coupling `topic: "news"` to recency, which scoped Tavily's index to news publications and excluded documentation, release notes, GitHub, and all non-news technical content. Technical queries with `--recency` now return the correct corpus.
 - Fixed status-line sanitization to strip OSC, DCS, PM, APC, and 8-bit CSI escape sequences instead of leaving payload fragments in the UI
 - Fixed inline read tool previews to avoid rendering duplicate summary rows above the same code cell
@@ -1563,7 +1563,7 @@
 - Added support for multi-file `edit` calls across replace, patch, hashline, and chunk modes by grouping `edits` entries by file path and returning combined per-file results
 - Added per-edit `path` support in chunk entries so each operation can target explicit files when submitting mixed edits in a single request
 - Added support for `computeHashlineDiff` to accept hashline edits with `loc` and `content` payloads without requiring pre-resolved `op` fields
-- Added `/rename <title>` slash command to set an explicit session name, updating the session header and terminal tab title ([#658](https://github.com/can1357/oh-my-pi/issues/658))
+- Added `/rename <title>` slash command to set an explicit session name, updating the session header and terminal tab title ([#658](https://github.com/can1357/gajae-code/issues/658))
 - Added `session_name` status line segment: displays the session name in the status bar right side with a stable hash-derived accent color unique to each name; shown in all presets when a name is set
 
 ### Changed
@@ -1694,7 +1694,7 @@
 
 ### Fixed
 
-- Fixed MCP config docs and schema to use `~/.omp/agent/mcp.json` for user-scoped OMP-native MCP config while keeping project config at `<cwd>/.omp/mcp.json`
+- Fixed MCP config docs and schema to use `~/.omp/agent/mcp.json` for user-scoped GJC-native MCP config while keeping project config at `<cwd>/.omp/mcp.json`
 
 ## [14.0.4] - 2026-04-10
 
@@ -1783,15 +1783,15 @@
 - Improved message cloning resilience by falling back to shallow array clone when structured cloning fails due to non-cloneable objects
 - Made `assertEditableFileContent` synchronous instead of async for improved performance in streaming edit checks
 - Enhanced streaming edit abort detection to check for auto-generated files as soon as the file path is available, rather than waiting for the full diff
-- Improved file prefix reading in session storage to use `peekFile` utility from @oh-my-pi/pi-utils for better efficiency
-- Moved image metadata detection to @oh-my-pi/pi-utils package for shared use across projects
+- Improved file prefix reading in session storage to use `peekFile` utility from @gajae-code/utils for better efficiency
+- Moved image metadata detection to @gajae-code/utils package for shared use across projects
 - Simplified image loading API by removing redundant metadata parameters and consolidating image utilities
-- Updated imports to use readImageMetadata and parseImageMetadata from @oh-my-pi/pi-utils instead of local implementations
+- Updated imports to use readImageMetadata and parseImageMetadata from @gajae-code/utils instead of local implementations
 
 ### Removed
 
 - Removed image-input.ts utility module; functionality consolidated into image-loading.ts
-- Removed mime.ts utility module; MIME detection moved to @oh-my-pi/pi-utils
+- Removed mime.ts utility module; MIME detection moved to @gajae-code/utils
 - Removed ImageMetadata interface and ReadImageMetadataOptions from local codebase
 
 ### Fixed
@@ -1924,9 +1924,9 @@
 - Reorganized package.json exports: moved `./edit` exports before `./plan-mode` for better logical grouping
 - Notebook conversion logic now checks for raw read mode or non-chunk mode before converting via markit, allowing chunk-mode reads of `.ipynb` files to use chunk parsing instead of conversion
 - Go receiver methods now render as top-level siblings instead of nested under their receiver type in chunk read output
-- Moved prompt formatting and rendering utilities from `coding-agent` to `pi-utils` package; `renderPromptTemplate()` and `formatPromptContent()` now accessed via `prompt.render()` and `prompt.format()` from `@oh-my-pi/pi-utils`
-- Moved `parseFrontmatter()` utility from `coding-agent` to `pi-utils` package; now imported from `@oh-my-pi/pi-utils` instead of local utils
-- Consolidated prompt template handling: `TemplateContext` type now available as `prompt.TemplateContext` from `@oh-my-pi/pi-utils`
+- Moved prompt formatting and rendering utilities from `coding-agent` to `pi-utils` package; `renderPromptTemplate()` and `formatPromptContent()` now accessed via `prompt.render()` and `prompt.format()` from `@gajae-code/utils`
+- Moved `parseFrontmatter()` utility from `coding-agent` to `pi-utils` package; now imported from `@gajae-code/utils` instead of local utils
+- Consolidated prompt template handling: `TemplateContext` type now available as `prompt.TemplateContext` from `@gajae-code/utils`
 - DAP initialization now advertises support for `runInTerminal` and `startDebugging` reverse requests, and memory references
 - Debug tool schema expanded with new parameters for instruction/data breakpoints, memory operations, and custom requests
 - DAP session state now tracks instruction and data breakpoints separately from source breakpoints
@@ -2121,7 +2121,7 @@
 - Added `gh_search_prs` tool to search GitHub pull requests with repository scoping
 - Added `gh_run_watch` tool to watch GitHub Actions workflow runs, fast-fail on job failures, and stream tailed logs for failed jobs
 - Added bundled `/green` command to generate iterative CI fix prompts with optional tag instructions when HEAD is tagged
-- Project-scoped marketplace plugin installs: `omp plugin install --scope project name@marketplace` and `/marketplace install --scope project name@marketplace` install plugins into the nearest `.omp/` or `.git`-rooted project directory instead of the user directory ([#581](https://github.com/can1357/oh-my-pi/issues/581))
+- Project-scoped marketplace plugin installs: `omp plugin install --scope project name@marketplace` and `/marketplace install --scope project name@marketplace` install plugins into the nearest `.omp/` or `.git`-rooted project directory instead of the user directory ([#581](https://github.com/can1357/gajae-code/issues/581))
 - `--scope user|project` flag added to `/marketplace uninstall`, `/marketplace upgrade`, `/plugins enable`, and `/plugins disable` to disambiguate when a plugin is installed in both scopes
 - `omp plugin upgrade --scope project` with no plugin ID warns that `--scope` is ignored for bulk upgrades
 - Added opt-in `gh_*` GitHub CLI tools behind the `github.enabled` setting for repository, issue, pull request, diff, and search workflows
@@ -2148,8 +2148,8 @@
 - Fixed `gh_run_watch` to hide repo and polling internals from the tool schema and save full failed-job logs as session artifacts alongside the inline tailed output
 - Fixed `gh_*` tool outputs to spill full large results to artifacts instead of pre-truncating the head with unusable `offset=` guidance
 - Fixed bundled `/green` to watch the workflow runs for the current `HEAD` commit instead of whichever branch run was newest
-- Fixed OpenAI Responses session rehydration to strip stale assistant replay payloads before resumed requests ([#594](https://github.com/can1357/oh-my-pi/pull/594) by [@daandden](https://github.com/daandden))
-- Fixed inline image rendering to cap image height and preserve multiplexer scrollback during terminal resizes ([#587](https://github.com/can1357/oh-my-pi/pull/587) by [@smileynet](https://github.com/smileynet))
+- Fixed OpenAI Responses session rehydration to strip stale assistant replay payloads before resumed requests ([#594](https://github.com/can1357/gajae-code/pull/594) by [@daandden](https://github.com/daandden))
+- Fixed inline image rendering to cap image height and preserve multiplexer scrollback during terminal resizes ([#587](https://github.com/can1357/gajae-code/pull/587) by [@smileynet](https://github.com/smileynet))
 
 ## [13.17.1] - 2026-04-01
 
@@ -2159,9 +2159,9 @@
 
 ### Fixed
 
-- Fixed edit tool diff rendering to wrap long diff lines with continuation gutters instead of truncating them at terminal width ([#578](https://github.com/can1357/oh-my-pi/issues/578))
-- Fixed `--list-models` and `/model` provider filtering to hide models from disabled providers ([#588](https://github.com/can1357/oh-my-pi/issues/588))
-- Fixed edit tool diffstats to use diff-specific add/remove theme colors instead of success/error status colors ([#589](https://github.com/can1357/oh-my-pi/issues/589))
+- Fixed edit tool diff rendering to wrap long diff lines with continuation gutters instead of truncating them at terminal width ([#578](https://github.com/can1357/gajae-code/issues/578))
+- Fixed `--list-models` and `/model` provider filtering to hide models from disabled providers ([#588](https://github.com/can1357/gajae-code/issues/588))
+- Fixed edit tool diffstats to use diff-specific add/remove theme colors instead of success/error status colors ([#589](https://github.com/can1357/gajae-code/issues/589))
 
 ## [13.17.0] - 2026-03-30
 
@@ -2178,7 +2178,7 @@
 - Added plugin source resolver with `pathIsWithin` containment checks and versioned cache manager
 - Added CLI commands: `omp plugin marketplace add|remove|update|list`, `omp plugin discover [marketplace]`
 - Added `classifyInstallTarget()` to distinguish `name@marketplace` from npm install targets
-- Extended `listClaudePluginRoots()` to read OMP's installed plugins registry alongside Claude Code's, with OMP as authoritative for duplicate plugin IDs
+- Extended `listClaudePluginRoots()` to read GJC's installed plugins registry alongside Claude Code's, with GJC as authoritative for duplicate plugin IDs
 - Added `--plugin-dir <path>` repeatable CLI flag for loading plugins from local directories
 - Added `/reload-plugins` slash command that invalidates fs content cache and plugin roots cache
 - Added `printPluginHelp()` entries for marketplace and discover commands
@@ -2212,7 +2212,7 @@
 
 ### Fixed
 
-- Fixed `--model provider/id` resolving to wrong provider when model ID exists in multiple catalogs ([#560](https://github.com/can1357/oh-my-pi/issues/560))
+- Fixed `--model provider/id` resolving to wrong provider when model ID exists in multiple catalogs ([#560](https://github.com/can1357/gajae-code/issues/560))
 
 ## [13.16.4] - 2026-03-28
 
@@ -2329,7 +2329,7 @@
 - Added ACP (Agent Client Protocol) mode for headless agent operation via `--mode acp`
 - Added support for Agent Client Protocol SDK integration with session management, MCP server configuration, and streaming communication
 - Added `ensureOnDisk()` method to SessionManager to persist sessions immediately for ACP discovery
-- Added multiline custom input for `ask` custom answers, using the prompt-style editor without inactivity timeout while composing ([#506](https://github.com/can1357/oh-my-pi/issues/506))
+- Added multiline custom input for `ask` custom answers, using the prompt-style editor without inactivity timeout while composing ([#506](https://github.com/can1357/gajae-code/issues/506))
 
 ### Changed
 
@@ -2390,7 +2390,7 @@
 
 ### Fixed
 
-- Fixed resumed and session-switched GitHub Copilot/OpenAI Responses conversations replaying stale assistant native history from older saved sessions by sanitizing persisted assistant replay metadata on rehydration and resetting provider session state across live session boundaries ([#505](https://github.com/can1357/oh-my-pi/issues/505))
+- Fixed resumed and session-switched GitHub Copilot/OpenAI Responses conversations replaying stale assistant native history from older saved sessions by sanitizing persisted assistant replay metadata on rehydration and resetting provider session state across live session boundaries ([#505](https://github.com/can1357/gajae-code/issues/505))
 
 ### Added
 
@@ -2419,8 +2419,8 @@
 
 - Fixed reconnect retry loop continuing after configuration changes by checking epoch before each reconnection attempt
 - `roots/list` timeout on MCP server initialization: `connectToServer` now always installs a default handler for `ping` and `roots/list`
-- Fixed resumed GitHub Copilot conversations that could fail with `401 input item does not belong to this connection` on the first follow-up after process restart ([#488](https://github.com/can1357/oh-my-pi/issues/488))
-- Fixed STT Alt+H mic cursor rendering to measure the actual microphone glyph width, preventing one-column TUI overflow crashes when the active symbol preset uses a wide icon ([#484](https://github.com/can1357/oh-my-pi/issues/484))
+- Fixed resumed GitHub Copilot conversations that could fail with `401 input item does not belong to this connection` on the first follow-up after process restart ([#488](https://github.com/can1357/gajae-code/issues/488))
+- Fixed STT Alt+H mic cursor rendering to measure the actual microphone glyph width, preventing one-column TUI overflow crashes when the active symbol preset uses a wide icon ([#484](https://github.com/can1357/gajae-code/issues/484))
 
 ## [13.13.2] - 2026-03-18
 
@@ -2476,7 +2476,7 @@
 
 - Fixed OAuth redirect URI validation to preserve exact configured values without adding trailing slashes
 - Fixed session deletion error handling to display error messages in the session selector UI instead of silently failing
-- Added `oauth.redirectUri`, `oauth.clientSecret`, and `oauth.callbackPath` support for MCP server OAuth config so providers can use exact registered redirect URIs while preserving local callback listener settings ([#445](https://github.com/can1357/oh-my-pi/issues/445))
+- Added `oauth.redirectUri`, `oauth.clientSecret`, and `oauth.callbackPath` support for MCP server OAuth config so providers can use exact registered redirect URIs while preserving local callback listener settings ([#445](https://github.com/can1357/gajae-code/issues/445))
 
 ## [13.12.8] - 2026-03-16
 
@@ -2743,7 +2743,7 @@
 
 ### Fixed
 
-- Respected `PI_CONFIG_DIR` when discovering native user config paths for slash commands and related config directories ([#349](https://github.com/can1357/oh-my-pi/issues/349))
+- Respected `PI_CONFIG_DIR` when discovering native user config paths for slash commands and related config directories ([#349](https://github.com/can1357/gajae-code/issues/349))
 
 ## [13.10.0] - 2026-03-10
 
@@ -2807,7 +2807,7 @@
 
 - Added Tavily as a supported web search provider with `TAVILY_API_KEY` credential discovery and provider fallback support
 - Added `#`-triggered prompt action suggestions in the editor, with keybinding hints for line navigation and prompt copy actions
-- Added Tavily as a supported web search provider with `TAVILY_API_KEY` credential discovery and provider fallback support ([#313](https://github.com/can1357/oh-my-pi/issues/313))
+- Added Tavily as a supported web search provider with `TAVILY_API_KEY` credential discovery and provider fallback support ([#313](https://github.com/can1357/gajae-code/issues/313))
 
 ### Removed
 
@@ -2881,7 +2881,7 @@
 
 ### Breaking Changes
 
-- Changed `ThinkingLevel` type to be imported from `@oh-my-pi/pi-agent-core` instead of `@oh-my-pi/pi-ai`
+- Changed `ThinkingLevel` type to be imported from `@gajae-code/agent-core` instead of `@gajae-code/ai`
 - Changed thinking level representation from string literals to `Effort` enum values (e.g., `Effort.High` instead of `"high"`)
 - Changed `getThinkingLevel()` return type to `ThinkingLevel | undefined` to support models without thinking support
 - Changed model `reasoning` property to `thinking` property with `ThinkingConfig` for explicit effort level configuration
@@ -2894,7 +2894,7 @@
 - Added `enrichModelThinking()` function to apply thinking configuration to models during registry initialization
 - Added `clampThinkingLevelForModel()` function to constrain thinking levels to model-supported ranges
 - Added `getSupportedEfforts()` function to retrieve available thinking efforts for a model
-- Added `Effort` enum import from `@oh-my-pi/pi-ai` for type-safe thinking level representation
+- Added `Effort` enum import from `@gajae-code/ai` for type-safe thinking level representation
 - Added `/fast` slash command to toggle OpenAI service tier priority mode for faster response processing
 - Added `serviceTier` setting to control OpenAI processing priority (none, auto, default, flex, scale, priority)
 - Added `compaction.remoteEnabled` setting to control use of remote compaction endpoints
@@ -2965,20 +2965,20 @@
 ### Changed
 
 - Updated read tool prompt to distinguish between default limit and maximum limit per call
-- Moved `ThinkingLevel` type from `@oh-my-pi/pi-agent-core` to `@oh-my-pi/pi-ai` for centralized thinking level definitions
-- Replaced local thinking level validation with `parseThinkingLevel()` and `ALL_THINKING_LEVELS` from `@oh-my-pi/pi-ai`
-- Updated thinking level option providers to use `THINKING_MODE_DESCRIPTIONS` from `@oh-my-pi/pi-ai` for consistent descriptions
+- Moved `ThinkingLevel` type from `@gajae-code/agent-core` to `@gajae-code/ai` for centralized thinking level definitions
+- Replaced local thinking level validation with `parseThinkingLevel()` and `ALL_THINKING_LEVELS` from `@gajae-code/ai`
+- Updated thinking level option providers to use `THINKING_MODE_DESCRIPTIONS` from `@gajae-code/ai` for consistent descriptions
 - Renamed `RoleThinkingMode` type to `ThinkingMode` and changed default value from `'default'` to `'inherit'` for clarity
-- Replaced `formatThinkingEffortLabel()` utility with `formatThinking()` from `@oh-my-pi/pi-ai`
+- Replaced `formatThinkingEffortLabel()` utility with `formatThinking()` from `@gajae-code/ai`
 - Renamed `extractExplicitThinkingLevel()` to `extractExplicitThinkingSelector()` in model resolver
-- Updated thinking level clamping to use `getAvailableThinkingLevel()` from `@oh-my-pi/pi-ai`
+- Updated thinking level clamping to use `getAvailableThinkingLevel()` from `@gajae-code/ai`
 
 ### Removed
 
-- Removed `thinking-effort-label.ts` utility file (functionality moved to `@oh-my-pi/pi-ai`)
+- Removed `thinking-effort-label.ts` utility file (functionality moved to `@gajae-code/ai`)
 - Removed local `VALID_THINKING_LEVELS` constant definitions across multiple files
-- Removed `isValidThinkingLevel()` function (replaced by `parseThinkingLevel()` from `@oh-my-pi/pi-ai`)
-- Removed `parseThinkingLevel()` helper from discovery module (now uses centralized version from `@oh-my-pi/pi-ai`)
+- Removed `isValidThinkingLevel()` function (replaced by `parseThinkingLevel()` from `@gajae-code/ai`)
+- Removed `parseThinkingLevel()` helper from discovery module (now uses centralized version from `@gajae-code/ai`)
 
 ### Fixed
 
@@ -2994,7 +2994,7 @@
 ### Changed
 
 - Changed edit tool response to include diff summary with line counts (+added -removed) and a compact diff preview instead of warnings-only output
-- Limited auto context promotion to models with explicit `contextPromotionTarget`; models without a configured target now compact on overflow instead of switching to arbitrary larger models ([#282](https://github.com/can1357/oh-my-pi/issues/282))
+- Limited auto context promotion to models with explicit `contextPromotionTarget`; models without a configured target now compact on overflow instead of switching to arbitrary larger models ([#282](https://github.com/can1357/gajae-code/issues/282))
 
 ### Fixed
 
@@ -3059,7 +3059,7 @@
 
 ### Fixed
 
-- Fixed `ask` timeout handling to auto-select the recommended option instead of aborting the turn, while preserving explicit user-cancel abort behavior ([#266](https://github.com/can1357/oh-my-pi/issues/266))
+- Fixed `ask` timeout handling to auto-select the recommended option instead of aborting the turn, while preserving explicit user-cancel abort behavior ([#266](https://github.com/can1357/gajae-code/issues/266))
 
 ## [13.6.2] - 2026-03-03
 
@@ -3074,7 +3074,7 @@
 
 ### Fixed
 
-- Fixed `omp update` silently succeeding without actually updating the binary when the update channel (bun global vs compiled binary) doesn't match the installation method ([#247](https://github.com/can1357/oh-my-pi/issues/247))
+- Fixed `omp update` silently succeeding without actually updating the binary when the update channel (bun global vs compiled binary) doesn't match the installation method ([#247](https://github.com/can1357/gajae-code/issues/247))
 - Added post-update verification that checks the resolved `omp` binary reports the expected version, with actionable warnings on mismatch
 - `omp update` now detects when the `omp` in PATH is not managed by bun and falls back to binary replacement instead of updating the wrong location
 
@@ -3113,7 +3113,7 @@
 
 ### Changed
 
-- Updated OAuth client name from 'oh-my-pi MCP' to 'Codex' for dynamic client registration
+- Updated OAuth client name from 'gajae-code MCP' to 'Codex' for dynamic client registration
 
 ### Fixed
 
@@ -3141,11 +3141,11 @@
 - Enhanced `discoverOAuthEndpoints()` to accept optional `authServerUrl` parameter and query both auth server and resource server for OAuth metadata
 - Improved OAuth metadata extraction to handle additional field name variations (`clientId`, `default_client_id`, `public_client_id`)
 - Refactored OAuth endpoint discovery logic into reusable `findEndpoints()` helper for consistent metadata parsing across multiple sources
-- Task subagents now strip inherited `AGENTS.md` context files and the task tool prompt no longer warns against repeating AGENTS guidance, aligning subagent context with explicit task inputs ([#233](https://github.com/can1357/oh-my-pi/issues/233))
+- Task subagents now strip inherited `AGENTS.md` context files and the task tool prompt no longer warns against repeating AGENTS guidance, aligning subagent context with explicit task inputs ([#233](https://github.com/can1357/gajae-code/issues/233))
 
 ### Fixed
 
-- Fixed MCP OAuth discovery to honor `Mcp-Auth-Server` metadata and resolve authorization endpoints from the declared auth server, restoring Figma MCP login URLs with `client_id` ([#235](https://github.com/can1357/oh-my-pi/issues/235))
+- Fixed MCP OAuth discovery to honor `Mcp-Auth-Server` metadata and resolve authorization endpoints from the declared auth server, restoring Figma MCP login URLs with `client_id` ([#235](https://github.com/can1357/gajae-code/issues/235))
 
 ## [13.5.3] - 2026-03-01
 
@@ -3218,7 +3218,7 @@
 - AST edit now registers pending actions after preview, allowing explicit apply/discard workflow via `resolve` tool
 - Custom tools can register pending actions via `pushPendingAction(action)` in `CustomToolAPI`, enabling the `resolve` workflow for custom preview-apply flows
 - `deferrable?: boolean` field added to `AgentTool`, `CustomTool`, and `ToolDefinition` interfaces; tools that set it signal they may stage pending actions
-- `HIDDEN_TOOLS` and `ResolveTool` exported from `@oh-my-pi/pi-coding-agent` SDK for manual tool composition
+- `HIDDEN_TOOLS` and `ResolveTool` exported from `@gajae-code/coding-agent` SDK for manual tool composition
 - `PendingActionStore` now uses a LIFO stack (`push`/`peek`/`pop`); multiple deferrable tools can stage actions that resolve in reverse order of registration
 - Added `gemini`, `codex`, and `synthetic` as supported values for the `providers.webSearch` setting
 - `ast_grep` tool now accepts a `patterns` array (replaces single `pattern`); multiple patterns run in one native pass and results are merged before offset/limit
@@ -3382,7 +3382,7 @@
 - Changed output schema validation to gracefully fall back to unconstrained object when schema is invalid, instead of rejecting submissions
 - Changed schema sanitization to remove strict-mode incompatible constraints (minLength, pattern, etc.) from tool parameters while preserving them for runtime validation
 - Simplified task execution to always pass available session skills to subagents instead of resolving per-task skill lists
-- Added `KILO_API_KEY` to CLI environment variable help text for Kilo Gateway provider setup ([#193](https://github.com/can1357/oh-my-pi/issues/193))
+- Added `KILO_API_KEY` to CLI environment variable help text for Kilo Gateway provider setup ([#193](https://github.com/can1357/gajae-code/issues/193))
 
 ### Removed
 
@@ -3487,9 +3487,9 @@
 
 ### Changed
 
-- Reorganized imports from `@oh-my-pi/pi-utils/dirs` to consolidate with main `@oh-my-pi/pi-utils` exports for cleaner dependency management
+- Reorganized imports from `@gajae-code/utils/dirs` to consolidate with main `@gajae-code/utils` exports for cleaner dependency management
 - Renamed `loadSkillsFromDir` to `scanSkillsFromDir` with updated interface for improved clarity on skill discovery behavior
-- Moved `tryParseJson` utility from local scrapers module to `@oh-my-pi/pi-utils` for centralized JSON parsing
+- Moved `tryParseJson` utility from local scrapers module to `@gajae-code/utils` for centralized JSON parsing
 - Simplified patch module exports by consolidating type re-exports with `export * from './types'`
 - Removed `emitCustomToolSessionEvent` method from AgentSession for streamlined session lifecycle management
 - Changed skill discovery from recursive to non-recursive (one level deep only) for improved performance and clarity
@@ -3771,7 +3771,7 @@
 
 ### Fixed
 
-- Fixed `omp stats` failing on npm/bun installs by including required stats build files in published `@oh-my-pi/omp-stats` package ([#113](https://github.com/can1357/oh-my-pi/pull/113) by [@masonc15](https://github.com/masonc15))
+- Fixed `omp stats` failing on npm/bun installs by including required stats build files in published `@gajae-code/stats` package ([#113](https://github.com/can1357/gajae-code/pull/113) by [@masonc15](https://github.com/masonc15))
 
 ## [12.14.0] - 2026-02-19
 
@@ -3789,7 +3789,7 @@
 
 ### Changed
 
-- System prompt now identifies agent as operating inside Oh My Pi harness and instructs reading docs:// URLs for omp/pi topics
+- System prompt now identifies agent as operating inside Gajae Code harness and instructs reading docs:// URLs for omp/pi topics
 - Tool discovery now accepts executable script extensions (.ts, .js, .sh, .bash, .py) in addition to .json and .md files
 - Updated bash and read tool documentation to reference `docs://` URL support
 - Hashline format separator changed from pipe (`|`) to colon (`:`) for improved readability (e.g., `LINE#ID:content` instead of `LINE#ID|content`)
@@ -3823,7 +3823,7 @@
 - Added support for SSH host configuration at project and user scopes (.omp/ssh.json and ~/.omp/agent/ssh.json)
 - Added `--host`, `--user`, `--port`, `--key`, `--desc`, `--compat`, and `--scope` flags for SSH host configuration
 - Added discovery of SSH hosts from project configuration files alongside manually configured hosts
-- Added NanoGPT as a login provider (`/login nanogpt`) with API key prompt flow linking to `https://nano-gpt.com/api` ([#111](https://github.com/can1357/oh-my-pi/issues/111))
+- Added NanoGPT as a login provider (`/login nanogpt`) with API key prompt flow linking to `https://nano-gpt.com/api` ([#111](https://github.com/can1357/gajae-code/issues/111))
 
 ### Changed
 
@@ -3845,7 +3845,7 @@
 
 ### Added
 
-- Added Kimi (Moonshot) as a web search provider with OAuth and API key support ([#110](https://github.com/can1357/oh-my-pi/pull/110) by [@oglassdev](https://github.com/oglassdev))
+- Added Kimi (Moonshot) as a web search provider with OAuth and API key support ([#110](https://github.com/can1357/gajae-code/pull/110) by [@oglassdev](https://github.com/oglassdev))
 
 ### Changed
 
@@ -3853,7 +3853,7 @@
 
 ### Fixed
 
-- Fixed Mermaid pre-render failures from repeatedly re-triggering background renders (freeze loop) and restored resilient rendering when diagram conversion/callbacks fail ([#109](https://github.com/can1357/oh-my-pi/issues/109)).
+- Fixed Mermaid pre-render failures from repeatedly re-triggering background renders (freeze loop) and restored resilient rendering when diagram conversion/callbacks fail ([#109](https://github.com/can1357/gajae-code/issues/109)).
 
 ## [12.12.0] - 2026-02-19
 
@@ -3876,7 +3876,7 @@
 
 ### Fixed
 
-- Fixed interactive-mode editor height to stay bounded and resize-aware, preventing off-screen cursor drift during long prompt/history navigation ([#99](https://github.com/can1357/oh-my-pi/issues/99)).
+- Fixed interactive-mode editor height to stay bounded and resize-aware, preventing off-screen cursor drift during long prompt/history navigation ([#99](https://github.com/can1357/gajae-code/issues/99)).
 
 ## [12.11.3] - 2026-02-19
 
@@ -3935,7 +3935,7 @@
 - Added `rules` option to CreateAgentSessionOptions for explicit rule configuration
 - Added `sessionDir` option to RpcClientOptions for specifying agent session directory
 - Added `Symbol.dispose` method to RpcClient for resource cleanup support
-- Added `autocompleteMaxVisible` setting to configure the number of items shown in the autocomplete dropdown (3-20, default 5) ([#98](https://github.com/can1357/oh-my-pi/pull/98) by [@masonc15](https://github.com/masonc15))
+- Added `autocompleteMaxVisible` setting to configure the number of items shown in the autocomplete dropdown (3-20, default 5) ([#98](https://github.com/can1357/gajae-code/pull/98) by [@masonc15](https://github.com/masonc15))
 - Added `condition` and `scope` fields to rule frontmatter for advanced TTSR matching and stream filtering
 - Added `ttsr.interruptMode` setting to control when TTSR rules interrupt mid-stream vs inject warnings after completion
 - Added support for loading rules, prompts, commands, context files (AGENTS.md), and system prompts (SYSTEM.md) from ~/.agent/ directory (with fallback to ~/.agents/)
@@ -3994,7 +3994,7 @@
 
 ### Changed
 
-- Improved `/changelog` performance by displaying only the most recent 3 versions by default, with a `--full` flag for the complete history ([#85](https://github.com/can1357/oh-my-pi/pull/85) by [@tctev](https://github.com/tctev))
+- Improved `/changelog` performance by displaying only the most recent 3 versions by default, with a `--full` flag for the complete history ([#85](https://github.com/can1357/gajae-code/pull/85) by [@tctev](https://github.com/tctev))
 - Centralized builtin slash command definitions and handlers into a shared registry, replacing the large input-controller if-chain dispatch
 
 ## [12.7.0] - 2026-02-16
@@ -4041,7 +4041,7 @@
 
 - Fixed LSP operations to properly respect abort signals and throw `ToolAbortError` when cancelled
 - Fixed workspace diagnostics process cleanup to remove abort event listeners in finally block
-- Fixed PTY-backed bash execution to enforce timeout completion when detached child processes keep the PTY stream open ([#88](https://github.com/can1357/oh-my-pi/issues/88))
+- Fixed PTY-backed bash execution to enforce timeout completion when detached child processes keep the PTY stream open ([#88](https://github.com/can1357/gajae-code/issues/88))
 
 ## [12.5.1] - 2026-02-15
 
@@ -4060,8 +4060,8 @@
 - Added `previewTheme()` function for non-destructive theme preview during settings browsing
 - Added animated microphone icon with color cycling during voice recording
 - Added support for discovering skills via symbolic links in skill directories
-- Added `abort_and_prompt` RPC command for atomic abort-and-reprompt without race conditions ([#357](https://github.com/can1357/oh-my-pi/pull/357))
-- Added automatic dark/light theme switching via SIGWINCH with separate `theme.dark`/`theme.light` settings, replacing the single `theme` setting ([#65](https://github.com/can1357/oh-my-pi/issues/65))
+- Added `abort_and_prompt` RPC command for atomic abort-and-reprompt without race conditions ([#357](https://github.com/can1357/gajae-code/pull/357))
+- Added automatic dark/light theme switching via SIGWINCH with separate `theme.dark`/`theme.light` settings, replacing the single `theme` setting ([#65](https://github.com/can1357/gajae-code/issues/65))
 - Added speech-to-text (STT) feature with `Alt+H` keybinding and `/stt` slash command
 - Added cross-platform audio recording: SoX, FFmpeg, arecord (Linux), PowerShell mciSendString (Windows fallback)
 - Added recording tool fallback chain — automatically tries each available tool in order
@@ -4104,7 +4104,7 @@
 
 ### Changed
 
-- Moved `sanitizeText` function from `@oh-my-pi/pi-utils` to `@oh-my-pi/pi-natives` for better code organization
+- Moved `sanitizeText` function from `@gajae-code/utils` to `@gajae-code/natives` for better code organization
 - Replaced internal `#normalizeOutput` methods with `sanitizeText` utility function in bash and Python execution components
 - Added line length clamping (4000 characters) to bash and Python execution output to prevent display of excessively long lines
 - Modified memory storage to isolate memories by project working directory, preventing cross-project memory contamination
@@ -4169,12 +4169,12 @@
 - Filesystem scan cache invalidation helpers (`invalidateFsScanAfterWrite`, `invalidateFsScanAfterDelete`, `invalidateFsScanAfterRename`) to properly invalidate shared caches after file mutations
 - Named discovery profile for file mention candidates to standardize cache visibility and ignore semantics across callers
 - Comprehensive `models.yml` provider integration guide documenting custom model registration, provider overrides, API adapters, merge behavior, and practical integration patterns for Ollama, vLLM, LM Studio, and proxy endpoints
-- Claude Code marketplace plugin discovery: automatically loads skills, commands, hooks, tools, and agents from `~/.claude/plugins/cache/` based on `installed_plugins.json` registry ([#48](https://github.com/can1357/oh-my-pi/issues/48))
+- Claude Code marketplace plugin discovery: automatically loads skills, commands, hooks, tools, and agents from `~/.claude/plugins/cache/` based on `installed_plugins.json` registry ([#48](https://github.com/can1357/gajae-code/issues/48))
 
 ### Changed
 
-- Moved directory path utilities from `src/config.ts` to `@oh-my-pi/pi-utils/dirs` for shared use across packages
-- Updated imports throughout codebase to use centralized directory path functions from `@oh-my-pi/pi-utils/dirs`
+- Moved directory path utilities from `src/config.ts` to `@gajae-code/utils/dirs` for shared use across packages
+- Updated imports throughout codebase to use centralized directory path functions from `@gajae-code/utils/dirs`
 - Updated interactive bash terminal UI label from 'InteractiveTerm' to 'Console' for clarity
 - Enhanced bash execution environment with comprehensive non-interactive defaults for pagers, editors, and package managers to prevent command blocking and interactive prompts
 - Updated custom models configuration to use `~/.omp/agent/models.yml` (YAML format) while maintaining backward compatibility with legacy `models.json`
@@ -4192,9 +4192,9 @@
 
 ### Fixed
 
-- Fixed `omp setup` crashing with uncaught exception when no component argument provided; now shows help ([#35](https://github.com/can1357/oh-my-pi/issues/35))
-- Fixed `/mcp list` showing "No MCP servers configured" when servers are loaded from discovery sources like `.claude.json`, `.cursor/mcp.json`, `.vscode/mcp.json` ([#34](https://github.com/can1357/oh-my-pi/issues/34))
-- Fixed model selector sorting to show newest models first within each provider instead of alphabetical; `-latest` aliases now appear before dated versions ([#37](https://github.com/can1357/oh-my-pi/issues/37))
+- Fixed `omp setup` crashing with uncaught exception when no component argument provided; now shows help ([#35](https://github.com/can1357/gajae-code/issues/35))
+- Fixed `/mcp list` showing "No MCP servers configured" when servers are loaded from discovery sources like `.claude.json`, `.cursor/mcp.json`, `.vscode/mcp.json` ([#34](https://github.com/can1357/gajae-code/issues/34))
+- Fixed model selector sorting to show newest models first within each provider instead of alphabetical; `-latest` aliases now appear before dated versions ([#37](https://github.com/can1357/gajae-code/issues/37))
 
 ## [11.14.4] - 2026-02-12
 
@@ -4216,7 +4216,7 @@
 
 ### Changed
 
-- Improved Bun binary detection to check `Bun.env.PI_COMPILED` environment variable
+- Improved Bun binary detection to check `Bun.env.PI_CGJCILED` environment variable
 - Enhanced Bun package manager update to install specific version instead of latest
 - Added post-update verification for Bun installations to warn if expected version was not installed
 
@@ -4399,7 +4399,7 @@
 - Migrated CLI framework from oclif to lightweight pi-utils CLI runner
 - Replaced oclif command registration with explicit command entries in cli.ts
 - Changed default root command name from 'index' to 'launch'
-- Updated all command imports to use @oh-my-pi/pi-utils/cli instead of @oclif/core
+- Updated all command imports to use @gajae-code/utils/cli instead of @oclif/core
 
 ### Removed
 
@@ -4510,7 +4510,7 @@
 - Improved error handling in worktree baseline application to use `isEnoent()` utility instead of file existence checks
 - Updated bash tool to use standard Node.js `fs.promises.stat()` with `isEnoent()` error handling
 - Replaced `tmpdir()` named import with `os` namespace import for consistency
-- Migrated logging from `chalk` and `console.error` to structured logger from `@oh-my-pi/pi-utils`
+- Migrated logging from `chalk` and `console.error` to structured logger from `@gajae-code/utils`
 
 ### Fixed
 
@@ -4920,7 +4920,7 @@
 - Updated thinking level cycling to no longer persist changes to settings, enabling quick iteration through thinking levels without modifying user preferences
 - Replaced nanoid with Snowflake for ID generation throughout codebase for improved performance and collision resistance
 - Updated session ID format in documentation from nanoid to snowflake hex string (e.g., "a1b2c3d4e5f60001")
-- Renamed environment variable prefix from `OMP_` to `PI_` throughout codebase (e.g., `OMP_DEBUG_STARTUP` → `PI_DEBUG_STARTUP`, `OMP_PYTHON_GATEWAY_URL` → `PI_PYTHON_GATEWAY_URL`)
+- Renamed environment variable prefix from `GJC_` to `PI_` throughout codebase (e.g., `GJC_DEBUG_STARTUP` → `PI_DEBUG_STARTUP`, `GJC_PYTHON_GATEWAY_URL` → `PI_PYTHON_GATEWAY_URL`)
 - Removed `env` setting from configuration schema; environment variables are no longer automatically applied from settings
 - Changed `venvPath` property in PythonRuntime from nullable to optional (returns `undefined` instead of `null`)
 - Simplified notification settings from protocol-specific options (bell, osc99, osc9) to simple on/off toggle for `completion.notify` and `ask.notify`
@@ -5005,7 +5005,7 @@
 - Added `/browser` command to toggle browser headless vs visible mode in interactive sessions
 - Added `browser.enabled` and `browser.headless` settings to control browser automation behavior
 - Added Python prelude caching to improve startup performance by storing compiled prelude helpers and module metadata
-- Added `OMP_DEBUG_STARTUP` environment variable for conditional startup performance debugging output
+- Added `GJC_DEBUG_STARTUP` environment variable for conditional startup performance debugging output
 - Added autonomous memory system with storage, memory tools, and context injection
 
 ### Changed
@@ -5036,7 +5036,7 @@
 ### Changed
 
 - Updated `renderResult` signature in custom tools and extensions to accept optional `args` parameter for context-aware rendering
-- Changed environment variable from `ENV_AGENT_DIR` constant to hardcoded `OMP_CODING_AGENT_DIR` string in config and CLI help text
+- Changed environment variable from `ENV_AGENT_DIR` constant to hardcoded `GJC_CODING_AGENT_DIR` string in config and CLI help text
 - Fixed method binding in extension and hook tool wrappers to preserve `this` context for `renderCall` and `renderResult` methods
 
 ## [10.3.1] - 2026-02-03
@@ -5218,7 +5218,7 @@
 
 ### Changed
 
-- Changed persistent shell from opt-out to opt-in (default: off) for improved reliability; enable via Settings > Bash > Persistent shell or `OMP_SHELL_PERSIST=1`
+- Changed persistent shell from opt-out to opt-in (default: off) for improved reliability; enable via Settings > Bash > Persistent shell or `GJC_SHELL_PERSIST=1`
 - Added new "Bash" settings tab grouping shell-related settings (force basic shell, persistent shell, interceptor, intercept ls)
 
 ## [9.5.0] - 2026-02-01
@@ -5311,7 +5311,7 @@
 
 - Persistent shell session support for bash tool with environment variable preservation across commands
 - New `shellForceBasic` setting to force bash/sh even if user's default shell is different (default: true)
-- New `OMP_SHELL_PERSIST` environment variable to control persistent shell behavior (set to 0 to disable)
+- New `GJC_SHELL_PERSIST` environment variable to control persistent shell behavior (set to 0 to disable)
 
 ### Changed
 
@@ -5321,7 +5321,7 @@
 - Shell snapshot generation now sanitizes `BASH_ENV` and `ENV` variables to prevent shell exit issues
 - Shell snapshot caching now per-shell-binary instead of global to avoid cross-shell contamination
 - System prompt restructured with coordinator-specific guidance for parallel task delegation
-- Bash tool now reuses a persistent shell session by default on Unix. Set `OMP_SHELL_PERSIST=0` to disable or fall back to per-command execution on Windows/unsupported shells.
+- Bash tool now reuses a persistent shell session by default on Unix. Set `GJC_SHELL_PERSIST=0` to disable or fall back to per-command execution on Windows/unsupported shells.
 - Added a shellForceBasic setting to force bash/sh and keep environment changes across bash commands (default: true).
 
 ### Fixed
@@ -5446,7 +5446,7 @@
 ### Added
 
 - Added `plan` model role for specifying the model used by the plan agent
-- Added `--plan` CLI flag and `OMP_PLAN_MODEL` environment variable for ephemeral plan model override
+- Added `--plan` CLI flag and `GJC_PLAN_MODEL` environment variable for ephemeral plan model override
 - Added plan model selection in model selector UI with PLAN badge
 
 ### Changed
@@ -5882,7 +5882,7 @@
 - Removed worktree management system
 - Removed bundled wt custom command
 - Removed voice-related settings and configuration options
-- Removed @oh-my-pi/pi-git-tool dependency
+- Removed @gajae-code/pi-git-tool dependency
 
 ## [6.8.5] - 2026-01-21
 
@@ -5958,7 +5958,7 @@
 
 ### Changed
 
-- Replaced internal logger with @oh-my-pi/pi-utils logger across all modules
+- Replaced internal logger with @gajae-code/utils logger across all modules
 - Updated process spawning to use cspawn and ptree utilities from pi-utils
 - Migrated file operations to use async fs/promises and Bun file APIs
 - Refactored promise handling to use Promise.withResolvers and utility functions
@@ -6002,7 +6002,7 @@
 - Extended anchor syntax: ellipsis placeholders, `top of file`/`start of file`, `@@ line N`, nested `@@` anchors, space-separated hierarchical contexts
 - Relaxed fuzzy threshold fallback and unique substring acceptance for context matching
 - Added `--no-title` flag to disable automatic session title generation
-- Environment variables for edit tool configuration (OMP_EDIT_VARIANT, OMP_EDIT_FUZZY, OMP_EDIT_FUZZY_THRESHOLD)
+- Environment variables for edit tool configuration (GJC_EDIT_VARIANT, GJC_EDIT_FUZZY, GJC_EDIT_FUZZY_THRESHOLD)
 - Configurable fuzzy matching threshold setting (0.85 lenient to 0.98 strict)
 - Apply-patch mode for edit tool (`edit.patchMode` setting) with create, update, delete, and rename operations
 - Added MCP tool caching for faster startup with cached tool definitions
@@ -6030,7 +6030,7 @@
 - Ambiguous context matching resolves duplicates using adjacent @@ anchor positioning
 - Patch parser handles bare \*\*\* terminators, model hallucination markers, line hint ranges
 - Function context matching handles signatures with and without empty parentheses
-- Fixed session title generation to respect OMP_NO_TITLE environment variable
+- Fixed session title generation to respect GJC_NO_TITLE environment variable
 - Fixed Python module discovery to use import.meta.dir for ES module compatibility
 - Fixed LSP writethrough batching to flush when delete operations complete a batch
 - Fixed line number validation, BOM detection, and trailing newline preservation in patches
@@ -6175,7 +6175,7 @@
 - Enhanced Python kernel availability checking with faster validation
 - Optimized Python environment warming to avoid blocking during tool initialization
 - Reorganized settings interface into behavior, tools, display, voice, status, lsp, and exa tabs
-- Migrated environment variables from PI* to OMP* prefix with automatic migration
+- Migrated environment variables from PI* to GJC* prefix with automatic migration
 - Updated model selector to use TabBar component for provider navigation
 - Changed role badges to inverted style with colored backgrounds
 - Added support for /models command alias in addition to /model
@@ -6802,7 +6802,7 @@
 
 ### Added
 
-- Added environment variable configuration for task limits: `OMP_TASK_MAX_PARALLEL`, `OMP_TASK_MAX_CONCURRENCY`, `OMP_TASK_MAX_OUTPUT_BYTES`, `OMP_TASK_MAX_OUTPUT_LINES`, and `OMP_TASK_MAX_AGENTS_IN_DESCRIPTION`
+- Added environment variable configuration for task limits: `GJC_TASK_MAX_PARALLEL`, `GJC_TASK_MAX_CONCURRENCY`, `GJC_TASK_MAX_OUTPUT_BYTES`, `GJC_TASK_MAX_OUTPUT_LINES`, and `GJC_TASK_MAX_AGENTS_IN_DESCRIPTION`
 - Added specialized web-fetch handlers for 50+ platforms including GitHub, GitLab, npm, PyPI, crates.io, Stack Overflow, Wikipedia, arXiv, PubMed, Hacker News, Reddit, Mastodon, Bluesky, and many more
 - Added automatic yt-dlp installation for YouTube transcript extraction
 - Added YouTube video support with automatic transcript extraction via yt-dlp
@@ -6860,7 +6860,7 @@
 
 - Removed `browser` embedded agent from task tool agent discovery
 - Removed `recursive` property from agent definitions
-- Removed environment variables `OMP_NO_SUBAGENTS`, `OMP_BLOCKED_AGENT`, and `OMP_SPAWNS` for subagent control
+- Removed environment variables `GJC_NO_SUBAGENTS`, `GJC_BLOCKED_AGENT`, and `GJC_SPAWNS` for subagent control
 - Removed pre-instantiated tool exports (`readTool`, `bashTool`, `editTool`, `writeTool`, `grepTool`, `findTool`, `lsTool`) in favor of factory functions
 - Removed `createCodingTools` and `createReadOnlyTools` helper functions
 - Removed `codingTools` and `readOnlyTools` convenience exports
@@ -6878,7 +6878,7 @@
 
 ### Changed
 
-- Switched from local `@oh-my-pi/pi-ai` to upstream `@oh-my-pi/pi-ai` package
+- Switched from local `@gajae-code/ai` to upstream `@gajae-code/ai` package
 
 ### Added
 
@@ -6960,7 +6960,7 @@
 - Added `/background` (or `/bg`) command to detach UI and continue agent execution in the background
 - Added completion notification system with configurable methods (bell, osc99, osc9, auto, off) when agent finishes
 - Added `completionNotification` setting to configure how the agent notifies on completion
-- Added `OMP_NOTIFICATIONS` environment variable to suppress notifications globally
+- Added `GJC_NOTIFICATIONS` environment variable to suppress notifications globally
 - Added `/wt` slash command for git worktree management with create, list, merge, remove, status, spawn, and parallel operations
 - Added worktree library with collapse strategies (simple, merge-base, rebase) for merging changes between worktrees
 - Added worktree session tracking for managing agent tasks across isolated worktrees
@@ -7192,7 +7192,7 @@
 - Added support for GitHub Copilot instructions with applyTo glob patterns
 - Added support for Gemini extensions and system.md customization files
 - Added support for Codex AGENTS.md and config.toml settings
-- Added automatic migration of `PI_*` environment variables to `OMP_*` equivalents for backwards compatibility
+- Added automatic migration of `PI_*` environment variables to `GJC_*` equivalents for backwards compatibility
 - Added multi-path config discovery supporting `.omp`, `.pi`, and `.claude` directories with priority ordering
 - Added `getConfigDirPaths()`, `findConfigFile()`, and `readConfigFile()` functions for unified config resolution
 - Added documentation for config module usage patterns
@@ -7203,7 +7203,7 @@
 - Changed /config output to show provider attribution for discovered items
 - Renamed CLI binary from `pi` to `omp` and updated all command references
 - Changed config directory from `.pi` to `.omp` with fallback support for legacy paths
-- Renamed environment variables from `PI_*` to `OMP_*` prefix (e.g., `OMP_SMOL_MODEL`, `OMP_SLOW_MODEL`)
+- Renamed environment variables from `PI_*` to `GJC_*` prefix (e.g., `GJC_SMOL_MODEL`, `GJC_SLOW_MODEL`)
 - Changed model role alias prefix from `pi/` to `omp/` (e.g., `omp/slow` instead of `pi/slow`)
 
 ## [2.1.1337] - 2026-01-03
@@ -7224,7 +7224,7 @@
 ### Added
 
 - Added shell environment snapshot to preserve user aliases, functions, and shell options when executing bash commands
-- Added support for `OMP_BASH_NO_CI`, `OMP_BASH_NO_LOGIN`, and `OMP_SHELL_PREFIX` environment variables for shell customization
+- Added support for `GJC_BASH_NO_CI`, `GJC_BASH_NO_LOGIN`, and `GJC_SHELL_PREFIX` environment variables for shell customization
 - Added zsh support alongside bash for shell detection and configuration
 
 ### Changed
@@ -7309,7 +7309,7 @@
 - Smol model auto-discovery using priority chain: haiku > flash > mini
 - Slow model auto-discovery using priority chain: gpt-5.2-codex > codex > gpt > opus > pro
 - CLI args for model roles: `--smol <model>` and `--slow <model>` (ephemeral, not persisted)
-- Env var overrides: `OMP_SMOL_MODEL` and `OMP_SLOW_MODEL`
+- Env var overrides: `GJC_SMOL_MODEL` and `GJC_SLOW_MODEL`
 - Title generation now uses configured smol model from settings
 - LSP diagnostics on edit: Edit tool can now return LSP diagnostics after editing code files. Disabled by default to avoid noise during multi-edit sequences. Enable via `lsp.diagnosticsOnEdit` setting.
 - LSP workspace diagnostics: New `lsp action=workspace_diagnostics` command checks the entire project for errors. Auto-detects project type and uses appropriate checker (rust-analyzer/cargo for Rust, tsc for TypeScript, go build for Go, pyright for Python).
@@ -7382,7 +7382,7 @@
 
 ### Changed
 
-- Renamed package scope to @oh-my-pi for consistent branding
+- Renamed package scope to @gajae-code for consistent branding
 - Simplified toolset and enhanced navigation
 - Improved process cleanup with tree kill
 - Updated CI/CD workflows for GitHub Actions with provenance-signed npm publishing
@@ -7395,7 +7395,7 @@
 
 ## [1.337.0] - 2026-01-02
 
-Initial release under @oh-my-pi scope. See previous releases at [badlogic/pi-mono](https://github.com/badlogic/pi-mono).
+Initial release under @gajae-code scope. See previous releases at [badlogic/pi-mono](https://github.com/badlogic/pi-mono).
 
 ## [0.31.1] - 2026-01-02
 
@@ -7511,7 +7511,7 @@ See [docs/custom-tools.md](docs/custom-tools.md) and [examples/custom-tools/](ex
 - `AppMessage` → `AgentMessage`
 - `sessionFile` returns `string | undefined` (was `string | null`)
 - `model` returns `Model | undefined` (was `Model | null`)
-- `Attachment` type removed. Use `ImageContent` from `@oh-my-pi/pi-ai` instead. Add images directly to message content arrays.
+- `Attachment` type removed. Use `ImageContent` from `@gajae-code/ai` instead. Add images directly to message content arrays.
 
 **AgentSession API:**
 
@@ -7544,7 +7544,7 @@ See [docs/custom-tools.md](docs/custom-tools.md) and [examples/custom-tools/](ex
 `ModelRegistry` is a new class that manages model discovery and API key resolution. It combines built-in models with custom models from `models.json` and resolves API keys via `AuthStorage`.
 
 ```typescript
-import { discoverAuthStorage, discoverModels } from "@oh-my-pi/pi-coding-agent";
+import { discoverAuthStorage, discoverModels } from "@gajae-code/coding-agent";
 
 const authStorage = discoverAuthStorage(); // ~/.omp/agent/auth.json
 const modelRegistry = discoverModels(authStorage); // + ~/.omp/agent/models.json
@@ -7700,7 +7700,7 @@ Total color count increased from 46 to 50. See [docs/theme.md](docs/theme.md) fo
 
 ### Added
 
-- **Automatic custom system prompt loading**: OMP now auto-loads `SYSTEM.md` files to replace the default system prompt. Project-local `.omp/SYSTEM.md` takes precedence over global `~/.omp/agent/SYSTEM.md`. CLI `--system-prompt` flag overrides both. ([#309](https://github.com/badlogic/pi-mono/issues/309))
+- **Automatic custom system prompt loading**: GJC now auto-loads `SYSTEM.md` files to replace the default system prompt. Project-local `.omp/SYSTEM.md` takes precedence over global `~/.omp/agent/SYSTEM.md`. CLI `--system-prompt` flag overrides both. ([#309](https://github.com/badlogic/pi-mono/issues/309))
 - **Unified `/settings` command**: New settings menu consolidating thinking level, theme, queue mode, auto-compact, show images, hide thinking, and collapse changelog. Replaces individual `/thinking`, `/queue`, `/theme`, `/autocompact`, and `/show-images` commands. ([#310](https://github.com/badlogic/pi-mono/issues/310))
 
 ### Fixed
@@ -7736,7 +7736,7 @@ Total color count increased from 46 to 50. See [docs/theme.md](docs/theme.md) fo
   - `createAgentSession()` now accepts `authStorage` and `modelRegistry` options
   - Removed `configureOAuthStorage()`, `defaultGetApiKey()`, `findModel()`, `discoverAvailableModels()`
   - Removed `getApiKey` callback option (use `AuthStorage.setRuntimeApiKey()` for runtime overrides)
-  - Use `getModel()` from `@oh-my-pi/pi-ai` for built-in models, `modelRegistry.find()` for custom models + built-in models
+  - Use `getModel()` from `@gajae-code/ai` for built-in models, `modelRegistry.find()` for custom models + built-in models
   - See updated [SDK documentation](docs/sdk.md) and [README](README.md)
 
 - **Settings changes**: Removed `apiKeys` from `settings.json`. Use `auth.json` instead. ([#296](https://github.com/badlogic/pi-mono/issues/296))
@@ -7820,7 +7820,7 @@ Total color count increased from 46 to 50. See [docs/theme.md](docs/theme.md) fo
 
 ### Added
 
-- **Startup timing instrumentation**: Set `OMP_TIMING=1` to see startup performance breakdown (interactive mode only).
+- **Startup timing instrumentation**: Set `GJC_TIMING=1` to see startup performance breakdown (interactive mode only).
 
 ## [0.27.0] - 2025-12-22
 
@@ -7940,7 +7940,7 @@ Total color count increased from 46 to 50. See [docs/theme.md](docs/theme.md) fo
 
 ### Added
 
-- **OAuth and model config exports**: Scripts using `AgentSession` directly can now import `getAvailableModels`, `getApiKeyForModel`, `findModel`, `login`, `logout`, and `getOAuthProviders` from `@oh-my-pi/pi-coding-agent` to reuse OAuth token storage and model resolution. ([#245](https://github.com/badlogic/pi-mono/issues/245))
+- **OAuth and model config exports**: Scripts using `AgentSession` directly can now import `getAvailableModels`, `getApiKeyForModel`, `findModel`, `login`, `logout`, and `getOAuthProviders` from `@gajae-code/coding-agent` to reuse OAuth token storage and model resolution. ([#245](https://github.com/badlogic/pi-mono/issues/245))
 
 - **xhigh thinking level for gpt-5.2 models**: The thinking level selector and shift+tab cycling now show xhigh option for gpt-5.2 and gpt-5.2-codex models (in addition to gpt-5.1-codex-max). ([#236](https://github.com/badlogic/pi-mono/pull/236) by [@theBucky](https://github.com/theBucky))
 
@@ -7966,7 +7966,7 @@ Total color count increased from 46 to 50. See [docs/theme.md](docs/theme.md) fo
 
 - **Subagent orchestration example**: Added comprehensive custom tool example for spawning and orchestrating sub-agents with isolated context windows. Includes scout/planner/reviewer/worker agents and workflow commands for multi-agent pipelines. ([#215](https://github.com/badlogic/pi-mono/pull/215) by [@nicobailon](https://github.com/nicobailon))
 
-- **`getMarkdownTheme()` export**: Custom tools can now import `getMarkdownTheme()` from `@oh-my-pi/pi-coding-agent` to use the same markdown styling as the main UI.
+- **`getMarkdownTheme()` export**: Custom tools can now import `getMarkdownTheme()` from `@gajae-code/coding-agent` to use the same markdown styling as the main UI.
 
 - **`pi.exec()` signal and timeout support**: Custom tools and hooks can now pass `{ signal, timeout }` options to `pi.exec()` for cancellation and timeout handling. The result includes a `killed` flag when the process was terminated.
 
@@ -8037,7 +8037,7 @@ Total color count increased from 46 to 50. See [docs/theme.md](docs/theme.md) fo
   - `rpc.md`: Added missing `hook_error` event documentation
   - `README.md`: Complete settings table, condensed philosophy section, standardized OAuth docs
 
-- Hooks loader now supports same import aliases as custom tools (`@sinclair/typebox`, `@oh-my-pi/pi-ai`, `@oh-my-pi/pi-tui`, `@oh-my-pi/pi-coding-agent`).
+- Hooks loader now supports same import aliases as custom tools (`@sinclair/typebox`, `@gajae-code/ai`, `@gajae-code/tui`, `@gajae-code/coding-agent`).
 
 ### Breaking Changes
 
@@ -8059,7 +8059,7 @@ Total color count increased from 46 to 50. See [docs/theme.md](docs/theme.md) fo
 
 - Fixed TUI performance regression caused by Box component lacking render caching. Built-in tools now use Text directly (like v0.22.5), and Box has proper caching for custom tool rendering.
 
-- Fixed custom tools failing to load from `~/.omp/agent/tools/` when omp is installed globally. Module imports (`@sinclair/typebox`, `@oh-my-pi/pi-tui`, `@oh-my-pi/pi-ai`) are now resolved via aliases.
+- Fixed custom tools failing to load from `~/.omp/agent/tools/` when omp is installed globally. Module imports (`@sinclair/typebox`, `@gajae-code/tui`, `@gajae-code/ai`) are now resolved via aliases.
 
 ## [0.23.0] - 2025-12-17
 
@@ -8099,7 +8099,7 @@ Total color count increased from 46 to 50. See [docs/theme.md](docs/theme.md) fo
 
 - **Tool output display**: When collapsed, tool output now shows the last N lines instead of the first N lines, making streaming output more useful.
 
-- Updated `@oh-my-pi/pi-ai` with X-Initiator header support for GitHub Copilot, ensuring agent calls are not deducted from quota. ([#200](https://github.com/badlogic/pi-mono/pull/200) by [@kim0](https://github.com/kim0))
+- Updated `@gajae-code/ai` with X-Initiator header support for GitHub Copilot, ensuring agent calls are not deducted from quota. ([#200](https://github.com/badlogic/pi-mono/pull/200) by [@kim0](https://github.com/kim0))
 
 ### Fixed
 
@@ -8111,7 +8111,7 @@ Total color count increased from 46 to 50. See [docs/theme.md](docs/theme.md) fo
 
 ### Changed
 
-- Updated `@oh-my-pi/pi-ai` with interleaved thinking enabled by default for Anthropic Claude 4 models.
+- Updated `@gajae-code/ai` with interleaved thinking enabled by default for Anthropic Claude 4 models.
 
 ## [0.22.1] - 2025-12-15
 
@@ -8119,7 +8119,7 @@ _Dedicated to Peter's shoulder ([@steipete](https://twitter.com/steipete))_
 
 ### Changed
 
-- Updated `@oh-my-pi/pi-ai` with interleaved thinking support for Anthropic models.
+- Updated `@gajae-code/ai` with interleaved thinking support for Anthropic models.
 
 ## [0.22.0] - 2025-12-15
 
@@ -8155,7 +8155,7 @@ _Dedicated to Peter's shoulder ([@steipete](https://twitter.com/steipete))_
 
 ### Breaking Changes
 
-- **OMP skills now use `SKILL.md` convention**: OMP skills must now be named `SKILL.md` inside a directory, matching Codex CLI format. Previously any `*.md` file was treated as a skill. Migrate by renaming `~/.omp/agent/skills/foo.md` to `~/.omp/agent/skills/foo/SKILL.md`.
+- **GJC skills now use `SKILL.md` convention**: GJC skills must now be named `SKILL.md` inside a directory, matching Codex CLI format. Previously any `*.md` file was treated as a skill. Migrate by renaming `~/.omp/agent/skills/foo.md` to `~/.omp/agent/skills/foo/SKILL.md`.
 
 ### Added
 
@@ -8171,7 +8171,7 @@ _Dedicated to Peter's shoulder ([@steipete](https://twitter.com/steipete))_
 
 ### Added
 
-- **Skills system**: Auto-discover and load instruction files on-demand. Supports Claude Code (`~/.claude/skills/*/SKILL.md`), Codex CLI (`~/.codex/skills/`), and OMP-native formats (`~/.omp/agent/skills/`, `.omp/skills/`). Skills are listed in system prompt with descriptions, agent loads them via read tool when needed. Supports `{baseDir}` placeholder. Disable with `--no-skills` or `skills.enabled: false` in settings. ([#169](https://github.com/badlogic/pi-mono/issues/169))
+- **Skills system**: Auto-discover and load instruction files on-demand. Supports Claude Code (`~/.claude/skills/*/SKILL.md`), Codex CLI (`~/.codex/skills/`), and GJC-native formats (`~/.omp/agent/skills/`, `.omp/skills/`). Skills are listed in system prompt with descriptions, agent loads them via read tool when needed. Supports `{baseDir}` placeholder. Disable with `--no-skills` or `skills.enabled: false` in settings. ([#169](https://github.com/badlogic/pi-mono/issues/169))
 
 - **Version flag**: Added `--version` / `-v` flag to display the current version and exit. ([#170](https://github.com/badlogic/pi-mono/pull/170))
 

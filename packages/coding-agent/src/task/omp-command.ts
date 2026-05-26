@@ -1,6 +1,6 @@
 import process from "node:process";
 
-import { $env } from "@oh-my-pi/pi-utils";
+import { $env } from "@gajae-code/utils";
 
 interface OmpCommand {
 	cmd: string;

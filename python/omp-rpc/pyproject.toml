@@ -3,7 +3,7 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "omp-rpc"
+name = "gjc-rpc"
 version = "0.1.0"
 description = "Typed Python client for the omp coding-agent RPC protocol"
 readme = "README.md"
@@ -24,8 +24,8 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://omp.sh/"
-Repository = "https://github.com/can1357/oh-my-pi"
-Documentation = "https://github.com/can1357/oh-my-pi/blob/main/docs/rpc.md"
+Repository = "https://github.com/can1357/gajae-code"
+Documentation = "https://github.com/can1357/gajae-code/blob/main/docs/rpc.md"
 
 [tool.setuptools]
 package-dir = { "" = "src" }

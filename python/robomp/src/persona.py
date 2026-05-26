@@ -15,9 +15,9 @@ from functools import cache
 from importlib import resources
 from typing import Any
 
-from robomp.git_ops import DirtyState
-from robomp.github_client import CommentInfo, IssueInfo, RepoInfo
-from robomp.sandbox import Workspace
+from robogjc.git_ops import DirtyState
+from robogjc.github_client import CommentInfo, IssueInfo, RepoInfo
+from robogjc.sandbox import Workspace
 
 _PLACEHOLDER = re.compile(r"\{\{\s*([a-zA-Z0-9_.]+)\s*\}\}")
 
@@ -43,7 +43,7 @@ def render(template: str, scope: Mapping[str, Any]) -> str:
 
 @cache
 def _load(name: str) -> str:
-    return resources.files("robomp.prompts").joinpath(name).read_text(encoding="utf-8")
+    return resources.files("robogjc.prompts").joinpath(name).read_text(encoding="utf-8")
 
 
 @cache
@@ -156,7 +156,7 @@ def dirty_state_reminder(
     """Reminder injected when the worktree has uncommitted or unpushed work.
 
     Fired by `worker._drive_turn` after the model emits a terminal turn but
-    leaves changes behind that roboomp would otherwise discard. The summary
+    leaves changes behind that robogjc would otherwise discard. The summary
     embedded in the template comes from `git_ops.inspect_dirty_state` so the
     agent sees the exact paths / commits it forgot about.
     """

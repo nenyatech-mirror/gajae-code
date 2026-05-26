@@ -1,20 +1,20 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { RenderResultOptions } from "@oh-my-pi/pi-agent-core";
-import { preloadPluginRoots } from "@oh-my-pi/pi-coding-agent/discovery/helpers";
-import { LspTool } from "@oh-my-pi/pi-coding-agent/lsp";
-import * as lspClient from "@oh-my-pi/pi-coding-agent/lsp/client";
-import * as lspConfig from "@oh-my-pi/pi-coding-agent/lsp/config";
-import { getServersForFile, loadConfig } from "@oh-my-pi/pi-coding-agent/lsp/config";
-import { renderCall, renderResult } from "@oh-my-pi/pi-coding-agent/lsp/render";
+import type { RenderResultOptions } from "@gajae-code/agent-core";
+import { preloadPluginRoots } from "@gajae-code/coding-agent/discovery/helpers";
+import { LspTool } from "@gajae-code/coding-agent/lsp";
+import * as lspClient from "@gajae-code/coding-agent/lsp/client";
+import * as lspConfig from "@gajae-code/coding-agent/lsp/config";
+import { getServersForFile, loadConfig } from "@gajae-code/coding-agent/lsp/config";
+import { renderCall, renderResult } from "@gajae-code/coding-agent/lsp/render";
 import type {
 	CodeAction,
 	Diagnostic,
 	LspClient,
 	ServerConfig,
 	SymbolInformation,
-} from "@oh-my-pi/pi-coding-agent/lsp/types";
+} from "@gajae-code/coding-agent/lsp/types";
 import {
 	applyCodeAction,
 	collectGlobMatches,
@@ -25,12 +25,12 @@ import {
 	hasGlobPattern,
 	resolveDiagnosticTargets,
 	resolveSymbolColumn,
-} from "@oh-my-pi/pi-coding-agent/lsp/utils";
-import { getThemeByName } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import { clampTimeout } from "@oh-my-pi/pi-coding-agent/tools/tool-timeouts";
-import * as piUtils from "@oh-my-pi/pi-utils";
-import { sanitizeText, TempDir } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/coding-agent/lsp/utils";
+import { getThemeByName } from "@gajae-code/coding-agent/modes/theme/theme";
+import type { ToolSession } from "@gajae-code/coding-agent/tools";
+import { clampTimeout } from "@gajae-code/coding-agent/tools/tool-timeouts";
+import * as piUtils from "@gajae-code/utils";
+import { sanitizeText, TempDir } from "@gajae-code/utils";
 
 describe("lsp regressions", () => {
 	afterEach(() => {

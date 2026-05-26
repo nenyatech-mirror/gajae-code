@@ -177,13 +177,13 @@ describe("streamPiNative request shape", () => {
 		}) as FetchImpl;
 
 		await streamPiNative(
-			fakeModel({ headers: { "x-omp-slot": "robomp-1", Authorization: "Bearer model-wins" } }),
+			fakeModel({ headers: { "x-omp-slot": "robogjc-1", Authorization: "Bearer model-wins" } }),
 			baseContext,
 			{ apiKey: "options-loses", fetch: fetchImpl },
 		).result();
 
 		const headers = captured.init?.headers as Record<string, string>;
-		expect(headers["x-omp-slot"]).toBe("robomp-1");
+		expect(headers["x-omp-slot"]).toBe("robogjc-1");
 		expect(headers.Authorization).toBe("Bearer model-wins");
 	});
 

@@ -1,8 +1,8 @@
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import type { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import { FileType, glob } from "@oh-my-pi/pi-natives";
+import type { ThinkingLevel } from "@gajae-code/agent-core";
+import { FileType, glob } from "@gajae-code/natives";
 import {
 	CONFIG_DIR_NAME,
 	getConfigDirName,
@@ -10,7 +10,7 @@ import {
 	getProjectDir,
 	parseFrontmatter,
 	tryParseJson,
-} from "@oh-my-pi/pi-utils";
+} from "@gajae-code/utils";
 import type { ExtensionModule } from "../capability/extension-module";
 import { invalidate as invalidateFsCache, readDirEntries, readFile } from "../capability/fs";
 import { parseRuleConditionAndScope, type Rule, type RuleFrontmatter } from "../capability/rule";
@@ -813,8 +813,8 @@ export async function listClaudePluginRoots(
 		}
 	}
 
-	// ── OMP installed plugins registry ───────────────────────────────────────
-	// OMP registry is authoritative: its entries replace Claude's entries for the same plugin ID.
+	// ── GJC installed plugins registry ───────────────────────────────────────
+	// GJC registry is authoritative: its entries replace Claude's entries for the same plugin ID.
 	// In production `home` is `os.homedir()`, so `getPluginsDir(home)` resolves to the
 	// same XDG-aware path the marketplace writer uses (reads and writes always agree).
 	// Tests pass a temp dir, which short-circuits the resolver for deterministic isolation.
@@ -834,7 +834,7 @@ export async function listClaudePluginRoots(
 				const pluginName = pluginId.slice(0, atIndex);
 				const marketplace = pluginId.slice(atIndex + 1);
 
-				// OMP is authoritative: drop all Claude-sourced entries for this plugin ID
+				// GJC is authoritative: drop all Claude-sourced entries for this plugin ID
 				const filtered = roots.filter(r => r.id !== pluginId);
 				roots.length = 0;
 				roots.push(...filtered);
@@ -859,11 +859,11 @@ export async function listClaudePluginRoots(
 				}
 			}
 		} else {
-			warnings.push(`Failed to parse OMP plugin registry: ${ompRegistryPath}`);
+			warnings.push(`Failed to parse GJC plugin registry: ${ompRegistryPath}`);
 		}
 	}
 
-	// ── Project-scoped OMP registry ────────────────────────────────────────
+	// ── Project-scoped GJC registry ────────────────────────────────────────
 	// Loaded from the nearest .omp/plugins/installed_plugins.json relative to cwd.
 	// Project entries take precedence over user entries for the same plugin ID.
 	if (resolvedProjectPath) {
@@ -978,7 +978,7 @@ export function getPreloadedPluginRoots(): readonly ClaudePluginRoot[] {
 
 /**
  * Inject synthetic plugin roots from --plugin-dir paths.
- * These are prepended to the cache with highest precedence (before OMP/Claude entries).
+ * These are prepended to the cache with highest precedence (before GJC/Claude entries).
  * Must be called before any listClaudePluginRoots() access.
  */
 export async function injectPluginDirRoots(home: string, dirs: string[], cwd?: string): Promise<void> {

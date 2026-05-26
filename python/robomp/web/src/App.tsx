@@ -44,7 +44,7 @@ export function App(): JSX.Element {
         <Logs />
 
         <footer class="text-center text-[11px] text-ink-500 pt-2 pb-1">
-          robomp · self-hosted triage &amp; fix · polling every 3s
+          robogjc · self-hosted triage &amp; fix · polling every 3s
         </footer>
       </main>
     </div>

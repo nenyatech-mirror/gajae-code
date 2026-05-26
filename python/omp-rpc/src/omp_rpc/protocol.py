@@ -96,8 +96,8 @@ _ASSISTANT_MESSAGE_EVENT_TYPE_VALUES: Final[frozenset[str]] = frozenset(
 )
 _ASSISTANT_DONE_REASON_VALUES: Final[frozenset[str]] = frozenset({"stop", "length", "toolUse"})
 _ASSISTANT_ERROR_REASON_VALUES: Final[frozenset[str]] = frozenset({"aborted", "error"})
-_AUTO_COMPACTION_REASON_VALUES: Final[frozenset[str]] = frozenset({"threshold", "overflow", "idle"})
-_AUTO_COMPACTION_ACTION_VALUES: Final[frozenset[str]] = frozenset({"context-full", "handoff"})
+_AUTO_CGJCACTION_REASON_VALUES: Final[frozenset[str]] = frozenset({"threshold", "overflow", "idle"})
+_AUTO_CGJCACTION_ACTION_VALUES: Final[frozenset[str]] = frozenset({"context-full", "handoff"})
 
 
 def _clone_json_value(value: object, *, field: str) -> JsonValue:
@@ -1370,11 +1370,11 @@ def parse_notification(payload: JsonObject) -> RpcNotification:
         return AutoCompactionStartEvent(
             reason=cast(
                 Literal["threshold", "overflow", "idle"],
-                _require_literal(payload.get("reason", "threshold"), _AUTO_COMPACTION_REASON_VALUES, field="auto_compaction_start.reason"),
+                _require_literal(payload.get("reason", "threshold"), _AUTO_CGJCACTION_REASON_VALUES, field="auto_compaction_start.reason"),
             ),
             action=cast(
                 Literal["context-full", "handoff"],
-                _require_literal(payload.get("action", "context-full"), _AUTO_COMPACTION_ACTION_VALUES, field="auto_compaction_start.action"),
+                _require_literal(payload.get("action", "context-full"), _AUTO_CGJCACTION_ACTION_VALUES, field="auto_compaction_start.action"),
             ),
         )
     if event_type == "auto_compaction_end":
@@ -1382,7 +1382,7 @@ def parse_notification(payload: JsonObject) -> RpcNotification:
         return AutoCompactionEndEvent(
             action=cast(
                 Literal["context-full", "handoff"],
-                _require_literal(payload.get("action", "context-full"), _AUTO_COMPACTION_ACTION_VALUES, field="auto_compaction_end.action"),
+                _require_literal(payload.get("action", "context-full"), _AUTO_CGJCACTION_ACTION_VALUES, field="auto_compaction_end.action"),
             ),
             result=(
                 parse_compaction_result(_clone_json_object(result_payload, field="auto_compaction_end.result"))

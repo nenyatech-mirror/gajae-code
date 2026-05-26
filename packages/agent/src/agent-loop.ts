@@ -13,8 +13,8 @@ import {
 	type TSchema,
 	validateToolArguments,
 	zodToWireSchema,
-} from "@oh-my-pi/pi-ai";
-import { sanitizeText } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/ai";
+import { sanitizeText } from "@gajae-code/utils";
 import {
 	createHarmonyAuditEvent,
 	type HarmonyDetection,

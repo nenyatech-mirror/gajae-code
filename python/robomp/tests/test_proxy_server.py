@@ -13,11 +13,11 @@ import httpx
 import pytest
 from pydantic import SecretStr
 
-from robomp.config import Settings
-from robomp.github_client import GitHubClient
-from robomp.proxy.server import create_proxy_app
-from robomp.proxy_hmac import HEADER_SIGNATURE, HEADER_TIMESTAMP, sign
-from robomp.sandbox import workspace_key
+from robogjc.config import Settings
+from robogjc.github_client import GitHubClient
+from robogjc.proxy.server import create_proxy_app
+from robogjc.proxy_hmac import HEADER_SIGNATURE, HEADER_TIMESTAMP, sign
+from robogjc.sandbox import workspace_key
 
 _HMAC = "test-hmac-key-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 _TOKEN = "ghp_test_token_value"
@@ -33,15 +33,15 @@ def _build_settings(tmp_path: Path) -> Settings:
     cfg = Settings.model_construct(
         github_token=SecretStr(_TOKEN),
         github_webhook_secret=SecretStr("webhook-secret"),
-        bot_login="robomp-bot",
-        git_author_email="robomp-bot@example.invalid",
+        bot_login="robogjc-bot",
+        git_author_email="robogjc-bot@example.invalid",
         repo_allowlist_raw="octo/widget",
         gh_proxy_url=None,
         gh_proxy_hmac_key=SecretStr(_HMAC),
         gh_proxy_bind_host="0.0.0.0",
         gh_proxy_bind_port=8081,
         workspace_root=tmp_path / "workspaces",
-        sqlite_path=tmp_path / "robomp.sqlite",
+        sqlite_path=tmp_path / "robogjc.sqlite",
         log_dir=tmp_path / "logs",
     )
     cfg.ensure_paths()
@@ -158,7 +158,7 @@ async def _async_client(app) -> httpx.AsyncClient:
 
 
 def test_read_origin_url_uses_safe_directory_and_slot_identity(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    from robomp.proxy import server as proxy_server
+    from robogjc.proxy import server as proxy_server
 
     captured: dict[str, object] = {}
     repo_dir = tmp_path / "repo"
@@ -168,9 +168,9 @@ def test_read_origin_url_uses_safe_directory_and_slot_identity(tmp_path: Path, m
         captured.update(kwargs)
         return subprocess.CompletedProcess(cmd, 0, "https://github.com/octo/widget.git\n", "")
 
-    monkeypatch.setattr("robomp.proxy.server.subprocess.run", fake_run)
+    monkeypatch.setattr("robogjc.proxy.server.subprocess.run", fake_run)
     monkeypatch.setattr(
-        "robomp.proxy.server._slot_subprocess_kwargs",
+        "robogjc.proxy.server._slot_subprocess_kwargs",
         lambda uid: {"user": uid, "group": uid, "extra_groups": [2000], "umask": 0o002},
     )
 
@@ -201,7 +201,7 @@ async def test_hmac_accept_post_comment_round_trip(proxy_settings: Settings) -> 
             201,
             json={
                 "id": 42,
-                "user": {"login": "robomp-bot"},
+                "user": {"login": "robogjc-bot"},
                 "body": "hello",
                 "created_at": "2026-01-01T00:00:00Z",
             },
@@ -216,7 +216,7 @@ async def test_hmac_accept_post_comment_round_trip(proxy_settings: Settings) -> 
             headers={**_signed("POST", "/gh/v1/post_comment", body), "Content-Type": "application/json"},
         )
     assert resp.status_code == 200
-    assert resp.json() == {"id": 42, "author": "robomp-bot", "body": "hello", "created_at": "2026-01-01T00:00:00Z"}
+    assert resp.json() == {"id": 42, "author": "robogjc-bot", "body": "hello", "created_at": "2026-01-01T00:00:00Z"}
     assert captured["req"].url.path == "/repos/octo/widget/issues/1/comments"
 
 
@@ -438,7 +438,7 @@ async def test_list_pr_reviews(proxy_settings: Settings) -> None:
 async def test_authenticated_login(proxy_settings: Settings) -> None:
     def gh(req: httpx.Request) -> httpx.Response:
         assert req.url.path == "/user"
-        return httpx.Response(200, json={"login": "robomp-bot"})
+        return httpx.Response(200, json={"login": "robogjc-bot"})
 
     app = _build_app(proxy_settings, gh)
     async with await _async_client(app) as client:
@@ -447,7 +447,7 @@ async def test_authenticated_login(proxy_settings: Settings) -> None:
             headers=_signed("GET", "/gh/v1/authenticated_login"),
         )
     assert resp.status_code == 200
-    assert resp.json() == {"login": "robomp-bot"}
+    assert resp.json() == {"login": "robogjc-bot"}
 
 
 # ============================================================================
@@ -759,7 +759,7 @@ async def test_git_push_happy_path(proxy_settings: Settings, upstream_repo: Path
 async def test_git_push_passes_slot_uid_to_git_push(
     proxy_settings: Settings, upstream_repo: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from robomp.git_ops import PushResult
+    from robogjc.git_ops import PushResult
 
     branch = "farm/abc/slot"
     repo_dir, head = _stage_workspace(proxy_settings, upstream_repo, "octo/widget", 1, branch)
@@ -777,7 +777,7 @@ async def test_git_push_passes_slot_uid_to_git_push(
         captured.update(kwargs)
         return PushResult(head=head, branch=branch)
 
-    monkeypatch.setattr("robomp.proxy.server.git_push", fake_git_push)
+    monkeypatch.setattr("robogjc.proxy.server.git_push", fake_git_push)
     app = _build_app(proxy_settings)
     body = (
         b'{"repo":"octo/widget","workspace_key":"octo__widget__1","branch":"'

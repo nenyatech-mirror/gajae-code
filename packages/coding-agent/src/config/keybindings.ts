@@ -8,8 +8,8 @@ import {
 	setKeybindings,
 	TUI_KEYBINDINGS,
 	KeybindingsManager as TuiKeybindingsManager,
-} from "@oh-my-pi/pi-tui";
-import { getAgentDir, isEnoent, logger } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/tui";
+import { getAgentDir, isEnoent, logger } from "@gajae-code/utils";
 
 /**
  * Application-level keybindings (coding agent specific).
@@ -52,7 +52,7 @@ interface AppKeybindings {
 
 export type AppKeybinding = keyof AppKeybindings;
 
-declare module "@oh-my-pi/pi-tui" {
+declare module "@gajae-code/tui" {
 	interface Keybindings extends AppKeybindings {}
 }
 

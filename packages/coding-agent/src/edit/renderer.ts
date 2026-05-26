@@ -2,9 +2,9 @@
  * Edit tool renderer and LSP batching helpers.
  */
 
-import type { Component } from "@oh-my-pi/pi-tui";
-import { Text, visibleWidth, wrapTextWithAnsi } from "@oh-my-pi/pi-tui";
-import { sanitizeText } from "@oh-my-pi/pi-utils";
+import type { Component } from "@gajae-code/tui";
+import { Text, visibleWidth, wrapTextWithAnsi } from "@gajae-code/tui";
+import { sanitizeText } from "@gajae-code/utils";
 import type { RenderResultOptions } from "../extensibility/custom-tools/types";
 import { HL_FILE_PREFIX } from "../hashline/hash";
 import type { FileDiagnosticsResult } from "../lsp";

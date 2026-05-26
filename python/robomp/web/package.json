@@ -1,9 +1,9 @@
 {
-  "name": "robomp-web",
+  "name": "robogjc-web",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Glassmorphic SolidJS dashboard bundled by Vite and served by robomp's FastAPI app.",
+  "description": "Glassmorphic SolidJS dashboard bundled by Vite and served by robogjc's FastAPI app.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -9,7 +9,7 @@ import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
 import { createInterface } from "node:readline/promises";
-import type { ImageContent } from "@oh-my-pi/pi-ai";
+import type { ImageContent } from "@gajae-code/ai";
 import {
 	$env,
 	getProjectDir,
@@ -18,7 +18,7 @@ import {
 	postmortem,
 	setProjectDir,
 	VERSION,
-} from "@oh-my-pi/pi-utils";
+} from "@gajae-code/utils";
 import chalk from "chalk";
 import type { Args } from "./cli/args";
 import { processFileArguments } from "./cli/file-processor";
@@ -68,7 +68,7 @@ async function checkForNewVersion(currentVersion: string): Promise<string | unde
 		return;
 	}
 	try {
-		const response = await fetch("https://registry.npmjs.org/@oh-my-pi/pi-coding-agent/latest");
+		const response = await fetch("https://registry.npmjs.org/@gajae-code/coding-agent/latest");
 		if (!response.ok) return undefined;
 
 		const data = (await response.json()) as { version?: string };

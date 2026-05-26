@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 
-from robomp.github_events import (
+from robogjc.github_events import (
     extract_mention,
     is_maintainer,
     rate_limit_cap,
@@ -12,7 +12,7 @@ from robomp.github_events import (
 )
 
 ALLOWLIST = frozenset({"octo/widget"})
-BOT = "robomp-bot"
+BOT = "robogjc-bot"
 
 
 def test_verify_signature_positive() -> None:
@@ -414,27 +414,27 @@ def test_rate_limit_cap_default_tier_for_unknown_and_first_timer() -> None:
 
 
 def test_extract_mention_returns_body_minus_mention() -> None:
-    assert extract_mention("hey @robomp-bot please look", "robomp-bot") == "hey please look"
-    assert extract_mention("@robomp-bot do X", "robomp-bot") == "do X"
+    assert extract_mention("hey @robogjc-bot please look", "robogjc-bot") == "hey please look"
+    assert extract_mention("@robogjc-bot do X", "robogjc-bot") == "do X"
 
 
 def test_extract_mention_returns_none_without_mention() -> None:
-    assert extract_mention("hello there", "robomp-bot") is None
-    assert extract_mention(None, "robomp-bot") is None
-    assert extract_mention("", "robomp-bot") is None
+    assert extract_mention("hello there", "robogjc-bot") is None
+    assert extract_mention(None, "robogjc-bot") is None
+    assert extract_mention("", "robogjc-bot") is None
 
 
 def test_extract_mention_is_case_insensitive() -> None:
-    assert extract_mention("yo @ROBOMP-BOT", "robomp-bot") == "yo"
+    assert extract_mention("yo @ROBGJC-BOT", "robogjc-bot") == "yo"
 
 
 def test_extract_mention_respects_hyphen_word_boundary() -> None:
-    # @robomp-bot-helper must NOT match @robomp-bot.
-    assert extract_mention("@robomp-bot-helper hi", "robomp-bot") is None
+    # @robogjc-bot-helper must NOT match @robogjc-bot.
+    assert extract_mention("@robogjc-bot-helper hi", "robogjc-bot") is None
 
 
 def test_extract_mention_handles_multiple_occurrences() -> None:
-    assert extract_mention("@robomp-bot one, then @robomp-bot two", "robomp-bot") == "one, then two"
+    assert extract_mention("@robogjc-bot one, then @robogjc-bot two", "robogjc-bot") == "one, then two"
 
 
 def test_is_maintainer_recognizes_explicit_allowlist() -> None:
@@ -461,7 +461,7 @@ def test_route_directive_set_on_issue_comment_when_owner_mentions_bot() -> None:
             "comment": {
                 "user": {"login": "can1357"},
                 "author_association": "OWNER",
-                "body": "@robomp-bot please refactor X",
+                "body": "@robogjc-bot please refactor X",
             },
             "issue": {"number": 9},
             "repository": {"full_name": "octo/widget"},
@@ -483,7 +483,7 @@ def test_route_directive_set_when_login_in_maintainers_list() -> None:
             "comment": {
                 "user": {"login": "can1357"},
                 # No author_association field.
-                "body": "@robomp-bot do it",
+                "body": "@robogjc-bot do it",
             },
             "issue": {"number": 9},
             "repository": {"full_name": "octo/widget"},
@@ -505,7 +505,7 @@ def test_route_directive_unset_for_random_user_even_with_mention() -> None:
             "comment": {
                 "user": {"login": "stranger"},
                 "author_association": "NONE",
-                "body": "@robomp-bot please refactor X",
+                "body": "@robogjc-bot please refactor X",
             },
             "issue": {"number": 9},
             "repository": {"full_name": "octo/widget"},
@@ -545,7 +545,7 @@ def test_route_directive_set_on_pr_conversation() -> None:
             "comment": {
                 "user": {"login": "can1357"},
                 "author_association": "OWNER",
-                "body": "@robomp-bot change the indentation in foo.py",
+                "body": "@robogjc-bot change the indentation in foo.py",
             },
             "issue": {"number": 50, "pull_request": {"url": "x"}},
             "repository": {"full_name": "octo/widget"},
@@ -568,7 +568,7 @@ def test_route_directive_set_on_review_comment() -> None:
             "comment": {
                 "user": {"login": "can1357"},
                 "author_association": "OWNER",
-                "body": "@robomp-bot use a generator here",
+                "body": "@robogjc-bot use a generator here",
             },
             "pull_request": {"number": 50, "user": {"login": BOT}},
             "repository": {"full_name": "octo/widget"},
@@ -680,7 +680,7 @@ def test_route_directive_strips_pragmas_from_maintainer_comment() -> None:
             "comment": {
                 "user": {"login": "can1357"},
                 "author_association": "OWNER",
-                "body": "@robomp-bot /model gpt /thinking low\nrefactor X",
+                "body": "@robogjc-bot /model gpt /thinking low\nrefactor X",
             },
             "issue": {"number": 9},
             "repository": {"full_name": "octo/widget"},

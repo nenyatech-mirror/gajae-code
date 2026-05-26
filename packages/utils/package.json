@@ -1,18 +1,18 @@
 {
 	"type": "module",
-	"name": "@oh-my-pi/pi-utils",
+	"name": "@gajae-code/utils",
 	"version": "15.3.2",
 	"description": "Shared utilities for pi packages",
-	"homepage": "https://omp.sh",
+	"homepage": "https://gajae-code.dev",
 	"author": "Can Boluk",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/can1357/oh-my-pi.git",
+		"url": "git+https://github.com/gajae-ai/gajae-code.git",
 		"directory": "packages/utils"
 	},
 	"bugs": {
-		"url": "https://github.com/can1357/oh-my-pi/issues"
+		"url": "https://github.com/gajae-ai/gajae-code/issues"
 	},
 	"keywords": [
 		"utilities",
@@ -31,7 +31,7 @@
 		"fmt": "biome format --write ."
 	},
 	"dependencies": {
-		"@oh-my-pi/pi-natives": "catalog:",
+		"@gajae-code/natives": "catalog:",
 		"beautiful-mermaid": "catalog:",
 		"handlebars": "catalog:",
 		"winston": "catalog:",

@@ -7,18 +7,18 @@
 
 import * as os from "node:os";
 import * as path from "node:path";
-import type { ToolCallContext } from "@oh-my-pi/pi-agent-core";
-import type { Ellipsis } from "@oh-my-pi/pi-natives";
-import type { Component } from "@oh-my-pi/pi-tui";
-import { replaceTabs, truncateToWidth } from "@oh-my-pi/pi-tui";
-import { pluralize } from "@oh-my-pi/pi-utils";
+import type { ToolCallContext } from "@gajae-code/agent-core";
+import type { Ellipsis } from "@gajae-code/natives";
+import type { Component } from "@gajae-code/tui";
+import { replaceTabs, truncateToWidth } from "@gajae-code/tui";
+import { pluralize } from "@gajae-code/utils";
 import { settings } from "../config/settings";
 import type { Theme } from "../modes/theme/theme";
 import { Hasher } from "../tui/utils";
 import { formatDimensionNote, type ResizedImage } from "../utils/image-resize";
 
-export { Ellipsis } from "@oh-my-pi/pi-natives";
-export { replaceTabs, truncateToWidth, wrapTextWithAnsi } from "@oh-my-pi/pi-tui";
+export { Ellipsis } from "@gajae-code/natives";
+export { replaceTabs, truncateToWidth, wrapTextWithAnsi } from "@gajae-code/tui";
 
 // =============================================================================
 // Standardized Display Constants
@@ -110,7 +110,7 @@ export function getDomain(url: string): string {
 // Formatting Utilities
 // =============================================================================
 
-export { formatAge, formatBytes, formatCount, formatDuration, pluralize } from "@oh-my-pi/pi-utils";
+export { formatAge, formatBytes, formatCount, formatDuration, pluralize } from "@gajae-code/utils";
 
 // =============================================================================
 // Theme Helper Utilities

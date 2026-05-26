@@ -4,13 +4,13 @@
  * Extends the base AgentMessage type with coding-agent specific message types,
  * and provides a transformer to convert them to LLM-compatible messages.
  */
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
+import type { AgentMessage } from "@gajae-code/agent-core";
 import {
 	type BranchSummaryMessage,
 	type CompactionSummaryMessage,
 	renderBranchSummaryContext,
 	renderCompactionSummaryContext,
-} from "@oh-my-pi/pi-agent-core/compaction/messages";
+} from "@gajae-code/agent-core/compaction/messages";
 import type {
 	AssistantMessage,
 	ImageContent,
@@ -18,19 +18,19 @@ import type {
 	MessageAttribution,
 	TextContent,
 	ToolResultMessage,
-} from "@oh-my-pi/pi-ai";
+} from "@gajae-code/ai";
 
 export {
 	type BranchSummaryMessage,
 	type CompactionSummaryMessage,
 	createBranchSummaryMessage,
 	createCompactionSummaryMessage,
-} from "@oh-my-pi/pi-agent-core/compaction/messages";
+} from "@gajae-code/agent-core/compaction/messages";
 
 import type { OutputMeta } from "../tools/output-meta";
 import { formatOutputNotice } from "../tools/output-meta";
 
-export const SKILL_PROMPT_MESSAGE_TYPE = "skill-prompt";
+export const SKILL_PRGJCT_MESSAGE_TYPE = "skill-prompt";
 
 export interface SkillPromptDetails {
 	name: string;
@@ -195,7 +195,7 @@ export interface FileMentionMessage {
 
 // Extend CustomAgentMessages via declaration merging
 // Legacy hookMessage is kept for migration; new code should use custom.
-declare module "@oh-my-pi/pi-agent-core" {
+declare module "@gajae-code/agent-core" {
 	interface CustomAgentMessages {
 		bashExecution: BashExecutionMessage;
 		pythonExecution: PythonExecutionMessage;

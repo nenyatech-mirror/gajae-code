@@ -2,8 +2,8 @@
  * Shared utilities for compaction and branch summarization.
  */
 
-import type { Message } from "@oh-my-pi/pi-ai";
-import { prompt } from "@oh-my-pi/pi-utils";
+import type { Message } from "@gajae-code/ai";
+import { prompt } from "@gajae-code/utils";
 import type { AgentMessage } from "../types";
 import fileOperationsTemplate from "./prompts/file-operations.md" with { type: "text" };
 import summarizationSystemPrompt from "./prompts/summarization-system.md" with { type: "text" };
@@ -182,4 +182,4 @@ export function serializeConversation(messages: Message[]): string {
 // Summarization System Prompt
 // ============================================================================
 
-export const SUMMARIZATION_SYSTEM_PROMPT = prompt.render(summarizationSystemPrompt);
+export const SUMMARIZATION_SYSTEM_PRGJCT = prompt.render(summarizationSystemPrompt);

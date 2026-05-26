@@ -7,17 +7,17 @@ from collections.abc import Iterable
 import pytest
 from pydantic import SecretStr
 
-from robomp.autoclose import AutocloseScheduler
-from robomp.config import Settings
-from robomp.db import Database, issue_key
-from robomp.github_client import GitHubError, ReactionInfo
+from robogjc.autoclose import AutocloseScheduler
+from robogjc.config import Settings
+from robogjc.db import Database, issue_key
+from robogjc.github_client import GitHubError, ReactionInfo
 
 
 def _settings(*, enabled: bool = True, hours: float = 4.0, scan: float = 60.0) -> Settings:
     return Settings.model_construct(
         github_token=None,
         github_webhook_secret=SecretStr("x"),
-        bot_login="robomp-bot",
+        bot_login="robogjc-bot",
         git_author_email="bot@example.invalid",
         repo_allowlist_raw="octo/widget",
         gh_proxy_url="http://proxy.invalid",

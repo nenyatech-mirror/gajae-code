@@ -454,7 +454,7 @@ IDLESS_ERROR_SERVER = textwrap.dedent(
     """
 )
 
-LATE_PROMPT_FAILURE_SERVER = textwrap.dedent(
+LATE_PRGJCT_FAILURE_SERVER = textwrap.dedent(
     """
     import json
     import sys
@@ -921,7 +921,7 @@ class RpcClientTests(unittest.TestCase):
 
     def test_prompt_and_wait_raises_for_late_prompt_failure(self) -> None:
         protocol_errors: list[str] = []
-        client = self.make_client(server=LATE_PROMPT_FAILURE_SERVER)
+        client = self.make_client(server=LATE_PRGJCT_FAILURE_SERVER)
         client.on_protocol_error(lambda error: protocol_errors.append(str(error)))
 
         try:

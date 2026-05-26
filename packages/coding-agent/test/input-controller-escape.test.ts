@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "bun:test";
-import { InputController } from "@oh-my-pi/pi-coding-agent/modes/controllers/input-controller";
-import type { InteractiveModeContext, SubmittedUserInput } from "@oh-my-pi/pi-coding-agent/modes/types";
+import { InputController } from "@gajae-code/coding-agent/modes/controllers/input-controller";
+import type { InteractiveModeContext, SubmittedUserInput } from "@gajae-code/coding-agent/modes/types";
 
 type FakeEditor = {
 	onEscape?: () => void;

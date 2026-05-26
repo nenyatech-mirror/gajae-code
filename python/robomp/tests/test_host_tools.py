@@ -12,11 +12,11 @@ import httpx
 import pytest
 from omp_rpc import HostToolContext, RpcCommandError
 
-from robomp import host_tools
-from robomp.db import Database
-from robomp.github_client import GitHubClient, IssueInfo, RepoInfo
-from robomp.host_tools import AbortController, ToolBindings, build
-from robomp.sandbox import LocalGitTransport, Workspace
+from robogjc import host_tools
+from robogjc.db import Database
+from robogjc.github_client import GitHubClient, IssueInfo, RepoInfo
+from robogjc.host_tools import AbortController, ToolBindings, build
+from robogjc.sandbox import LocalGitTransport, Workspace
 
 
 def _stub_workspace(tmp_path: Path) -> Workspace:
@@ -87,8 +87,8 @@ def _bindings(
         issue=_stub_issue(),
         workspace=_stub_workspace(tmp_path),
         loop=loop,
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
         slot_uid=slot_uid,
     )
     db.upsert_issue(
@@ -111,7 +111,7 @@ def test_repo_command_env_scrubs_secrets_and_uses_workspace_cache(
 ) -> None:
     monkeypatch.setenv("GITHUB_TOKEN", "secret-token")
     monkeypatch.setenv("GITHUB_WEBHOOK_SECRET", "secret-webhook")
-    monkeypatch.setenv("ROBOMP_GH_PROXY_HMAC_KEY", "secret-proxy")
+    monkeypatch.setenv("ROBGJC_GH_PROXY_HMAC_KEY", "secret-proxy")
     monkeypatch.setenv("BUN_INSTALL_CACHE_DIR", "/data/cache/bun-cache")
 
     bindings, loop, thread = _bindings(db, tmp_path, httpx.MockTransport(lambda _r: httpx.Response(500)), slot_uid=2001)
@@ -122,7 +122,7 @@ def test_repo_command_env_scrubs_secrets_and_uses_workspace_cache(
 
     assert env["GITHUB_TOKEN"] == ""
     assert env["GITHUB_WEBHOOK_SECRET"] == ""
-    assert env["ROBOMP_GH_PROXY_HMAC_KEY"] == ""
+    assert env["ROBGJC_GH_PROXY_HMAC_KEY"] == ""
     assert env["BUN_INSTALL_CACHE_DIR"] == str(bindings.workspace.root / ".omp-xdg" / "cache" / "bun-install")
     assert env["XDG_CACHE_HOME"] == str(bindings.workspace.root / ".omp-xdg" / "cache")
     assert env["TMPDIR"] == str(bindings.workspace.root / ".omp-tmp")
@@ -178,7 +178,7 @@ def test_guarded_push_branch_rev_parse_runs_via_repo_command_and_passes_slot_uid
     import subprocess
     from dataclasses import replace
 
-    from robomp.git_ops import PushResult
+    from robogjc.git_ops import PushResult
 
     class RecordingTransport:
         def __init__(self) -> None:
@@ -211,7 +211,7 @@ def test_guarded_push_branch_rev_parse_runs_via_repo_command_and_passes_slot_uid
             return subprocess.CompletedProcess(
                 command,
                 0,
-                "abc123\trobomp-bot@example.invalid\trobomp-bot\n",
+                "abc123\trobogjc-bot@example.invalid\trobogjc-bot\n",
                 "",
             )
         return subprocess.CompletedProcess(command, 0, "", "")
@@ -244,7 +244,7 @@ def test_gh_post_comment_happy_path(db: Database, tmp_path: Path) -> None:
         captured["url"] = str(request.url)
         captured["body"] = json.loads(request.content)
         captured["auth"] = request.headers.get("authorization")
-        return httpx.Response(201, json={"id": 999, "user": {"login": "robomp-bot"}, "body": "hi", "created_at": "t"})
+        return httpx.Response(201, json={"id": 999, "user": {"login": "robogjc-bot"}, "body": "hi", "created_at": "t"})
 
     transport = httpx.MockTransport(handler)
     bindings, loop, t = _bindings(db, tmp_path, transport)
@@ -277,7 +277,7 @@ def test_gh_post_comment_defaults_to_inbound_pr_thread(db: Database, tmp_path: P
 
     def handler(request: httpx.Request) -> httpx.Response:
         captured["url"] = str(request.url)
-        return httpx.Response(201, json={"id": 7, "user": {"login": "robomp-bot"}, "body": "hi", "created_at": "t"})
+        return httpx.Response(201, json={"id": 7, "user": {"login": "robogjc-bot"}, "body": "hi", "created_at": "t"})
 
     transport = httpx.MockTransport(handler)
     github = GitHubClient("token", transport=transport)
@@ -290,8 +290,8 @@ def test_gh_post_comment_defaults_to_inbound_pr_thread(db: Database, tmp_path: P
         issue=_stub_issue(),  # issue #42
         workspace=_stub_workspace(tmp_path),
         loop=loop,
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
         inbound_thread_number=99,  # PR #99 that fixes issue #42
     )
     try:
@@ -309,7 +309,7 @@ def test_gh_post_comment_explicit_number_overrides_inbound(db: Database, tmp_pat
 
     def handler(request: httpx.Request) -> httpx.Response:
         captured["url"] = str(request.url)
-        return httpx.Response(201, json={"id": 7, "user": {"login": "robomp-bot"}, "body": "hi", "created_at": "t"})
+        return httpx.Response(201, json={"id": 7, "user": {"login": "robogjc-bot"}, "body": "hi", "created_at": "t"})
 
     transport = httpx.MockTransport(handler)
     github = GitHubClient("token", transport=transport)
@@ -322,8 +322,8 @@ def test_gh_post_comment_explicit_number_overrides_inbound(db: Database, tmp_pat
         issue=_stub_issue(),
         workspace=_stub_workspace(tmp_path),
         loop=loop,
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
         inbound_thread_number=99,
     )
     try:
@@ -384,7 +384,7 @@ def test_repro_record_writes_transcript(db: Database, tmp_path: Path) -> None:
 def test_repro_record_chowns_to_slot_when_root(db: Database, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     chowns: list[tuple[Path, int, int]] = []
     monkeypatch.setattr(host_tools, "_slot_permissions_active", lambda slot_uid: slot_uid is not None)
-    monkeypatch.setattr("robomp.host_tools.os.chown", lambda path, uid, gid: chowns.append((Path(path), uid, gid)))
+    monkeypatch.setattr("robogjc.host_tools.os.chown", lambda path, uid, gid: chowns.append((Path(path), uid, gid)))
 
     bindings, loop, t = _bindings(db, tmp_path, httpx.MockTransport(lambda r: httpx.Response(500)), slot_uid=2001)
     try:
@@ -423,7 +423,7 @@ def test_mark_unable_posts_comment_and_abandons(db: Database, tmp_path: Path) ->
 
     def handler(request: httpx.Request) -> httpx.Response:
         captured["body"] = json.loads(request.content)
-        return httpx.Response(201, json={"id": 77, "user": {"login": "robomp-bot"}, "body": "x", "created_at": "t"})
+        return httpx.Response(201, json={"id": 77, "user": {"login": "robogjc-bot"}, "body": "x", "created_at": "t"})
 
     bindings, loop, t = _bindings(db, tmp_path, httpx.MockTransport(handler))
     try:
@@ -666,8 +666,8 @@ def _pr_bindings(
         issue=_stub_issue(),
         workspace=_stub_workspace(tmp_path),
         loop=loop,
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
         inbound_thread_number=99,
         inbound_is_pr=True,
     )
@@ -962,7 +962,7 @@ def test_gh_push_branch_rejects_wrong_identity(db: Database, tmp_path: Path) -> 
     ):
         subprocess.run(cmd, check=True, capture_output=True, env=env)
 
-    from robomp.sandbox import SandboxManager
+    from robogjc.sandbox import SandboxManager
 
     mgr = SandboxManager(tmp_path / "workspaces")
     ws = mgr.ensure_workspace(
@@ -971,8 +971,8 @@ def test_gh_push_branch_rejects_wrong_identity(db: Database, tmp_path: Path) -> 
         title="identity test",
         clone_url=str(bare),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     # Commit with a different identity to provoke the gate.
     bad_env = os.environ | {
@@ -1010,8 +1010,8 @@ def test_gh_push_branch_rejects_wrong_identity(db: Database, tmp_path: Path) -> 
             ),
             workspace=ws,
             loop=loop,
-            author_name="robomp-bot",
-            author_email="robomp-bot@example.invalid",
+            author_name="robogjc-bot",
+            author_email="robogjc-bot@example.invalid",
         )
         db.upsert_issue(
             key=bindings.issue_key,
@@ -1027,7 +1027,7 @@ def test_gh_push_branch_rejects_wrong_identity(db: Database, tmp_path: Path) -> 
         msg = str(exc.value)
         assert "identity mismatch" in msg
         assert "wrong <wrong@nope>" in msg
-        assert "robomp-bot <robomp-bot@example.invalid>" in msg
+        assert "robogjc-bot <robogjc-bot@example.invalid>" in msg
         # Branch must NOT have been pushed.
         refs = subprocess.run(
             ["git", "-C", str(bare), "for-each-ref", "--format=%(refname)"],
@@ -1066,7 +1066,7 @@ def test_gh_open_pr_rejects_wrong_identity_before_push_or_pr(db: Database, tmp_p
     ):
         subprocess.run(cmd, check=True, capture_output=True, env=env)
 
-    from robomp.sandbox import SandboxManager
+    from robogjc.sandbox import SandboxManager
 
     mgr = SandboxManager(tmp_path / "workspaces")
     ws = mgr.ensure_workspace(
@@ -1075,8 +1075,8 @@ def test_gh_open_pr_rejects_wrong_identity_before_push_or_pr(db: Database, tmp_p
         title="identity test",
         clone_url=str(bare),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     bad_env = os.environ | {
         "GIT_AUTHOR_NAME": "wrong",
@@ -1128,8 +1128,8 @@ def test_gh_open_pr_rejects_wrong_identity_before_push_or_pr(db: Database, tmp_p
             ),
             workspace=ws,
             loop=loop,
-            author_name="robomp-bot",
-            author_email="robomp-bot@example.invalid",
+            author_name="robogjc-bot",
+            author_email="robogjc-bot@example.invalid",
         )
         db.upsert_issue(
             key=bindings.issue_key,
@@ -1167,10 +1167,10 @@ def test_gh_push_branch_rejects_invalid_identity_scan_range(db: Database, tmp_pa
     seed = tmp_path / "seed"
     seed.mkdir()
     env = os.environ | {
-        "GIT_AUTHOR_NAME": "robomp-bot",
-        "GIT_AUTHOR_EMAIL": "robomp-bot@example.invalid",
-        "GIT_COMMITTER_NAME": "robomp-bot",
-        "GIT_COMMITTER_EMAIL": "robomp-bot@example.invalid",
+        "GIT_AUTHOR_NAME": "robogjc-bot",
+        "GIT_AUTHOR_EMAIL": "robogjc-bot@example.invalid",
+        "GIT_COMMITTER_NAME": "robogjc-bot",
+        "GIT_COMMITTER_EMAIL": "robogjc-bot@example.invalid",
     }
     subprocess.run(["git", "init", "--initial-branch=main", str(seed)], check=True, capture_output=True)
     (seed / "README.md").write_text("init\n")
@@ -1181,9 +1181,9 @@ def test_gh_push_branch_rejects_invalid_identity_scan_range(db: Database, tmp_pa
             "-C",
             str(seed),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "init",
@@ -1193,7 +1193,7 @@ def test_gh_push_branch_rejects_invalid_identity_scan_range(db: Database, tmp_pa
     ):
         subprocess.run(cmd, check=True, capture_output=True, env=env)
 
-    from robomp.sandbox import SandboxManager
+    from robogjc.sandbox import SandboxManager
 
     mgr = SandboxManager(tmp_path / "workspaces")
     ws = mgr.ensure_workspace(
@@ -1202,8 +1202,8 @@ def test_gh_push_branch_rejects_invalid_identity_scan_range(db: Database, tmp_pa
         title="missing base ref",
         clone_url=str(bare),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     subprocess.run(
         ["git", "-C", str(ws.repo_dir), "update-ref", "-d", "refs/remotes/origin/main"], check=True, capture_output=True
@@ -1216,9 +1216,9 @@ def test_gh_push_branch_rejects_invalid_identity_scan_range(db: Database, tmp_pa
             "-C",
             str(ws.repo_dir),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "ok",
@@ -1248,8 +1248,8 @@ def test_gh_push_branch_rejects_invalid_identity_scan_range(db: Database, tmp_pa
             ),
             workspace=ws,
             loop=loop,
-            author_name="robomp-bot",
-            author_email="robomp-bot@example.invalid",
+            author_name="robogjc-bot",
+            author_email="robogjc-bot@example.invalid",
         )
         db.upsert_issue(
             key=bindings.issue_key,
@@ -1363,10 +1363,10 @@ def test_gh_push_branch_rejects_dirty_worktree(db: Database, tmp_path: Path) -> 
     seed = tmp_path / "seed"
     seed.mkdir()
     env = os.environ | {
-        "GIT_AUTHOR_NAME": "robomp-bot",
-        "GIT_AUTHOR_EMAIL": "robomp-bot@example.invalid",
-        "GIT_COMMITTER_NAME": "robomp-bot",
-        "GIT_COMMITTER_EMAIL": "robomp-bot@example.invalid",
+        "GIT_AUTHOR_NAME": "robogjc-bot",
+        "GIT_AUTHOR_EMAIL": "robogjc-bot@example.invalid",
+        "GIT_COMMITTER_NAME": "robogjc-bot",
+        "GIT_COMMITTER_EMAIL": "robogjc-bot@example.invalid",
     }
     subprocess.run(["git", "init", "--initial-branch=main", str(seed)], check=True, capture_output=True)
     (seed / "README.md").write_text("init\n")
@@ -1377,9 +1377,9 @@ def test_gh_push_branch_rejects_dirty_worktree(db: Database, tmp_path: Path) -> 
             "-C",
             str(seed),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "init",
@@ -1389,7 +1389,7 @@ def test_gh_push_branch_rejects_dirty_worktree(db: Database, tmp_path: Path) -> 
     ):
         subprocess.run(cmd, check=True, capture_output=True, env=env)
 
-    from robomp.sandbox import SandboxManager
+    from robogjc.sandbox import SandboxManager
 
     mgr = SandboxManager(tmp_path / "workspaces")
     ws = mgr.ensure_workspace(
@@ -1398,8 +1398,8 @@ def test_gh_push_branch_rejects_dirty_worktree(db: Database, tmp_path: Path) -> 
         title="dirty test",
         clone_url=str(bare),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     # Make a proper commit (so the identity gate passes).
     (ws.repo_dir / "a.txt").write_text("a\n")
@@ -1410,9 +1410,9 @@ def test_gh_push_branch_rejects_dirty_worktree(db: Database, tmp_path: Path) -> 
             "-C",
             str(ws.repo_dir),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "ok",
@@ -1444,8 +1444,8 @@ def test_gh_push_branch_rejects_dirty_worktree(db: Database, tmp_path: Path) -> 
             ),
             workspace=ws,
             loop=loop,
-            author_name="robomp-bot",
-            author_email="robomp-bot@example.invalid",
+            author_name="robogjc-bot",
+            author_email="robogjc-bot@example.invalid",
         )
         db.upsert_issue(
             key=bindings.issue_key,
@@ -1486,10 +1486,10 @@ def test_gh_push_branch_runs_fix_and_check_before_pushing(
     seed = tmp_path / "seed"
     seed.mkdir()
     env = os.environ | {
-        "GIT_AUTHOR_NAME": "robomp-bot",
-        "GIT_AUTHOR_EMAIL": "robomp-bot@example.invalid",
-        "GIT_COMMITTER_NAME": "robomp-bot",
-        "GIT_COMMITTER_EMAIL": "robomp-bot@example.invalid",
+        "GIT_AUTHOR_NAME": "robogjc-bot",
+        "GIT_AUTHOR_EMAIL": "robogjc-bot@example.invalid",
+        "GIT_COMMITTER_NAME": "robogjc-bot",
+        "GIT_COMMITTER_EMAIL": "robogjc-bot@example.invalid",
     }
     subprocess.run(["git", "init", "--initial-branch=main", str(seed)], check=True, capture_output=True)
     (seed / "README.md").write_text("init\n")
@@ -1500,9 +1500,9 @@ def test_gh_push_branch_runs_fix_and_check_before_pushing(
             "-C",
             str(seed),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "init",
@@ -1512,7 +1512,7 @@ def test_gh_push_branch_runs_fix_and_check_before_pushing(
     ):
         subprocess.run(cmd, check=True, capture_output=True, env=env)
 
-    from robomp.sandbox import SandboxManager
+    from robogjc.sandbox import SandboxManager
 
     mgr = SandboxManager(tmp_path / "workspaces")
     ws = mgr.ensure_workspace(
@@ -1521,8 +1521,8 @@ def test_gh_push_branch_runs_fix_and_check_before_pushing(
         title="push gate",
         clone_url=str(bare),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
 
     fix_calls = tmp_path / "fix-calls"
@@ -1559,9 +1559,9 @@ def test_gh_push_branch_runs_fix_and_check_before_pushing(
             "-C",
             str(ws.repo_dir),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "feat: follow-up",
@@ -1591,8 +1591,8 @@ def test_gh_push_branch_runs_fix_and_check_before_pushing(
             ),
             workspace=ws,
             loop=loop,
-            author_name="robomp-bot",
-            author_email="robomp-bot@example.invalid",
+            author_name="robogjc-bot",
+            author_email="robogjc-bot@example.invalid",
         )
         db.upsert_issue(
             key=bindings.issue_key,
@@ -1618,7 +1618,7 @@ def test_gh_push_branch_runs_fix_and_check_before_pushing(
         check=True,
     )
     lines = log.stdout.strip().splitlines()
-    assert lines[0].startswith("robomp-bot <robomp-bot@example.invalid> style: bun run fix"), lines
+    assert lines[0].startswith("robogjc-bot <robogjc-bot@example.invalid> style: bun run fix"), lines
     # And the branch ended up on the remote at the new head.
     assert result.startswith(f"pushed {ws.branch} ")
     refs = subprocess.run(
@@ -1645,10 +1645,10 @@ def test_gh_push_branch_force_with_lease_recovers_after_amend(db: Database, tmp_
     seed = tmp_path / "seed"
     seed.mkdir()
     env = os.environ | {
-        "GIT_AUTHOR_NAME": "robomp-bot",
-        "GIT_AUTHOR_EMAIL": "robomp-bot@example.invalid",
-        "GIT_COMMITTER_NAME": "robomp-bot",
-        "GIT_COMMITTER_EMAIL": "robomp-bot@example.invalid",
+        "GIT_AUTHOR_NAME": "robogjc-bot",
+        "GIT_AUTHOR_EMAIL": "robogjc-bot@example.invalid",
+        "GIT_COMMITTER_NAME": "robogjc-bot",
+        "GIT_COMMITTER_EMAIL": "robogjc-bot@example.invalid",
     }
     subprocess.run(["git", "init", "--initial-branch=main", str(seed)], check=True, capture_output=True)
     (seed / "README.md").write_text("init\n")
@@ -1659,9 +1659,9 @@ def test_gh_push_branch_force_with_lease_recovers_after_amend(db: Database, tmp_
             "-C",
             str(seed),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "init",
@@ -1671,7 +1671,7 @@ def test_gh_push_branch_force_with_lease_recovers_after_amend(db: Database, tmp_
     ):
         subprocess.run(cmd, check=True, capture_output=True, env=env)
 
-    from robomp.sandbox import SandboxManager
+    from robogjc.sandbox import SandboxManager
 
     mgr = SandboxManager(tmp_path / "workspaces")
     ws = mgr.ensure_workspace(
@@ -1680,8 +1680,8 @@ def test_gh_push_branch_force_with_lease_recovers_after_amend(db: Database, tmp_
         title="amend recover",
         clone_url=str(bare),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     # First commit + push — fast-forward path.
     (ws.repo_dir / "feature.txt").write_text("original\n")
@@ -1692,9 +1692,9 @@ def test_gh_push_branch_force_with_lease_recovers_after_amend(db: Database, tmp_
             "-C",
             str(ws.repo_dir),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "feat: original",
@@ -1724,8 +1724,8 @@ def test_gh_push_branch_force_with_lease_recovers_after_amend(db: Database, tmp_
             ),
             workspace=ws,
             loop=loop,
-            author_name="robomp-bot",
-            author_email="robomp-bot@example.invalid",
+            author_name="robogjc-bot",
+            author_email="robogjc-bot@example.invalid",
         )
         db.upsert_issue(
             key=bindings.issue_key,
@@ -1756,9 +1756,9 @@ def test_gh_push_branch_force_with_lease_recovers_after_amend(db: Database, tmp_
                 "-C",
                 str(ws.repo_dir),
                 "-c",
-                "user.email=robomp-bot@example.invalid",
+                "user.email=robogjc-bot@example.invalid",
                 "-c",
-                "user.name=robomp-bot",
+                "user.name=robogjc-bot",
                 "commit",
                 "--amend",
                 "--no-edit",
@@ -1803,10 +1803,10 @@ def test_gh_push_branch_aborts_on_failed_bun_check(
     seed = tmp_path / "seed"
     seed.mkdir()
     env = os.environ | {
-        "GIT_AUTHOR_NAME": "robomp-bot",
-        "GIT_AUTHOR_EMAIL": "robomp-bot@example.invalid",
-        "GIT_COMMITTER_NAME": "robomp-bot",
-        "GIT_COMMITTER_EMAIL": "robomp-bot@example.invalid",
+        "GIT_AUTHOR_NAME": "robogjc-bot",
+        "GIT_AUTHOR_EMAIL": "robogjc-bot@example.invalid",
+        "GIT_COMMITTER_NAME": "robogjc-bot",
+        "GIT_COMMITTER_EMAIL": "robogjc-bot@example.invalid",
     }
     subprocess.run(["git", "init", "--initial-branch=main", str(seed)], check=True, capture_output=True)
     (seed / "README.md").write_text("init\n")
@@ -1817,9 +1817,9 @@ def test_gh_push_branch_aborts_on_failed_bun_check(
             "-C",
             str(seed),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "init",
@@ -1829,7 +1829,7 @@ def test_gh_push_branch_aborts_on_failed_bun_check(
     ):
         subprocess.run(cmd, check=True, capture_output=True, env=env)
 
-    from robomp.sandbox import SandboxManager
+    from robogjc.sandbox import SandboxManager
 
     mgr = SandboxManager(tmp_path / "workspaces")
     ws = mgr.ensure_workspace(
@@ -1838,8 +1838,8 @@ def test_gh_push_branch_aborts_on_failed_bun_check(
         title="push aborted",
         clone_url=str(bare),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
 
     fakebin = tmp_path / "fakebin"
@@ -1870,9 +1870,9 @@ def test_gh_push_branch_aborts_on_failed_bun_check(
             "-C",
             str(ws.repo_dir),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "ok",
@@ -1902,8 +1902,8 @@ def test_gh_push_branch_aborts_on_failed_bun_check(
             ),
             workspace=ws,
             loop=loop,
-            author_name="robomp-bot",
-            author_email="robomp-bot@example.invalid",
+            author_name="robogjc-bot",
+            author_email="robogjc-bot@example.invalid",
         )
         db.upsert_issue(
             key=bindings.issue_key,
@@ -1958,10 +1958,10 @@ def test_gh_push_branch_skip_checks_bypasses_failing_bun_check(
     seed = tmp_path / "seed"
     seed.mkdir()
     env = os.environ | {
-        "GIT_AUTHOR_NAME": "robomp-bot",
-        "GIT_AUTHOR_EMAIL": "robomp-bot@example.invalid",
-        "GIT_COMMITTER_NAME": "robomp-bot",
-        "GIT_COMMITTER_EMAIL": "robomp-bot@example.invalid",
+        "GIT_AUTHOR_NAME": "robogjc-bot",
+        "GIT_AUTHOR_EMAIL": "robogjc-bot@example.invalid",
+        "GIT_COMMITTER_NAME": "robogjc-bot",
+        "GIT_COMMITTER_EMAIL": "robogjc-bot@example.invalid",
     }
     subprocess.run(["git", "init", "--initial-branch=main", str(seed)], check=True, capture_output=True)
     (seed / "README.md").write_text("init\n")
@@ -1972,9 +1972,9 @@ def test_gh_push_branch_skip_checks_bypasses_failing_bun_check(
             "-C",
             str(seed),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "init",
@@ -1984,7 +1984,7 @@ def test_gh_push_branch_skip_checks_bypasses_failing_bun_check(
     ):
         subprocess.run(cmd, check=True, capture_output=True, env=env)
 
-    from robomp.sandbox import SandboxManager
+    from robogjc.sandbox import SandboxManager
 
     mgr = SandboxManager(tmp_path / "workspaces")
     ws = mgr.ensure_workspace(
@@ -1993,8 +1993,8 @@ def test_gh_push_branch_skip_checks_bypasses_failing_bun_check(
         title="skip checks",
         clone_url=str(bare),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
 
     fakebin = tmp_path / "fakebin"
@@ -2025,9 +2025,9 @@ def test_gh_push_branch_skip_checks_bypasses_failing_bun_check(
             "-C",
             str(ws.repo_dir),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "ok",
@@ -2057,8 +2057,8 @@ def test_gh_push_branch_skip_checks_bypasses_failing_bun_check(
             ),
             workspace=ws,
             loop=loop,
-            author_name="robomp-bot",
-            author_email="robomp-bot@example.invalid",
+            author_name="robogjc-bot",
+            author_email="robogjc-bot@example.invalid",
         )
         db.upsert_issue(
             key=bindings.issue_key,
@@ -2108,10 +2108,10 @@ def test_gh_push_branch_skip_checks_still_refuses_dirty_worktree(
     seed = tmp_path / "seed"
     seed.mkdir()
     env = os.environ | {
-        "GIT_AUTHOR_NAME": "robomp-bot",
-        "GIT_AUTHOR_EMAIL": "robomp-bot@example.invalid",
-        "GIT_COMMITTER_NAME": "robomp-bot",
-        "GIT_COMMITTER_EMAIL": "robomp-bot@example.invalid",
+        "GIT_AUTHOR_NAME": "robogjc-bot",
+        "GIT_AUTHOR_EMAIL": "robogjc-bot@example.invalid",
+        "GIT_COMMITTER_NAME": "robogjc-bot",
+        "GIT_COMMITTER_EMAIL": "robogjc-bot@example.invalid",
     }
     subprocess.run(["git", "init", "--initial-branch=main", str(seed)], check=True, capture_output=True)
     (seed / "README.md").write_text("init\n")
@@ -2122,9 +2122,9 @@ def test_gh_push_branch_skip_checks_still_refuses_dirty_worktree(
             "-C",
             str(seed),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "init",
@@ -2134,7 +2134,7 @@ def test_gh_push_branch_skip_checks_still_refuses_dirty_worktree(
     ):
         subprocess.run(cmd, check=True, capture_output=True, env=env)
 
-    from robomp.sandbox import SandboxManager
+    from robogjc.sandbox import SandboxManager
 
     mgr = SandboxManager(tmp_path / "workspaces")
     ws = mgr.ensure_workspace(
@@ -2143,8 +2143,8 @@ def test_gh_push_branch_skip_checks_still_refuses_dirty_worktree(
         title="dirty",
         clone_url=str(bare),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     # package.json declares scripts.fix so the dirty-tree gate inside
     # _run_pre_publish_bun_fix actually runs (the helper short-circuits to
@@ -2160,9 +2160,9 @@ def test_gh_push_branch_skip_checks_still_refuses_dirty_worktree(
             "-C",
             str(ws.repo_dir),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "wip",
@@ -2194,8 +2194,8 @@ def test_gh_push_branch_skip_checks_still_refuses_dirty_worktree(
             ),
             workspace=ws,
             loop=loop,
-            author_name="robomp-bot",
-            author_email="robomp-bot@example.invalid",
+            author_name="robogjc-bot",
+            author_email="robogjc-bot@example.invalid",
         )
         db.upsert_issue(
             key=bindings.issue_key,
@@ -2236,10 +2236,10 @@ def test_gh_open_pr_runs_fix_then_check_and_commits_fixup(
     seed = tmp_path / "seed"
     seed.mkdir()
     env = os.environ | {
-        "GIT_AUTHOR_NAME": "robomp-bot",
-        "GIT_AUTHOR_EMAIL": "robomp-bot@example.invalid",
-        "GIT_COMMITTER_NAME": "robomp-bot",
-        "GIT_COMMITTER_EMAIL": "robomp-bot@example.invalid",
+        "GIT_AUTHOR_NAME": "robogjc-bot",
+        "GIT_AUTHOR_EMAIL": "robogjc-bot@example.invalid",
+        "GIT_COMMITTER_NAME": "robogjc-bot",
+        "GIT_COMMITTER_EMAIL": "robogjc-bot@example.invalid",
     }
     subprocess.run(["git", "init", "--initial-branch=main", str(seed)], check=True, capture_output=True)
     (seed / "README.md").write_text("init\n")
@@ -2250,9 +2250,9 @@ def test_gh_open_pr_runs_fix_then_check_and_commits_fixup(
             "-C",
             str(seed),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "init",
@@ -2262,7 +2262,7 @@ def test_gh_open_pr_runs_fix_then_check_and_commits_fixup(
     ):
         subprocess.run(cmd, check=True, capture_output=True, env=env)
 
-    from robomp.sandbox import SandboxManager
+    from robogjc.sandbox import SandboxManager
 
     mgr = SandboxManager(tmp_path / "workspaces")
     ws = mgr.ensure_workspace(
@@ -2271,8 +2271,8 @@ def test_gh_open_pr_runs_fix_then_check_and_commits_fixup(
         title="fix runs before check",
         clone_url=str(bare),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
 
     # The fake bun:
@@ -2313,9 +2313,9 @@ def test_gh_open_pr_runs_fix_then_check_and_commits_fixup(
             "-C",
             str(ws.repo_dir),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "feat: initial change",
@@ -2360,8 +2360,8 @@ def test_gh_open_pr_runs_fix_then_check_and_commits_fixup(
             ),
             workspace=ws,
             loop=loop,
-            author_name="robomp-bot",
-            author_email="robomp-bot@example.invalid",
+            author_name="robogjc-bot",
+            author_email="robogjc-bot@example.invalid",
         )
         db.upsert_issue(
             key=bindings.issue_key,
@@ -2388,7 +2388,7 @@ def test_gh_open_pr_runs_fix_then_check_and_commits_fixup(
         check=True,
     )
     lines = log.stdout.strip().splitlines()
-    assert lines[0] == "robomp-bot|robomp-bot@example.invalid|style: bun run fix"
+    assert lines[0] == "robogjc-bot|robogjc-bot@example.invalid|style: bun run fix"
     assert lines[1].endswith("|feat: initial change")
     # Worktree is clean again (gate before push would have rejected otherwise).
     status = subprocess.run(
@@ -2426,10 +2426,10 @@ def test_gh_open_pr_refuses_dirty_worktree_before_fix(
     seed = tmp_path / "seed"
     seed.mkdir()
     env = os.environ | {
-        "GIT_AUTHOR_NAME": "robomp-bot",
-        "GIT_AUTHOR_EMAIL": "robomp-bot@example.invalid",
-        "GIT_COMMITTER_NAME": "robomp-bot",
-        "GIT_COMMITTER_EMAIL": "robomp-bot@example.invalid",
+        "GIT_AUTHOR_NAME": "robogjc-bot",
+        "GIT_AUTHOR_EMAIL": "robogjc-bot@example.invalid",
+        "GIT_COMMITTER_NAME": "robogjc-bot",
+        "GIT_COMMITTER_EMAIL": "robogjc-bot@example.invalid",
     }
     subprocess.run(["git", "init", "--initial-branch=main", str(seed)], check=True, capture_output=True)
     (seed / "README.md").write_text("init\n")
@@ -2440,9 +2440,9 @@ def test_gh_open_pr_refuses_dirty_worktree_before_fix(
             "-C",
             str(seed),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "init",
@@ -2452,7 +2452,7 @@ def test_gh_open_pr_refuses_dirty_worktree_before_fix(
     ):
         subprocess.run(cmd, check=True, capture_output=True, env=env)
 
-    from robomp.sandbox import SandboxManager
+    from robogjc.sandbox import SandboxManager
 
     mgr = SandboxManager(tmp_path / "workspaces")
     ws = mgr.ensure_workspace(
@@ -2461,8 +2461,8 @@ def test_gh_open_pr_refuses_dirty_worktree_before_fix(
         title="dirty before fix",
         clone_url=str(bare),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
 
     # `bun run fix` is a no-op; `bun check` would also pass. The bug being
@@ -2493,9 +2493,9 @@ def test_gh_open_pr_refuses_dirty_worktree_before_fix(
             "-C",
             str(ws.repo_dir),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "feat: committed work",
@@ -2533,8 +2533,8 @@ def test_gh_open_pr_refuses_dirty_worktree_before_fix(
             ),
             workspace=ws,
             loop=loop,
-            author_name="robomp-bot",
-            author_email="robomp-bot@example.invalid",
+            author_name="robogjc-bot",
+            author_email="robogjc-bot@example.invalid",
         )
         db.upsert_issue(
             key=bindings.issue_key,
@@ -2602,10 +2602,10 @@ def test_gh_open_pr_skips_fix_when_no_script(db: Database, tmp_path: Path, monke
     seed = tmp_path / "seed"
     seed.mkdir()
     env = os.environ | {
-        "GIT_AUTHOR_NAME": "robomp-bot",
-        "GIT_AUTHOR_EMAIL": "robomp-bot@example.invalid",
-        "GIT_COMMITTER_NAME": "robomp-bot",
-        "GIT_COMMITTER_EMAIL": "robomp-bot@example.invalid",
+        "GIT_AUTHOR_NAME": "robogjc-bot",
+        "GIT_AUTHOR_EMAIL": "robogjc-bot@example.invalid",
+        "GIT_COMMITTER_NAME": "robogjc-bot",
+        "GIT_COMMITTER_EMAIL": "robogjc-bot@example.invalid",
     }
     subprocess.run(["git", "init", "--initial-branch=main", str(seed)], check=True, capture_output=True)
     (seed / "README.md").write_text("init\n")
@@ -2616,9 +2616,9 @@ def test_gh_open_pr_skips_fix_when_no_script(db: Database, tmp_path: Path, monke
             "-C",
             str(seed),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "init",
@@ -2628,7 +2628,7 @@ def test_gh_open_pr_skips_fix_when_no_script(db: Database, tmp_path: Path, monke
     ):
         subprocess.run(cmd, check=True, capture_output=True, env=env)
 
-    from robomp.sandbox import SandboxManager
+    from robogjc.sandbox import SandboxManager
 
     mgr = SandboxManager(tmp_path / "workspaces")
     ws = mgr.ensure_workspace(
@@ -2637,8 +2637,8 @@ def test_gh_open_pr_skips_fix_when_no_script(db: Database, tmp_path: Path, monke
         title="no fix script",
         clone_url=str(bare),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
 
     fix_calls = tmp_path / "fix-calls"
@@ -2672,9 +2672,9 @@ def test_gh_open_pr_skips_fix_when_no_script(db: Database, tmp_path: Path, monke
             "-C",
             str(ws.repo_dir),
             "-c",
-            "user.email=robomp-bot@example.invalid",
+            "user.email=robogjc-bot@example.invalid",
             "-c",
-            "user.name=robomp-bot",
+            "user.name=robogjc-bot",
             "commit",
             "-m",
             "feat: x",
@@ -2716,8 +2716,8 @@ def test_gh_open_pr_skips_fix_when_no_script(db: Database, tmp_path: Path, monke
             ),
             workspace=ws,
             loop=loop,
-            author_name="robomp-bot",
-            author_email="robomp-bot@example.invalid",
+            author_name="robogjc-bot",
+            author_email="robogjc-bot@example.invalid",
         )
         db.upsert_issue(
             key=bindings.issue_key,
@@ -2749,12 +2749,12 @@ def _stub_settings(*, enabled: bool = True, hours: float = 4.0):
     """
     from pydantic import SecretStr
 
-    from robomp.config import Settings
+    from robogjc.config import Settings
 
     return Settings.model_construct(
         github_token=None,
         github_webhook_secret=SecretStr("x"),
-        bot_login="robomp-bot",
+        bot_login="robogjc-bot",
         git_author_email="bot@example.invalid",
         repo_allowlist_raw="octo/widget",
         gh_proxy_url="http://proxy.invalid",
@@ -2771,7 +2771,7 @@ def _question_handler(captured: dict[str, Any]):
         captured["body"] = json.loads(request.content)
         return httpx.Response(
             201,
-            json={"id": 4242, "user": {"login": "robomp-bot"}, "body": "x", "created_at": "t"},
+            json={"id": 4242, "user": {"login": "robogjc-bot"}, "body": "x", "created_at": "t"},
         )
 
     return handler

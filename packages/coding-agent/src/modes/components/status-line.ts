@@ -1,8 +1,8 @@
 import * as fs from "node:fs";
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
-import { estimateTokens } from "@oh-my-pi/pi-agent-core/compaction";
-import { type Component, truncateToWidth, visibleWidth } from "@oh-my-pi/pi-tui";
-import { formatCount, getProjectDir } from "@oh-my-pi/pi-utils";
+import type { AgentMessage } from "@gajae-code/agent-core";
+import { estimateTokens } from "@gajae-code/agent-core/compaction";
+import { type Component, truncateToWidth, visibleWidth } from "@gajae-code/tui";
+import { formatCount, getProjectDir } from "@gajae-code/utils";
 import { $ } from "bun";
 import { settings } from "../../config/settings";
 import type { StatusLinePreset, StatusLineSegmentId, StatusLineSeparatorStyle } from "../../config/settings-schema";

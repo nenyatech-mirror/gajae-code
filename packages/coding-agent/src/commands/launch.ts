@@ -2,9 +2,9 @@
  * Root command for the coding agent CLI.
  */
 
-import { THINKING_EFFORTS } from "@oh-my-pi/pi-ai";
-import { APP_NAME } from "@oh-my-pi/pi-utils";
-import { Args, Command, Flags } from "@oh-my-pi/pi-utils/cli";
+import { THINKING_EFFORTS } from "@gajae-code/ai";
+import { APP_NAME } from "@gajae-code/utils";
+import { Args, Command, Flags } from "@gajae-code/utils/cli";
 import { parseArgs } from "../cli/args";
 import { runRootCommand } from "../main";
 import { prepareAcpTerminalAuthArgs } from "../modes/acp/terminal-auth";

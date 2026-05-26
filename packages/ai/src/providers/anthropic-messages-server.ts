@@ -1,4 +1,4 @@
-import { logger } from "@oh-my-pi/pi-utils";
+import { logger } from "@gajae-code/utils";
 import { captureRequestHeaders, resolvePromptCacheKey } from "../auth-gateway/http";
 import type {
 	AssistantMessage,

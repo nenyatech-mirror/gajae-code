@@ -7,7 +7,7 @@ import asyncio
 import httpx
 import pytest
 
-from robomp.github_client import GitHubClient, GitHubError
+from robogjc.github_client import GitHubClient, GitHubError
 
 
 def _run_async(coro):
@@ -98,7 +98,7 @@ def test_get_pull_request_parses_head_repo_and_author() -> None:
                 "head": {"ref": "farm/abc12345/fix", "repo": {"full_name": "octo/widget"}},
                 "base": {"ref": "main"},
                 "state": "open",
-                "user": {"login": "robomp-bot"},
+                "user": {"login": "robogjc-bot"},
             },
         )
 
@@ -106,7 +106,7 @@ def test_get_pull_request_parses_head_repo_and_author() -> None:
     pr = _run_async(client.get_pull_request("octo/widget", 9))
     assert pr.head_ref == "farm/abc12345/fix"
     assert pr.head_repo == "octo/widget"
-    assert pr.author == "robomp-bot"
+    assert pr.author == "robogjc-bot"
 
 
 def test_204_no_content_returns_none() -> None:

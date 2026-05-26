@@ -17,8 +17,8 @@ import {
 	zPromptResponse,
 	zSessionNotification,
 } from "@agentclientprotocol/sdk/dist/schema/zod.gen.js";
-import type { Model } from "@oh-my-pi/pi-ai";
-import { getConfigRootDir, setAgentDir } from "@oh-my-pi/pi-utils";
+import type { Model } from "@gajae-code/ai";
+import { getConfigRootDir, setAgentDir } from "@gajae-code/utils";
 import { resetSettingsForTest, Settings } from "../src/config/settings";
 import { ACP_BOOTSTRAP_RACE_GUARD_MS, AcpAgent, createAcpExtensionUiContext } from "../src/modes/acp/acp-agent";
 import type { PlanModeState } from "../src/plan-mode/state";

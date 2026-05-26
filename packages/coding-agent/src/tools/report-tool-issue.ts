@@ -21,8 +21,8 @@
  */
 import { Database } from "bun:sqlite";
 import path from "node:path";
-import type { AgentTool } from "@oh-my-pi/pi-agent-core";
-import { $env, $flag, getAgentDir, getInstallId, logger, VERSION } from "@oh-my-pi/pi-utils";
+import type { AgentTool } from "@gajae-code/agent-core";
+import { $env, $flag, getAgentDir, getInstallId, logger, VERSION } from "@gajae-code/utils";
 import * as z from "zod/v4";
 import type { Settings } from "..";
 import type { ToolSession } from "./index";

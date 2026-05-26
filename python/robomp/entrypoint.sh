@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# roboomp container entrypoint. No per-boot pip installs — everything is baked
+# robogjc container entrypoint. No per-boot pip installs — everything is baked
 # into the image; we only sanity-check the runtime mount and create state dirs.
 #
-# Used by both the orchestrator (CMD: `python -m robomp serve`) and the
-# sibling gh-proxy (compose command: `python -m robomp.proxy serve`). The
+# Used by both the orchestrator (CMD: `python -m robogjc serve`) and the
+# sibling gh-proxy (compose command: `python -m robogjc.proxy serve`). The
 # proxy role does NOT need a $PI_ROOT pi checkout — it never runs omp.
 set -euo pipefail
 
@@ -13,17 +13,17 @@ set -euo pipefail
 umask 0002
 
 # Detect the proxy role by inspecting the command. Compose passes `command:`
-# as $@ here (after tini --), so $1=python, $2=-m, $3=robomp.proxy is the
+# as $@ here (after tini --), so $1=python, $2=-m, $3=robogjc.proxy is the
 # canonical shape; we also accept a single concatenated arg for safety.
 is_proxy_role=0
-if [ "${1:-}" = "python" ] && [ "${2:-}" = "-m" ] && [[ "${3:-}" == robomp.proxy* ]]; then
+if [ "${1:-}" = "python" ] && [ "${2:-}" = "-m" ] && [[ "${3:-}" == robogjc.proxy* ]]; then
     is_proxy_role=1
-elif [[ "${1:-}" == *"robomp.proxy"* ]]; then
+elif [[ "${1:-}" == *"robogjc.proxy"* ]]; then
     is_proxy_role=1
 fi
 
 /usr/sbin/groupadd -f -g 2000 omp
-max_slots="${ROBOMP_MAX_CONCURRENCY:-8}"
+max_slots="${ROBGJC_MAX_CONCURRENCY:-8}"
 for i in $(seq 1 "$max_slots"); do
     user="omp-$i"
     slot_group="omp-$i"
@@ -39,7 +39,7 @@ fi
 
 : "${PI_ROOT:=/work/pi}"
 if [ ! -d "$PI_ROOT/packages/coding-agent" ]; then
-    echo "roboomp: PI_ROOT=$PI_ROOT does not look like a pi checkout (no packages/coding-agent/)" >&2
+    echo "robogjc: PI_ROOT=$PI_ROOT does not look like a pi checkout (no packages/coding-agent/)" >&2
     exit 1
 fi
 
@@ -69,10 +69,10 @@ chown -R root:root /srv/agent-home || true
 find /srv/agent-home -type d -exec chmod 0755 {} +
 find /srv/agent-home -type f -exec chmod 0644 {} +
 
-touch /data/robomp.sqlite
-chown root:root /data/robomp.sqlite
-chmod 0600 /data/robomp.sqlite
-for db_file in /data/robomp.sqlite-wal /data/robomp.sqlite-shm; do
+touch /data/robogjc.sqlite
+chown root:root /data/robogjc.sqlite
+chmod 0600 /data/robogjc.sqlite
+for db_file in /data/robogjc.sqlite-wal /data/robogjc.sqlite-shm; do
     if [ -e "$db_file" ]; then
         chown root:root "$db_file"
         chmod 0600 "$db_file"

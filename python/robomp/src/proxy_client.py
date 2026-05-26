@@ -1,8 +1,8 @@
-"""Client half of the roboomp ↔ gh-proxy channel.
+"""Client half of the robogjc ↔ gh-proxy channel.
 
 `GitHubProxyClient` implements `GitHubBackend` by HMAC-signing each request
 and forwarding to gh-proxy. `ProxyGitTransport` implements `GitTransport` by
-routing clone/fetch/push through the proxy too — roboomp never holds the PAT.
+routing clone/fetch/push through the proxy too — robogjc never holds the PAT.
 
 Both classes share an `httpx.AsyncClient` + `httpx.Client` against the proxy.
 Tests can inject a custom transport (`httpx.MockTransport` or `ASGITransport`)
@@ -19,8 +19,8 @@ from typing import Any
 
 import httpx
 
-from robomp.git_ops import GitCommandError, HeadDriftError, PushResult
-from robomp.github_client import (
+from robogjc.git_ops import GitCommandError, HeadDriftError, PushResult
+from robogjc.github_client import (
     CommentInfo,
     GitHubError,
     IssueInfo,
@@ -31,7 +31,7 @@ from robomp.github_client import (
     RepoInfo,
     ReviewCommentInfo,
 )
-from robomp.proxy_hmac import HEADER_SIGNATURE, HEADER_TIMESTAMP, sign
+from robogjc.proxy_hmac import HEADER_SIGNATURE, HEADER_TIMESTAMP, sign
 
 log = logging.getLogger(__name__)
 
@@ -90,7 +90,7 @@ def _signed_headers(method: str, target: str, body: bytes, key: bytes) -> dict[s
 
 
 class GitHubProxyClient:
-    """HMAC-signed REST client speaking to a `robomp.proxy.server` instance.
+    """HMAC-signed REST client speaking to a `robogjc.proxy.server` instance.
 
     Implements `GitHubBackend` (duck-typed). Returns the same typed
     dataclasses as the in-process `GitHubClient`, so call sites in worker,

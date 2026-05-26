@@ -5,10 +5,10 @@
  */
 
 import path from "node:path";
-import type { AgentEvent, AgentIdentity, AgentTelemetryConfig, ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import { recordHandoff, resolveTelemetry } from "@oh-my-pi/pi-agent-core";
-import { type JsonSchemaValidationIssue, validateJsonSchemaValue } from "@oh-my-pi/pi-ai/utils/schema";
-import { logger, prompt, untilAborted } from "@oh-my-pi/pi-utils";
+import type { AgentEvent, AgentIdentity, AgentTelemetryConfig, ThinkingLevel } from "@gajae-code/agent-core";
+import { recordHandoff, resolveTelemetry } from "@gajae-code/agent-core";
+import { type JsonSchemaValidationIssue, validateJsonSchemaValue } from "@gajae-code/ai/utils/schema";
+import { logger, prompt, untilAborted } from "@gajae-code/utils";
 import { ModelRegistry } from "../config/model-registry";
 import { resolveModelOverrideWithAuthFallback } from "../config/model-resolver";
 import type { PromptTemplate } from "../config/prompt-templates";
@@ -29,7 +29,7 @@ import { createAgentSession, discoverAuthStorage } from "../sdk";
 import type { AgentSession, AgentSessionEvent } from "../session/agent-session";
 import type { ArtifactManager } from "../session/artifacts";
 import type { AuthStorage } from "../session/auth-storage";
-import { SKILL_PROMPT_MESSAGE_TYPE } from "../session/messages";
+import { SKILL_PRGJCT_MESSAGE_TYPE } from "../session/messages";
 import { SessionManager } from "../session/session-manager";
 import { truncateTail } from "../session/streaming-output";
 import type { ContextFileEntry } from "../tools";
@@ -1429,7 +1429,7 @@ export async function runSubprocess(options: ExecutorOptions): Promise<SingleRes
 					const { message } = await buildSkillPromptMessage(skill, "");
 					await session.sendCustomMessage(
 						{
-							customType: SKILL_PROMPT_MESSAGE_TYPE,
+							customType: SKILL_PRGJCT_MESSAGE_TYPE,
 							content: message,
 							display: false,
 							details: { name: skill.name, path: skill.filePath },

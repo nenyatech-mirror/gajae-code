@@ -4,7 +4,7 @@
  * resolveActiveProjectRegistryPath: walk-up, .git fallback, null return, canonical path.
  * listClaudePluginRoots: project entries shadow user entries for same plugin ID.
  *
- * Note: helpers.ts imports @oh-my-pi/pi-natives (Rust addon via glob).
+ * Note: helpers.ts imports @gajae-code/natives (Rust addon via glob).
  * This file imports from helpers.ts directly — the native addon IS present in the
  * test environment (verified: `bun run import-helpers.ts` succeeds).
  */
@@ -12,13 +12,13 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import type { InstalledPluginEntry } from "@oh-my-pi/pi-coding-agent/extensibility/plugins/marketplace";
+import type { InstalledPluginEntry } from "@gajae-code/coding-agent/extensibility/plugins/marketplace";
 import {
 	addInstalledPlugin,
 	buildPluginId,
 	readInstalledPluginsRegistry,
 	writeInstalledPluginsRegistry,
-} from "@oh-my-pi/pi-coding-agent/extensibility/plugins/marketplace";
+} from "@gajae-code/coding-agent/extensibility/plugins/marketplace";
 import {
 	clearClaudePluginRootsCache,
 	listClaudePluginRoots,
@@ -110,7 +110,7 @@ describe("resolveActiveProjectRegistryPath", () => {
 		try {
 			// Start from a tmpDir that has no .omp/ or .git/ of its own.
 			const result = await resolveActiveProjectRegistryPath(tmpDir);
-			// Must not resolve to the home-dir OMP registry.
+			// Must not resolve to the home-dir GJC registry.
 			const homeOmpPath = path.join(homeDir, ".omp", "plugins", "installed_plugins.json");
 			expect(result).not.toBe(homeOmpPath);
 		} finally {
@@ -137,7 +137,7 @@ describe("resolveActiveProjectRegistryPath", () => {
 describe("listClaudePluginRoots — project shadows user", () => {
 	let tmpHome: string;
 	let tmpProject: string;
-	/** Path where listClaudePluginRoots reads the user OMP registry. */
+	/** Path where listClaudePluginRoots reads the user GJC registry. */
 	let userRegPath: string;
 	/** Path where listClaudePluginRoots reads the project registry (resolved from tmpProject). */
 	let projectRegPath: string;

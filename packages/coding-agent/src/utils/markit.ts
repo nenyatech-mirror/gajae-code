@@ -1,4 +1,4 @@
-import { untilAborted } from "@oh-my-pi/pi-utils";
+import { untilAborted } from "@gajae-code/utils";
 import type { Markit, StreamInfo } from "markit-ai";
 import { ToolAbortError } from "../tools/tool-errors";
 

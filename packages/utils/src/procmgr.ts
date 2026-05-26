@@ -1,6 +1,6 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { Process, ProcessStatus } from "@oh-my-pi/pi-natives";
+import { Process, ProcessStatus } from "@gajae-code/natives";
 import type { Subprocess } from "bun";
 import { $env, filterProcessEnv } from "./env";
 import { $which } from "./which";
@@ -49,7 +49,7 @@ function buildSpawnEnv(shell: string): Record<string, string> {
 		SHELL: shell,
 		GIT_EDITOR: "true",
 		GPG_TTY: "not a tty",
-		OMPCODE: "1",
+		GJCCODE: "1",
 		CLAUDECODE: "1",
 		...(noCI ? {} : { CI: "true" }),
 	} as Record<string, string>;

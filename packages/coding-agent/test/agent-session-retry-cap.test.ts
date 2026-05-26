@@ -1,15 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as path from "node:path";
 import { scheduler } from "node:timers/promises";
-import { Agent } from "@oh-my-pi/pi-agent-core";
-import { type AssistantMessage, getBundledModel } from "@oh-my-pi/pi-ai";
-import { createMockModel } from "@oh-my-pi/pi-ai/providers/mock";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { AgentSession, type AgentSessionEvent } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import { Agent } from "@gajae-code/agent-core";
+import { type AssistantMessage, getBundledModel } from "@gajae-code/ai";
+import { createMockModel } from "@gajae-code/ai/providers/mock";
+import { ModelRegistry } from "@gajae-code/coding-agent/config/model-registry";
+import { Settings } from "@gajae-code/coding-agent/config/settings";
+import { AgentSession, type AgentSessionEvent } from "@gajae-code/coding-agent/session/agent-session";
+import { AuthStorage } from "@gajae-code/coding-agent/session/auth-storage";
+import { SessionManager } from "@gajae-code/coding-agent/session/session-manager";
+import { TempDir } from "@gajae-code/utils";
 
 type AutoRetryEndEvent = Extract<AgentSessionEvent, { type: "auto_retry_end" }>;
 type AutoRetryStartEvent = Extract<AgentSessionEvent, { type: "auto_retry_start" }>;

@@ -1,13 +1,13 @@
 /**
- * Regression for https://github.com/can1357/oh-my-pi/issues/823.
+ * Regression for https://github.com/can1357/gajae-code/issues/823.
  *
  * On WSL (and any host where the user moves the standalone binary away from the
  * build-time native artifacts), the compiled `omp` binary fails to load
  * `pi_natives.linux-x64-*.node`. Root cause: the old loader's
  * `isCompiledBinary` detection relied on signals that are unreliable in a Bun
  * standalone binary:
- *   - `process.env.PI_COMPILED` — never set, because `bun build --compile
- *     --define PI_COMPILED=true` substitutes the bare identifier, not
+ *   - `process.env.PI_CGJCILED` — never set, because `bun build --compile
+ *     --define PI_CGJCILED=true` substitutes the bare identifier, not
  *     property accesses on `process.env`.
  *   - CommonJS `__filename` bunfs markers — Bun's compiled binaries kept the
  *     original build-host absolute path there, while `import.meta.url` is the
@@ -32,7 +32,7 @@ import { detectCompiledBinary, getAddonFilenames, resolveLoaderCandidates } from
 describe("issue 823: standalone-binary native loader path resolution", () => {
 	it("detects compiled-binary mode from embedded-addon presence when env and url markers are absent", () => {
 		// Mirrors what a Bun standalone binary actually sees on linux-x64 / WSL:
-		// - `process.env.PI_COMPILED` is undefined (the build flag does not substitute property accesses).
+		// - `process.env.PI_CGJCILED` is undefined (the build flag does not substitute property accesses).
 		// - `import.meta.url` points at `$bunfs` for bundled modules; the old CJS
 		//   loader used `__filename`, which is NOT rewritten.
 		// The embedded-addon module is the authoritative compiled-mode signal: it is `null` in
@@ -65,11 +65,11 @@ describe("issue 823: standalone-binary native loader path resolution", () => {
 			}),
 		).toBe(false);
 
-		// Env override (e.g. user-set PI_COMPILED=1) still wins.
+		// Env override (e.g. user-set PI_CGJCILED=1) still wins.
 		expect(
 			detectCompiledBinary({
 				embeddedAddon: null,
-				env: { PI_COMPILED: "1" },
+				env: { PI_CGJCILED: "1" },
 				importMetaUrl: "/anywhere",
 			}),
 		).toBe(true);

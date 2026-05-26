@@ -1,10 +1,10 @@
 /**
  * Builtin Provider (.omp)
  *
- * Primary provider for OMP native configs. Supports all capabilities.
+ * Primary provider for GJC native configs. Supports all capabilities.
  */
 import * as path from "node:path";
-import { logger, parseFrontmatter, tryParseJson } from "@oh-my-pi/pi-utils";
+import { logger, parseFrontmatter, tryParseJson } from "@gajae-code/utils";
 import { YAML } from "bun";
 import { registerProvider } from "../capability";
 import { type ContextFile, contextFileCapability } from "../capability/context-file";
@@ -35,8 +35,8 @@ import {
 } from "./helpers";
 
 const PROVIDER_ID = "native";
-const DISPLAY_NAME = "OMP";
-const DESCRIPTION = "Native OMP configuration from ~/.omp and .omp/";
+const DISPLAY_NAME = "GJC";
+const DESCRIPTION = "Native GJC configuration from ~/.omp and .omp/";
 const PRIORITY = 100;
 
 const PATHS = SOURCE_PATHS.native;

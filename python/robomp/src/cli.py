@@ -9,10 +9,10 @@ import sys
 import click
 import uvicorn
 
-from robomp.config import Settings, get_settings
-from robomp.db import INACTIVE_EVENT_STATES, get_database
-from robomp.logging_config import configure_logging
-from robomp.manual_triage import (
+from robogjc.config import Settings, get_settings
+from robogjc.db import INACTIVE_EVENT_STATES, get_database
+from robogjc.logging_config import configure_logging
+from robogjc.manual_triage import (
     InvalidIssueRef,
     ManualTriageError,
     ManualTriageTimeout,
@@ -20,9 +20,9 @@ from robomp.manual_triage import (
     enqueue_manual_triage,
     parse_issue_ref,
 )
-from robomp.proxy_client import GitHubProxyClient
-from robomp.sandbox import SandboxManager
-from robomp.server import create_app
+from robogjc.proxy_client import GitHubProxyClient
+from robogjc.sandbox import SandboxManager
+from robogjc.server import create_app
 
 
 def _settings_or_die() -> Settings:
@@ -36,13 +36,13 @@ def _settings_or_die() -> Settings:
 def _require_proxy_mode(cfg: Settings) -> tuple[str, bytes]:
     if cfg.github_token is not None:
         raise SystemExit(
-            "robomp orchestrator refuses to start with GITHUB_TOKEN set in env. "
+            "robogjc orchestrator refuses to start with GITHUB_TOKEN set in env. "
             "The PAT must live only in the gh-proxy container."
         )
     if cfg.gh_proxy_url is None or cfg.gh_proxy_hmac_key is None:
         raise SystemExit(
-            "robomp orchestrator requires ROBOMP_GH_PROXY_URL and "
-            "ROBOMP_GH_PROXY_HMAC_KEY (run gh-proxy in a sibling container)."
+            "robogjc orchestrator requires ROBGJC_GH_PROXY_URL and "
+            "ROBGJC_GH_PROXY_HMAC_KEY (run gh-proxy in a sibling container)."
         )
     return cfg.gh_proxy_url, cfg.gh_proxy_hmac_key.get_secret_value().encode("utf-8")
 
@@ -58,7 +58,7 @@ def _default_wait_timeout(cfg: Settings) -> float:
 
 @click.group()
 def main() -> None:
-    """roboomp control surface."""
+    """robogjc control surface."""
 
 
 @main.command()
@@ -93,7 +93,7 @@ def triage(issue_ref: str, wait_timeout: float | None) -> None:
         click.echo(str(exc), err=True)
         sys.exit(2)
     if not cfg.allows(repo_full):
-        click.echo(f"refusing: {repo_full} not in ROBOMP_REPO_ALLOWLIST", err=True)
+        click.echo(f"refusing: {repo_full} not in ROBGJC_REPO_ALLOWLIST", err=True)
         sys.exit(2)
 
     async def _go() -> None:

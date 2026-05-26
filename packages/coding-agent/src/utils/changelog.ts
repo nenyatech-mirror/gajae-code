@@ -1,4 +1,4 @@
-import { isEnoent, logger } from "@oh-my-pi/pi-utils";
+import { isEnoent, logger } from "@gajae-code/utils";
 
 export interface ChangelogEntry {
 	major: number;

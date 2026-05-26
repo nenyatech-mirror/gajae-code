@@ -1,5 +1,5 @@
-import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@oh-my-pi/pi-agent-core";
-import { prompt } from "@oh-my-pi/pi-utils";
+import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@gajae-code/agent-core";
+import { prompt } from "@gajae-code/utils";
 import type * as z from "zod/v4";
 import {
 	executeHashlineSingle,

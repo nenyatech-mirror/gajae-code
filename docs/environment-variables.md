@@ -10,7 +10,7 @@ It documents only active behavior.
 
 ## Resolution model and precedence
 
-Most runtime lookups use `$env` from `@oh-my-pi/pi-utils` (`packages/utils/src/env.ts`).
+Most runtime lookups use `$env` from `@gajae-code/utils` (`packages/utils/src/env.ts`).
 
 `$env` loading order:
 
@@ -20,7 +20,7 @@ Most runtime lookups use `$env` from `@oh-my-pi/pi-utils` (`packages/utils/src/e
 4. Config-root `.env` (`~/.omp/.env`, respecting `PI_CONFIG_DIR`) for keys not already set
 5. Home `.env` (`~/.env`) for keys not already set
 
-Additional rule inside each `.env` file: `OMP_*` keys are mirrored to `PI_*` keys in that parsed file.
+Additional rule inside each `.env` file: `GJC_*` keys are mirrored to `PI_*` keys in that parsed file.
 
 ---
 
@@ -90,10 +90,10 @@ When the broker is enabled, the local SQLite credential store is bypassed and al
 
 | Variable                | Used for                                                                                          | Required when                                                                                                          | Notes / precedence                                                                                                                                                                                  |
 | ----------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OMP_AUTH_BROKER_URL`   | Base URL of the remote auth-broker (e.g. `https://broker.tailnet:8765`); selects broker mode      | Resolving credentials through a broker; also required by `omp auth-gateway serve` (the gateway is itself a broker client) | Wins over `auth.broker.url` in `config.yml`. When set with no resolvable token, `resolveAuthBrokerConfig()` hard-errors instead of falling back to local SQLite.                                    |
-| `OMP_AUTH_BROKER_TOKEN` | Bearer token sent on every broker endpoint except `/v1/healthz`                                   | `OMP_AUTH_BROKER_URL` is set and no token is available from `auth.broker.token` or `<config-dir>/auth-broker.token`     | Resolution: this env → `auth.broker.token` (`$ENV_NAME` indirection supported) → `<config-dir>/auth-broker.token` (mode `0600`). `<config-dir>` is `~/.omp/` (respecting `PI_CONFIG_DIR`).         |
+| `GJC_AUTH_BROKER_URL`   | Base URL of the remote auth-broker (e.g. `https://broker.tailnet:8765`); selects broker mode      | Resolving credentials through a broker; also required by `omp auth-gateway serve` (the gateway is itself a broker client) | Wins over `auth.broker.url` in `config.yml`. When set with no resolvable token, `resolveAuthBrokerConfig()` hard-errors instead of falling back to local SQLite.                                    |
+| `GJC_AUTH_BROKER_TOKEN` | Bearer token sent on every broker endpoint except `/v1/healthz`                                   | `GJC_AUTH_BROKER_URL` is set and no token is available from `auth.broker.token` or `<config-dir>/auth-broker.token`     | Resolution: this env → `auth.broker.token` (`$ENV_NAME` indirection supported) → `<config-dir>/auth-broker.token` (mode `0600`). `<config-dir>` is `~/.omp/` (respecting `PI_CONFIG_DIR`).         |
 
-The gateway has no dedicated env vars — it inherits `OMP_AUTH_BROKER_*`. Its own inbound bearer token lives at `<config-dir>/auth-gateway.token` and is managed via `omp auth-gateway token`.
+The gateway has no dedicated env vars — it inherits `GJC_AUTH_BROKER_*`. Its own inbound bearer token lives at `<config-dir>/auth-gateway.token` and is managed via `omp auth-gateway token`.
 
 ---
 
@@ -283,7 +283,7 @@ Extra conditional behavior:
 | `PI_SLOW_MODEL`              | Ephemeral model-role override for `slow` (CLI `--slow` takes precedence)                           |
 | `PI_PLAN_MODEL`              | Ephemeral model-role override for `plan` (CLI `--plan` takes precedence)                           |
 | `PI_NO_TITLE`                | If set (any non-empty value), disables auto session title generation on first user message         |
-| `NULL_PROMPT`                | If `true`, system prompt builder returns empty string                                              |
+| `NULL_PRGJCT`                | If `true`, system prompt builder returns empty string                                              |
 | `PI_BLOCKED_AGENT`           | Blocks a specific subagent type in task tool                                                       |
 | `PI_SUBPROCESS_CMD`          | Overrides subagent spawn command (`omp` / `omp.cmd` resolution bypass)                             |
 | `PI_TASK_MAX_OUTPUT_BYTES`   | Max captured output bytes per subagent (default `500000`)                                          |
@@ -309,7 +309,7 @@ Extra conditional behavior:
 
 ## 6) Storage and config root paths
 
-These are consumed via `@oh-my-pi/pi-utils/dirs` and affect where coding-agent stores data.
+These are consumed via `@gajae-code/utils/dirs` and affect where coding-agent stores data.
 
 | Variable              | Default / behavior                                                            |
 | --------------------- | ----------------------------------------------------------------------------- |

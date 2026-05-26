@@ -10,8 +10,8 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any, Literal
 
-from robomp.db import issue_key
-from robomp.pragmas import parse_pragmas
+from robogjc.db import issue_key
+from robogjc.pragmas import parse_pragmas
 
 log = logging.getLogger(__name__)
 
@@ -91,7 +91,7 @@ def extract_mention(body: str | None, bot_login: str) -> str | None:
     """Return `body` with `@<bot_login>` mentions stripped, or None if no mention.
 
     Match is case-insensitive and word-boundary aware (hyphens in logins are
-    part of the token, so `@robomp-bot` does NOT match `@robomp-bot-extra`).
+    part of the token, so `@robogjc-bot` does NOT match `@robogjc-bot-extra`).
     """
     if not isinstance(body, str) or not body:
         return None

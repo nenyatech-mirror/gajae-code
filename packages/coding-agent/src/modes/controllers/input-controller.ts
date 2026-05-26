@@ -1,14 +1,14 @@
 import * as fs from "node:fs/promises";
-import { type AgentMessage, ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { AutocompleteProvider, SlashCommand } from "@oh-my-pi/pi-tui";
-import { $env, sanitizeText } from "@oh-my-pi/pi-utils";
+import { type AgentMessage, ThinkingLevel } from "@gajae-code/agent-core";
+import type { AutocompleteProvider, SlashCommand } from "@gajae-code/tui";
+import { $env, sanitizeText } from "@gajae-code/utils";
 import { isSettingsInitialized, settings } from "../../config/settings";
 import { expandEmoticons } from "../../modes/emoji-autocomplete";
 import { createPromptActionAutocompleteProvider } from "../../modes/prompt-action-autocomplete";
 import { theme } from "../../modes/theme/theme";
 import type { InteractiveModeContext } from "../../modes/types";
 import type { AgentSessionEvent } from "../../session/agent-session";
-import { SKILL_PROMPT_MESSAGE_TYPE, type SkillPromptDetails } from "../../session/messages";
+import { SKILL_PRGJCT_MESSAGE_TYPE, type SkillPromptDetails } from "../../session/messages";
 import { executeBuiltinSlashCommand } from "../../slash-commands/builtin-registry";
 import { copyToClipboard, readImageFromClipboard } from "../../utils/clipboard";
 import { getEditorCommand, openInEditor } from "../../utils/external-editor";
@@ -455,7 +455,7 @@ export class InputController {
 			}
 			await this.ctx.session.promptCustomMessage(
 				{
-					customType: SKILL_PROMPT_MESSAGE_TYPE,
+					customType: SKILL_PRGJCT_MESSAGE_TYPE,
 					content: message,
 					display: true,
 					details,

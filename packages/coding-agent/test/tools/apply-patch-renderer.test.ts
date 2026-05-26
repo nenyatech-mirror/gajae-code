@@ -2,10 +2,10 @@ import { describe, expect, it, vi } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { ToolExecutionComponent } from "@oh-my-pi/pi-coding-agent/modes/components/tool-execution";
-import * as themeModule from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { toolRenderers } from "@oh-my-pi/pi-coding-agent/tools/renderers";
-import type { TUI } from "@oh-my-pi/pi-tui";
+import { ToolExecutionComponent } from "@gajae-code/coding-agent/modes/components/tool-execution";
+import * as themeModule from "@gajae-code/coding-agent/modes/theme/theme";
+import { toolRenderers } from "@gajae-code/coding-agent/tools/renderers";
+import type { TUI } from "@gajae-code/tui";
 
 async function getUiTheme() {
 	await themeModule.initTheme(false, undefined, undefined, "dark", "light");
@@ -175,7 +175,7 @@ describe("apply_patch rendering", () => {
 					op: "update",
 					diff: [
 						" 10|}",
-						'+11|import { CODEX_INSTRUCTIONS } from "@oh-my-pi/pi-ai/providers/openai-codex-responses";',
+						'+11|import { CODEX_INSTRUCTIONS } from "@gajae-code/ai/providers/openai-codex-responses";',
 						" 12|\t$env,",
 						" 228|\toutput_format: typeof OPENAI_IMAGE_OUTPUT_FORMAT;",
 						"+235|\tinstructions?: string;",

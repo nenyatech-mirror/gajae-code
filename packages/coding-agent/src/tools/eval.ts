@@ -1,8 +1,8 @@
-import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@oh-my-pi/pi-agent-core";
-import type { ImageContent } from "@oh-my-pi/pi-ai";
-import type { Component } from "@oh-my-pi/pi-tui";
-import { Markdown, Text } from "@oh-my-pi/pi-tui";
-import { prompt } from "@oh-my-pi/pi-utils";
+import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@gajae-code/agent-core";
+import type { ImageContent } from "@gajae-code/ai";
+import type { Component } from "@gajae-code/tui";
+import { Markdown, Text } from "@gajae-code/tui";
+import { prompt } from "@gajae-code/utils";
 import * as z from "zod/v4";
 import { jsBackend, pythonBackend } from "../eval";
 import type { ExecutorBackend } from "../eval/backend";

@@ -13,9 +13,9 @@
  */
 
 import { describe, expect, it } from "bun:test";
-import { getBundledModel } from "@oh-my-pi/pi-ai/models";
-import { complete } from "@oh-my-pi/pi-ai/stream";
-import type { Api, Context, Model, OptionsForApi, Usage } from "@oh-my-pi/pi-ai/types";
+import { getBundledModel } from "@gajae-code/ai/models";
+import { complete } from "@gajae-code/ai/stream";
+import type { Api, Context, Model, OptionsForApi, Usage } from "@gajae-code/ai/types";
 import { e2eApiKey, resolveApiKey } from "./oauth";
 
 // Resolve OAuth tokens at module level (async, runs before tests)
@@ -29,7 +29,7 @@ const oauthTokens = await Promise.all([
 const [anthropicOAuthToken, githubCopilotToken, geminiCliToken, antigravityToken, openaiCodexToken] = oauthTokens;
 
 // Generate a long system prompt to trigger caching (>2k bytes for most providers)
-const LONG_SYSTEM_PROMPT = `You are a helpful assistant. Be concise in your responses.
+const LONG_SYSTEM_PRGJCT = `You are a helpful assistant. Be concise in your responses.
 
 Here is some additional context that makes this system prompt long enough to trigger caching:
 
@@ -47,7 +47,7 @@ async function testTotalTokensWithCache<TApi extends Api>(
 ): Promise<{ first: Usage; second: Usage }> {
 	// First request - no cache
 	const context1: Context = {
-		systemPrompt: [LONG_SYSTEM_PROMPT],
+		systemPrompt: [LONG_SYSTEM_PRGJCT],
 		messages: [
 			{
 				role: "user",
@@ -62,7 +62,7 @@ async function testTotalTokensWithCache<TApi extends Api>(
 
 	// Second request - should trigger cache read (same system prompt, add conversation)
 	const context2: Context = {
-		systemPrompt: [LONG_SYSTEM_PROMPT],
+		systemPrompt: [LONG_SYSTEM_PRGJCT],
 		messages: [
 			...context1.messages,
 			response1, // Include previous assistant response

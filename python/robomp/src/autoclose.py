@@ -20,10 +20,10 @@ import asyncio
 import logging
 from datetime import UTC, datetime
 
-from robomp.config import Settings
-from robomp.db import Database, PendingClosureRow
-from robomp.github_backend import GitHubBackend
-from robomp.github_client import GitHubError
+from robogjc.config import Settings
+from robogjc.db import Database, PendingClosureRow
+from robogjc.github_backend import GitHubBackend
+from robogjc.github_client import GitHubError
 
 log = logging.getLogger(__name__)
 

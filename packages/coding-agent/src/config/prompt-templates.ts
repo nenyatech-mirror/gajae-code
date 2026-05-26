@@ -7,7 +7,7 @@ import {
 	logger,
 	parseFrontmatter,
 	prompt,
-} from "@oh-my-pi/pi-utils";
+} from "@gajae-code/utils";
 import { computeLineHash, HL_BODY_SEP } from "../hashline/hash";
 import { jtdToTypeScript } from "../tools/jtd-to-typescript";
 import { parseCommandArgs, substituteArgs } from "../utils/command-args";

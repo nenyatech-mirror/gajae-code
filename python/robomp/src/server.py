@@ -14,32 +14,32 @@ from fastapi import Body, FastAPI, Header, HTTPException, Request, status
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from robomp import github_events
-from robomp.autoclose import AutocloseScheduler
-from robomp.config import Settings, get_settings
-from robomp.dashboard import render_index, static_dir, tail_jsonl
-from robomp.db import (
+from robogjc import github_events
+from robogjc.autoclose import AutocloseScheduler
+from robogjc.config import Settings, get_settings
+from robogjc.dashboard import render_index, static_dir, tail_jsonl
+from robogjc.db import (
     INACTIVE_EVENT_STATES,
     Database,
     get_database,
     iso_seconds_ago,
 )
-from robomp.db import (
+from robogjc.db import (
     issue_key as make_issue_key,
 )
-from robomp.github_backend import GitHubBackend
-from robomp.github_client import GitHubError, IssueSummary
-from robomp.manual_triage import (
+from robogjc.github_backend import GitHubBackend
+from robogjc.github_client import GitHubError, IssueSummary
+from robogjc.manual_triage import (
     InvalidIssueRef,
     ManualTriageConflict,
     ManualTriageError,
     enqueue_manual_triage,
     parse_issue_ref,
 )
-from robomp.natives_cache import NativesCache
-from robomp.proxy_client import GitHubProxyClient, ProxyGitTransport
-from robomp.queue import WorkerPool
-from robomp.sandbox import SandboxManager
+from robogjc.natives_cache import NativesCache
+from robogjc.proxy_client import GitHubProxyClient, ProxyGitTransport
+from robogjc.queue import WorkerPool
+from robogjc.sandbox import SandboxManager
 
 log = logging.getLogger(__name__)
 
@@ -217,13 +217,13 @@ def _issue_browse_payload(
 def _require_proxy_mode(cfg: Settings) -> tuple[str, bytes]:
     if cfg.github_token is not None:
         raise SystemExit(
-            "robomp orchestrator refuses to start with GITHUB_TOKEN set in env. "
+            "robogjc orchestrator refuses to start with GITHUB_TOKEN set in env. "
             "The PAT must live only in the gh-proxy container."
         )
     if cfg.gh_proxy_url is None or cfg.gh_proxy_hmac_key is None:
         raise SystemExit(
-            "robomp orchestrator requires ROBOMP_GH_PROXY_URL and "
-            "ROBOMP_GH_PROXY_HMAC_KEY (run gh-proxy in a sibling container)."
+            "robogjc orchestrator requires ROBGJC_GH_PROXY_URL and "
+            "ROBGJC_GH_PROXY_HMAC_KEY (run gh-proxy in a sibling container)."
         )
     return cfg.gh_proxy_url, cfg.gh_proxy_hmac_key.get_secret_value().encode("utf-8")
 
@@ -287,7 +287,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 kill_timeout=cfg.shutdown_kill_timeout_seconds,
             )
 
-    app = FastAPI(title="robomp", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="robogjc", version="0.1.0", lifespan=lifespan)
 
     @app.get("/healthz")
     async def healthz() -> dict[str, str]:
@@ -374,7 +374,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         # queue (and any replay) carries the maintainer signal forward.
         if decision.directive:
             payload = dict(payload)
-            payload["_robomp_directive"] = {
+            payload["_robogjc_directive"] = {
                 "body": decision.directive_body,
                 "author": decision.directive_author,
                 "pragmas": [list(item) for item in decision.directive_pragmas],
@@ -462,14 +462,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.post("/replay")
     async def replay(
         request: Request,
-        x_robomp_token: str | None = Header(None, alias="X-Robomp-Replay-Token"),
+        x_robogjc_token: str | None = Header(None, alias="X-Robogjc-Replay-Token"),
         delivery_id: str = "",
     ) -> JSONResponse:
         bag = request.app.state.bag
         cfg: Settings = bag["settings"]
         if cfg.replay_token is None:
             raise HTTPException(404, "replay disabled")
-        if x_robomp_token != cfg.replay_token.get_secret_value():
+        if x_robogjc_token != cfg.replay_token.get_secret_value():
             raise HTTPException(401, "invalid replay token")
         db: Database = bag["db"]
         row = db.get_event(delivery_id)
@@ -482,7 +482,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     def _require_trigger_token(cfg: Settings, token: str | None) -> None:
         if cfg.replay_token is None:
-            raise HTTPException(404, "trigger disabled (set ROBOMP_REPLAY_TOKEN to enable)")
+            raise HTTPException(404, "trigger disabled (set ROBGJC_REPLAY_TOKEN to enable)")
         if token != cfg.replay_token.get_secret_value():
             raise HTTPException(401, "invalid replay token")
 
@@ -492,9 +492,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         state: str = "open",
         limit: int = 30,
         refresh: bool = False,
-        x_robomp_token: str | None = Header(None, alias="X-Robomp-Replay-Token"),
+        x_robogjc_token: str | None = Header(None, alias="X-Robogjc-Replay-Token"),
     ) -> dict[str, Any]:
-        """Browse issues across `ROBOMP_REPO_ALLOWLIST` for the trigger picker.
+        """Browse issues across `ROBGJC_REPO_ALLOWLIST` for the trigger picker.
 
         Token-gated identically to `/api/trigger`: this can expose titles from
         private repos. Normal dashboard loads use the server cache; only cache
@@ -502,7 +502,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         """
         bag = request.app.state.bag
         cfg: Settings = bag["settings"]
-        _require_trigger_token(cfg, x_robomp_token)
+        _require_trigger_token(cfg, x_robogjc_token)
 
         if state not in ("open", "closed", "all"):
             raise HTTPException(400, "state must be open|closed|all")
@@ -549,7 +549,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     async def api_trigger(
         request: Request,
         payload: dict[str, Any] = Body(...),
-        x_robomp_token: str | None = Header(None, alias="X-Robomp-Replay-Token"),
+        x_robogjc_token: str | None = Header(None, alias="X-Robogjc-Replay-Token"),
     ) -> JSONResponse:
         """Manually queue an issue. Modes:
 
@@ -558,7 +558,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         """
         bag = request.app.state.bag
         cfg: Settings = bag["settings"]
-        _require_trigger_token(cfg, x_robomp_token)
+        _require_trigger_token(cfg, x_robogjc_token)
 
         db: Database = bag["db"]
         github: GitHubBackend = bag["github"]
@@ -579,7 +579,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             except InvalidIssueRef as exc:
                 raise HTTPException(400, str(exc)) from exc
             if not cfg.allows(repo_full):
-                raise HTTPException(403, f"{repo_full} not in ROBOMP_REPO_ALLOWLIST")
+                raise HTTPException(403, f"{repo_full} not in ROBGJC_REPO_ALLOWLIST")
             try:
                 delivery = await enqueue_manual_triage(
                     db=db,
@@ -609,7 +609,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             except InvalidIssueRef as exc:
                 raise HTTPException(400, str(exc)) from exc
             if not cfg.allows(repo_full):
-                raise HTTPException(403, f"{repo_full} not in ROBOMP_REPO_ALLOWLIST")
+                raise HTTPException(403, f"{repo_full} not in ROBGJC_REPO_ALLOWLIST")
             row = db.latest_event_for_issue(make_issue_key(repo_full, number))
             if row is None:
                 raise HTTPException(404, f"no retryable stored event for {repo_full}#{number}")
@@ -633,14 +633,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     async def api_cancel(
         request: Request,
         payload: dict[str, Any] = Body(...),
-        x_robomp_token: str | None = Header(None, alias="X-Robomp-Replay-Token"),
+        x_robogjc_token: str | None = Header(None, alias="X-Robogjc-Replay-Token"),
     ) -> JSONResponse:
         """Stop a running event. The omp subprocess is killed; the row lands in
         `failed` with `cancelled by operator` as the error.
         """
         bag = request.app.state.bag
         cfg: Settings = bag["settings"]
-        _require_trigger_token(cfg, x_robomp_token)
+        _require_trigger_token(cfg, x_robogjc_token)
 
         delivery_id = payload.get("delivery_id")
         if not isinstance(delivery_id, str) or not delivery_id:
@@ -776,7 +776,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     async def api_logs(request: Request, limit: int = 400) -> dict[str, Any]:
         cfg: Settings = request.app.state.bag["settings"]
         capped = max(1, min(int(limit), 2000))
-        entries = tail_jsonl(cfg.log_dir / "robomp.log.jsonl", limit=capped)
+        entries = tail_jsonl(cfg.log_dir / "robogjc.log.jsonl", limit=capped)
         return {"entries": entries, "count": len(entries), "limit": capped}
 
     # Mount the built dashboard bundle. The `index.html` itself is served by

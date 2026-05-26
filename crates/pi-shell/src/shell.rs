@@ -1108,7 +1108,7 @@ fn should_skip_env_var(key: &str) -> bool {
 			| "SHELLOPTS"
 			| "SHLVL"
 			| "SHELL"
-			| "COMP_WORDBREAKS"
+			| "CGJC_WORDBREAKS"
 			| "DIRSTACK"
 			| "EPOCHREALTIME"
 			| "EPOCHSECONDS"
@@ -1871,9 +1871,9 @@ mod tests {
 	}
 
 	/// Brush expands `$env:NAME` against the `env` shell variable by default,
-	/// collapsing PowerShell references like `Write-Host $env:OMPCODE` to
-	/// `:OMPCODE`. The session-level fallback below defines `env=$env` so the
-	/// expansion is the literal `$env:OMPCODE`, preserving the PowerShell
+	/// collapsing PowerShell references like `Write-Host $env:GJCCODE` to
+	/// `:GJCCODE`. The session-level fallback below defines `env=$env` so the
+	/// expansion is the literal `$env:GJCCODE`, preserving the PowerShell
 	/// token when the command is forwarded to a child shell.
 	#[cfg(unix)]
 	#[tokio::test(flavor = "multi_thread")]

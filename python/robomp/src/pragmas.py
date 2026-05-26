@@ -6,14 +6,14 @@ on their own line (chatops convention; identical surface to Slack / Discord
 / Probot):
 
 ```
-@robomp-bot /model gpt /thinking low
+@robogjc-bot /model gpt /thinking low
 fix the off-by-one in foo()
 ```
 
 Or stacked:
 
 ```
-@robomp-bot
+@robogjc-bot
 /model gpt
 /thinking low
 fix the off-by-one
@@ -29,10 +29,10 @@ as a directive (reviewer-bot or maintainer-mention).
 
 Supported keys (today):
 
-- `/model <alias>` — pick the first id in `ROBOMP_MODEL` whose model id
+- `/model <alias>` — pick the first id in `ROBGJC_MODEL` whose model id
   contains `<alias>` (case-insensitive). Falls back to the normal random
   pool selection if no member matches.
-- `/thinking <level>` — override `ROBOMP_THINKING` for this run. Accepts
+- `/thinking <level>` — override `ROBGJC_THINKING` for this run. Accepts
   `off|none|no`, `lo|low`, `med|medium`, `hi|high`, `xhi|xhigh`
   (case-insensitive); anything else is ignored.
 

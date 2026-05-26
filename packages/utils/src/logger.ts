@@ -1,5 +1,5 @@
 /**
- * Centralized logger for omp.
+ * Centralized logger for gajae-code.
  *
  * Default: rotating `~/.omp/logs/omp.<DATE>.log`, no console output (writing
  * to stdout/stderr would corrupt the TUI). Long-running headless services
@@ -47,7 +47,7 @@ const logFormat = winston.format.combine(
 function makeFileTransport(dir?: string): winston.transport {
 	return new DailyRotateFile({
 		dirname: ensureDir(dir ?? getLogsDir()),
-		filename: "omp.%DATE%.log",
+		filename: "gjc.%DATE%.log",
 		datePattern: "YYYY-MM-DD",
 		maxSize: "10m",
 		maxFiles: 5,

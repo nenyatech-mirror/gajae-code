@@ -1,7 +1,7 @@
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { isEnoent } from "@oh-my-pi/pi-utils";
+import { isEnoent } from "@gajae-code/utils";
 import { AgentRegistry } from "../registry/agent-registry";
 import { parseInternalUrl } from "./parse";
 import { validateRelativePath } from "./skill-protocol";

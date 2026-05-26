@@ -2,10 +2,10 @@
  * Generate commit messages from diffs using a smol, fast model.
  * Follows the same pattern as title-generator.ts.
  */
-import type { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { Api, Model } from "@oh-my-pi/pi-ai";
-import { completeSimple } from "@oh-my-pi/pi-ai";
-import { logger, prompt } from "@oh-my-pi/pi-utils";
+import type { ThinkingLevel } from "@gajae-code/agent-core";
+import type { Api, Model } from "@gajae-code/ai";
+import { completeSimple } from "@gajae-code/ai";
+import { logger, prompt } from "@gajae-code/utils";
 import type { ModelRegistry } from "../config/model-registry";
 import { resolveModelRoleValue } from "../config/model-resolver";
 import type { Settings } from "../config/settings";
@@ -13,7 +13,7 @@ import MODEL_PRIO from "../priority.json" with { type: "json" };
 import commitSystemPrompt from "../prompts/system/commit-message-system.md" with { type: "text" };
 import { toReasoningEffort } from "../thinking";
 
-const COMMIT_SYSTEM_PROMPT = prompt.render(commitSystemPrompt);
+const COMMIT_SYSTEM_PRGJCT = prompt.render(commitSystemPrompt);
 const MAX_DIFF_CHARS = 4000;
 const COMMIT_MAX_TOKENS = 60;
 const REASONING_SAFE_MAX_TOKENS = 1024;
@@ -107,7 +107,7 @@ export async function generateCommitMessage(
 			const response = await completeSimple(
 				candidate.model,
 				{
-					systemPrompt: [COMMIT_SYSTEM_PROMPT],
+					systemPrompt: [COMMIT_SYSTEM_PRGJCT],
 					messages: [{ role: "user", content: userMessage, timestamp: Date.now() }],
 				},
 				{ apiKey, maxTokens, reasoning: toReasoningEffort(candidate.thinkingLevel) },

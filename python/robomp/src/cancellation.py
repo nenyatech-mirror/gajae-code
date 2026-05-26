@@ -28,7 +28,7 @@ class _CancelSink(Protocol):
 
 
 _current_event: contextvars.ContextVar[tuple[_CancelSink, str] | None] = contextvars.ContextVar(
-    "robomp_current_event", default=None
+    "robogjc_current_event", default=None
 )
 
 

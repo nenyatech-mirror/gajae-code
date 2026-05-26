@@ -2,11 +2,11 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { discoverAndLoadExtensions } from "@oh-my-pi/pi-coding-agent/extensibility/extensions/loader";
-import { getAgentDir, getPluginsDir, setAgentDir, TempDir } from "@oh-my-pi/pi-utils";
+import { discoverAndLoadExtensions } from "@gajae-code/coding-agent/extensibility/extensions/loader";
+import { getAgentDir, getPluginsDir, setAgentDir, TempDir } from "@gajae-code/utils";
 
-const currentPiCodingAgentPath = Bun.resolveSync("@oh-my-pi/pi-coding-agent", import.meta.dir);
-const currentPiExtensionsPath = Bun.resolveSync("@oh-my-pi/pi-coding-agent/extensibility/extensions", import.meta.dir);
+const currentPiCodingAgentPath = Bun.resolveSync("@gajae-code/coding-agent", import.meta.dir);
+const currentPiExtensionsPath = Bun.resolveSync("@gajae-code/coding-agent/extensibility/extensions", import.meta.dir);
 
 describe("plugin extension discovery", () => {
 	let projectDir: TempDir;
@@ -107,8 +107,8 @@ describe("plugin extension discovery", () => {
 			[
 				'import * as nodePath from "path";',
 				'if (false) import("./optional-missing.js");',
-				'import { isToolCallEventType as legacyRoot } from "@mariozechner/pi-coding-agent";',
-				'import { isToolCallEventType as legacyExtensions } from "@mariozechner/pi-coding-agent/extensibility/extensions";',
+				'import { isToolCallEventType as legacyRoot } from "@mariozechner/gajae-code";',
+				'import { isToolCallEventType as legacyExtensions } from "@mariozechner/gajae-code/extensibility/extensions";',
 				`import { isToolCallEventType as modernRoot } from ${JSON.stringify(currentPiCodingAgentPath)};`,
 				`import { isToolCallEventType as modernExtensions } from ${JSON.stringify(currentPiExtensionsPath)};`,
 				"",

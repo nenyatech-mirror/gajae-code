@@ -19,21 +19,21 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { Agent } from "@oh-my-pi/pi-agent-core";
-import { getBundledModel } from "@oh-my-pi/pi-ai/models";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { EventController } from "@oh-my-pi/pi-coding-agent/modes/controllers/event-controller";
-import { InputController } from "@oh-my-pi/pi-coding-agent/modes/controllers/input-controller";
-import { getThemeByName, setThemeInstance } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { InteractiveModeContext } from "@oh-my-pi/pi-coding-agent/modes/types";
-import { UiHelpers } from "@oh-my-pi/pi-coding-agent/modes/utils/ui-helpers";
-import { AgentSession, type AgentSessionEvent } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { SKILL_PROMPT_MESSAGE_TYPE, type SkillPromptDetails } from "@oh-my-pi/pi-coding-agent/session/messages";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { Container } from "@oh-my-pi/pi-tui";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import { Agent } from "@gajae-code/agent-core";
+import { getBundledModel } from "@gajae-code/ai/models";
+import { ModelRegistry } from "@gajae-code/coding-agent/config/model-registry";
+import { Settings } from "@gajae-code/coding-agent/config/settings";
+import { EventController } from "@gajae-code/coding-agent/modes/controllers/event-controller";
+import { InputController } from "@gajae-code/coding-agent/modes/controllers/input-controller";
+import { getThemeByName, setThemeInstance } from "@gajae-code/coding-agent/modes/theme/theme";
+import type { InteractiveModeContext } from "@gajae-code/coding-agent/modes/types";
+import { UiHelpers } from "@gajae-code/coding-agent/modes/utils/ui-helpers";
+import { AgentSession, type AgentSessionEvent } from "@gajae-code/coding-agent/session/agent-session";
+import { AuthStorage } from "@gajae-code/coding-agent/session/auth-storage";
+import { SKILL_PRGJCT_MESSAGE_TYPE, type SkillPromptDetails } from "@gajae-code/coding-agent/session/messages";
+import { SessionManager } from "@gajae-code/coding-agent/session/session-manager";
+import { Container } from "@gajae-code/tui";
+import { TempDir } from "@gajae-code/utils";
 
 // ============================================================================
 // Shared helpers
@@ -233,7 +233,7 @@ function emitCustomMessageStart(session: AgentSession, content: string, tag?: st
 		type: "message_start",
 		message: {
 			role: "custom",
-			customType: SKILL_PROMPT_MESSAGE_TYPE,
+			customType: SKILL_PRGJCT_MESSAGE_TYPE,
 			content,
 			display: true,
 			details,
@@ -492,7 +492,7 @@ describe("EventController custom-role dequeue refresh (E10)", () => {
 			type: "message_start",
 			message: {
 				role: "custom",
-				customType: SKILL_PROMPT_MESSAGE_TYPE,
+				customType: SKILL_PRGJCT_MESSAGE_TYPE,
 				content: "first",
 				display: true,
 				details: {
@@ -520,7 +520,7 @@ describe("EventController custom-role dequeue refresh (E10)", () => {
 			type: "message_start",
 			message: {
 				role: "custom",
-				customType: SKILL_PROMPT_MESSAGE_TYPE,
+				customType: SKILL_PRGJCT_MESSAGE_TYPE,
 				content: "second",
 				display: true,
 				details: undefined,

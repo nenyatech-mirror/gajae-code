@@ -1,4 +1,4 @@
-import { getProjectDir, logger } from "@oh-my-pi/pi-utils";
+import { getProjectDir, logger } from "@gajae-code/utils";
 import type { AutocompleteProvider, CombinedAutocompleteProvider } from "../autocomplete";
 import { BracketedPasteHandler } from "../bracketed-paste";
 import { getKeybindings, type KeybindingsManager } from "../keybindings";
@@ -1588,7 +1588,7 @@ export class Editor implements Component, Focusable {
 			// renders — without this, cursor column accounting drifts by
 			// `(NFD cells − NFC cells)` and the visible glyph desyncs from the
 			// hardware cursor. Matches the `Input` component's prior fix; this
-			// is the same fix on the real OMP prompt component (`Editor`).
+			// is the same fix on the real GJC prompt component (`Editor`).
 			const cleanText = decodedText.replace(/\r\n?/g, "\n").normalize("NFC");
 
 			// Convert tabs to spaces (4 spaces per tab)

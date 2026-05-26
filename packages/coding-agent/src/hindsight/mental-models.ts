@@ -37,7 +37,7 @@
  * followed by a re-seed.
  */
 
-import { logger } from "@oh-my-pi/pi-utils";
+import { logger } from "@gajae-code/utils";
 import type { BankScope } from "./bank";
 import type {
 	HindsightApi,

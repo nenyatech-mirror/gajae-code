@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-# OMP Coding Agent Installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/can1357/oh-my-pi/main/scripts/install.sh | sh
+# GJC Coding Agent Installer
+# Usage: curl -fsSL https://raw.githubusercontent.com/can1357/gajae-code/main/scripts/install.sh | sh
 #
 # Options:
 #   --source       Install via bun (installs bun if needed)
@@ -10,8 +10,8 @@ set -e
 #   --ref <ref>    Install specific tag/commit/branch
 #   -r <ref>       Shorthand for --ref
 
-REPO="can1357/oh-my-pi"
-PACKAGE="@oh-my-pi/pi-coding-agent"
+REPO="can1357/gajae-code"
+PACKAGE="@gajae-code/coding-agent"
 INSTALL_DIR="${PI_INSTALL_DIR:-$HOME/.local/bin}"
 MIN_BUN_VERSION="1.3.14"
 

@@ -79,7 +79,7 @@ The catalog file must live at `.claude-plugin/marketplace.json` in the repositor
     "name": "Acme Corp",
     "email": "plugins@acme.example"
   },
-  "description": "Official Acme plugins for oh-my-pi",
+  "description": "Official Acme plugins for gajae-code",
   "plugins": [
     {
       "name": "acme-linter",

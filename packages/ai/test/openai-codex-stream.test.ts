@@ -1,13 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
-import { enrichModelThinking } from "@oh-my-pi/pi-ai/model-thinking";
+import { enrichModelThinking } from "@gajae-code/ai/model-thinking";
 import {
 	getOpenAICodexTransportDetails,
 	getOpenAICodexWebSocketDebugStats,
 	prewarmOpenAICodexResponses,
 	streamOpenAICodexResponses,
-} from "@oh-my-pi/pi-ai/providers/openai-codex-responses";
-import type { Context, Model, ProviderSessionState } from "@oh-my-pi/pi-ai/types";
-import { getAgentDir, setAgentDir, TempDir } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/ai/providers/openai-codex-responses";
+import type { Context, Model, ProviderSessionState } from "@gajae-code/ai/types";
+import { getAgentDir, setAgentDir, TempDir } from "@gajae-code/utils";
 
 const originalFetch = global.fetch;
 const originalAgentDir = getAgentDir();
@@ -463,7 +463,7 @@ describe("openai-codex streaming", () => {
 				return new Response(JSON.stringify({ tag_name: "rust-v0.0.0" }), { status: 200 });
 			}
 			if (url.startsWith("https://raw.githubusercontent.com/openai/codex/")) {
-				return new Response("PROMPT", { status: 200, headers: { etag: '"etag"' } });
+				return new Response("PRGJCT", { status: 200, headers: { etag: '"etag"' } });
 			}
 			if (url === "https://chatgpt.com/backend-api/codex/responses") {
 				const headers = init?.headers instanceof Headers ? init.headers : undefined;
@@ -860,7 +860,7 @@ describe("openai-codex streaming", () => {
 				return new Response(JSON.stringify({ tag_name: "rust-v0.0.0" }), { status: 200 });
 			}
 			if (url.startsWith("https://raw.githubusercontent.com/openai/codex/")) {
-				return new Response("PROMPT", { status: 200, headers: { etag: '"etag"' } });
+				return new Response("PRGJCT", { status: 200, headers: { etag: '"etag"' } });
 			}
 			if (url === "https://chatgpt.com/backend-api/codex/responses") {
 				const headers = init?.headers instanceof Headers ? init.headers : undefined;
@@ -960,7 +960,7 @@ describe("openai-codex streaming", () => {
 				return new Response(JSON.stringify({ tag_name: "rust-v0.0.0" }), { status: 200 });
 			}
 			if (url.startsWith("https://raw.githubusercontent.com/openai/codex/")) {
-				return new Response("PROMPT", { status: 200, headers: { etag: '"etag"' } });
+				return new Response("PRGJCT", { status: 200, headers: { etag: '"etag"' } });
 			}
 			if (url === "https://chatgpt.com/backend-api/codex/responses") {
 				const body = typeof init?.body === "string" ? (JSON.parse(init.body) as Record<string, unknown>) : null;
@@ -1050,7 +1050,7 @@ describe("openai-codex streaming", () => {
 				return new Response(JSON.stringify({ tag_name: "rust-v0.0.0" }), { status: 200 });
 			}
 			if (url.startsWith("https://raw.githubusercontent.com/openai/codex/")) {
-				return new Response("PROMPT", { status: 200, headers: { etag: '"etag"' } });
+				return new Response("PRGJCT", { status: 200, headers: { etag: '"etag"' } });
 			}
 			if (url === "https://chatgpt.com/backend-api/codex/responses") {
 				const headers = init?.headers instanceof Headers ? init.headers : undefined;

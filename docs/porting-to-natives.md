@@ -18,14 +18,14 @@ Avoid ports that depend on JS-only state or dynamic imports. N-API exports shoul
 
 ## Current package shape
 
-`@oh-my-pi/pi-natives` no longer has a `packages/natives/src/<module>` TypeScript wrapper layer. The package root points at generated native artifacts:
+`@gajae-code/natives` no longer has a `packages/natives/src/<module>` TypeScript wrapper layer. The package root points at generated native artifacts:
 
 - runtime entry: `packages/natives/native/index.js`
 - types entry: `packages/natives/native/index.d.ts`
 - loader helpers: `packages/natives/native/loader-state.js`
 - embedded manifest: `packages/natives/native/embedded-addon.js`
 
-Consumers import directly from `@oh-my-pi/pi-natives`. The generated declarations are produced during `bun --cwd=packages/natives run build`.
+Consumers import directly from `@gajae-code/natives`. The generated declarations are produced during `bun --cwd=packages/natives run build`.
 
 ## Anatomy of a native export
 
@@ -42,7 +42,7 @@ Consumers import directly from `@oh-my-pi/pi-natives`. The generated declaration
 
 - `packages/natives/scripts/build-native.ts` runs napi-rs, installs the `.node` artifact, copies generated `index.js`/`index.d.ts`, and appends enum runtime exports.
 - `packages/natives/native/index.js` is the loader that chooses a candidate `.node` file and returns the loaded addon.
-- `packages/natives/package.json` exposes only the package root (`@oh-my-pi/pi-natives`).
+- `packages/natives/package.json` exposes only the package root (`@gajae-code/natives`).
 
 **Consumer side:**
 
@@ -68,7 +68,7 @@ Consumers import directly from `@oh-my-pi/pi-natives`. The generated declaration
 
 3. **Update consumers**
 
-- Import the new export directly from `@oh-my-pi/pi-natives`.
+- Import the new export directly from `@gajae-code/natives`.
 - Replace only callsites where the native implementation is faster/equivalent and preserves behavior.
 - Remove obsolete JS implementation code in the same change when the native path becomes canonical.
 

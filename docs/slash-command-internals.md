@@ -28,7 +28,7 @@ The capability registry loads all registered providers, sorted by provider prior
 
 Current slash-command providers and priorities:
 
-1. `native` (OMP) — priority `100`
+1. `native` (GJC) — priority `100`
 2. `claude` — priority `80`
 3. `claude-plugins` — priority `70`
 4. `codex` — priority `70`

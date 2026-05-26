@@ -145,7 +145,7 @@ class GitHubClient:
             "Authorization": f"Bearer {token}",
             "Accept": ACCEPT,
             "X-GitHub-Api-Version": API_VERSION,
-            "User-Agent": "robomp/0.1",
+            "User-Agent": "robogjc/0.1",
         }
         self._transport = transport
 

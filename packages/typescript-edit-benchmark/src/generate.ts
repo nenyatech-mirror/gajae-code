@@ -12,7 +12,7 @@
  * - Dense code: Minimal whitespace makes context harder to read
  * - Deep nesting: Whitespace-sensitive edits at high indent levels
  *
- * Difficulty modes control both FILE SELECTION and PROMPT DETAIL:
+ * Difficulty modes control both FILE SELECTION and PRGJCT DETAIL:
  * - easy: Short files, unique lines, line number given
  * - medium: Medium files, function context given
  * - hard: Long files with similar blocks, no location hint
@@ -21,7 +21,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { parseArgs } from "node:util";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import { TempDir } from "@gajae-code/utils";
 import { $ } from "bun";
 import { diffLines } from "diff";
 import { formatContent } from "./formatter";

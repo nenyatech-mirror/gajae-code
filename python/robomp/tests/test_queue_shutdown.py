@@ -13,10 +13,10 @@ from contextlib import suppress
 
 import pytest
 
-from robomp.config import Settings
-from robomp.db import Database, EventRow
-from robomp.queue import WorkerPool
-from robomp.slot_pool import SlotPool
+from robogjc.config import Settings
+from robogjc.db import Database, EventRow
+from robogjc.queue import WorkerPool
+from robogjc.slot_pool import SlotPool
 
 
 class _StubGitHub:
@@ -63,7 +63,7 @@ async def test_non_root_fallback_semaphore_caps_dispatch_concurrency(
     settings: Settings, db: Database, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     settings.max_concurrency = 1
-    monkeypatch.setattr("robomp.queue.os.geteuid", lambda: 501)
+    monkeypatch.setattr("robogjc.queue.os.geteuid", lambda: 501)
 
     pool = WorkerPool(
         settings=settings,

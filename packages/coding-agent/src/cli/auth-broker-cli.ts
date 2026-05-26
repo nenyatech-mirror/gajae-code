@@ -30,8 +30,8 @@ import {
 	type OAuthProvider,
 	SqliteAuthCredentialStore,
 	startAuthBroker,
-} from "@oh-my-pi/pi-ai";
-import { $which, APP_NAME, getAgentDbPath, getConfigRootDir, isEnoent, logger, VERSION } from "@oh-my-pi/pi-utils";
+} from "@gajae-code/ai";
+import { $which, APP_NAME, getAgentDbPath, getConfigRootDir, isEnoent, logger, VERSION } from "@gajae-code/utils";
 import { $ } from "bun";
 import chalk from "chalk";
 import { resolveAuthBrokerConfig } from "../session/auth-broker-config";
@@ -186,7 +186,7 @@ async function runLogin(flags: AuthBrokerCommandArgs["flags"]): Promise<void> {
 async function runLocalLogin(provider: OAuthProvider): Promise<void> {
 	// Spawn the pi-ai CLI in-process — it handles the per-provider OAuth dance
 	// and persists into the same SQLite store the broker uses.
-	const piAiCli = Bun.fileURLToPath(import.meta.resolve("@oh-my-pi/pi-ai/cli"));
+	const piAiCli = Bun.fileURLToPath(import.meta.resolve("@gajae-code/ai/cli"));
 	const proc = Bun.spawn({
 		cmd: [process.execPath, piAiCli, "login", provider],
 		stdin: "inherit",
@@ -532,7 +532,7 @@ async function runMigrate(flags: AuthBrokerCommandArgs["flags"]): Promise<void> 
 	const brokerConfig = await resolveAuthBrokerConfig();
 	if (!brokerConfig) {
 		throw new Error(
-			"OMP_AUTH_BROKER_URL must be set (or `auth.broker.url` in config.yml). `migrate` uploads local credentials to a configured broker.",
+			"GJC_AUTH_BROKER_URL must be set (or `auth.broker.url` in config.yml). `migrate` uploads local credentials to a configured broker.",
 		);
 	}
 	if (flags.fromLocal !== true) {
@@ -685,7 +685,7 @@ async function runMigrate(flags: AuthBrokerCommandArgs["flags"]): Promise<void> 
 async function runStatus(flags: AuthBrokerCommandArgs["flags"]): Promise<void> {
 	const cfg = await resolveAuthBrokerConfig();
 	if (!cfg) {
-		const message = "No auth-broker configured (set OMP_AUTH_BROKER_URL to enable).";
+		const message = "No auth-broker configured (set GJC_AUTH_BROKER_URL to enable).";
 		if (flags.json) process.stdout.write(`${JSON.stringify({ ok: false, reason: "not_configured" })}\n`);
 		else process.stdout.write(`${chalk.yellow(message)}\n`);
 		return;

@@ -9,8 +9,8 @@ import * as os from "node:os";
 import * as path from "node:path";
 import type { AgentSideConnection, InitializeRequest } from "@agentclientprotocol/sdk";
 import { zInitializeResponse } from "@agentclientprotocol/sdk/dist/schema/zod.gen.js";
-import type { Model } from "@oh-my-pi/pi-ai";
-import { getConfigRootDir, setAgentDir, VERSION } from "@oh-my-pi/pi-utils";
+import type { Model } from "@gajae-code/ai";
+import { getConfigRootDir, setAgentDir, VERSION } from "@gajae-code/utils";
 import { AcpAgent } from "../src/modes/acp/acp-agent";
 import { ACP_TERMINAL_AUTH_FLAG, prepareAcpTerminalAuthArgs } from "../src/modes/acp/terminal-auth";
 import type { AgentSession } from "../src/session/agent-session";
@@ -219,8 +219,8 @@ describe("ACP initialize conformance", () => {
 		const pkg = (await Bun.file(pkgPath).json()) as { version: string };
 		expect(response.agentInfo).toEqual(
 			expect.objectContaining({
-				name: "oh-my-pi",
-				title: "Oh My Pi",
+				name: "gajae-code",
+				title: "Gajae Code",
 				version: VERSION,
 			}),
 		);

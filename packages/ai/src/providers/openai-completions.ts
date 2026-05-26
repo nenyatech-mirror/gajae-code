@@ -1,4 +1,4 @@
-import { $env, extractHttpStatusFromError } from "@oh-my-pi/pi-utils";
+import { $env, extractHttpStatusFromError } from "@gajae-code/utils";
 import OpenAI from "openai";
 import type {
 	ChatCompletionAssistantMessageParam,
@@ -244,7 +244,7 @@ type BuiltOpenAICompletionTools = {
 	toolStrictMode: AppliedToolStrictMode;
 };
 
-const OPENAI_COMPLETIONS_PROVIDER_SESSION_STATE_PREFIX = "openai-completions:";
+const OPENAI_CGJCLETIONS_PROVIDER_SESSION_STATE_PREFIX = "openai-completions:";
 
 type OpenAICompletionsProviderSessionState = ProviderSessionState & {
 	strictToolsDisabled: boolean;
@@ -266,7 +266,7 @@ function getOpenAICompletionsProviderSessionState(
 	providerSessionState: Map<string, ProviderSessionState> | undefined,
 ): OpenAICompletionsProviderSessionState | undefined {
 	if (!providerSessionState) return undefined;
-	const key = `${OPENAI_COMPLETIONS_PROVIDER_SESSION_STATE_PREFIX}${model.provider}:${baseUrl ?? ""}:${model.id}`;
+	const key = `${OPENAI_CGJCLETIONS_PROVIDER_SESSION_STATE_PREFIX}${model.provider}:${baseUrl ?? ""}:${model.id}`;
 	const existing = providerSessionState.get(key) as OpenAICompletionsProviderSessionState | undefined;
 	if (existing) return existing;
 	const created = createOpenAICompletionsProviderSessionState();
@@ -373,7 +373,7 @@ function getTrailingPartialDeepseekToken(text: string): string {
 	return tail;
 }
 
-const OPENAI_COMPLETIONS_FIRST_EVENT_TIMEOUT_MESSAGE =
+const OPENAI_CGJCLETIONS_FIRST_EVENT_TIMEOUT_MESSAGE =
 	"OpenAI completions stream timed out while waiting for the first event";
 
 export const streamOpenAICompletions: StreamFunction<"openai-completions"> = (
@@ -391,7 +391,7 @@ export const streamOpenAICompletions: StreamFunction<"openai-completions"> = (
 		const output: AssistantMessage = createInitialResponsesAssistantMessage(model.api, model.provider, model.id);
 		let rawRequestDump: RawHttpRequestDump | undefined;
 		const abortTracker = createAbortSourceTracker(options?.signal);
-		const firstEventTimeoutAbortError = new Error(OPENAI_COMPLETIONS_FIRST_EVENT_TIMEOUT_MESSAGE);
+		const firstEventTimeoutAbortError = new Error(OPENAI_CGJCLETIONS_FIRST_EVENT_TIMEOUT_MESSAGE);
 		const { requestAbortController, requestSignal } = abortTracker;
 
 		try {

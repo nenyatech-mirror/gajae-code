@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { type AuthBrokerServerHandle, AuthStorage, SqliteAuthCredentialStore, startAuthBroker } from "@oh-my-pi/pi-ai";
-import { getAgentDbPath, setAgentDir } from "@oh-my-pi/pi-utils";
+import { type AuthBrokerServerHandle, AuthStorage, SqliteAuthCredentialStore, startAuthBroker } from "@gajae-code/ai";
+import { getAgentDbPath, setAgentDir } from "@gajae-code/utils";
 import { runAuthBrokerCommand } from "../src/cli/auth-broker-cli";
 
 const ORIGINAL_STDOUT_WRITE = process.stdout.write.bind(process.stdout);
@@ -23,7 +23,7 @@ describe("auth-broker import (CLIProxyAPI)", () => {
 	let originalAgentDir: string | undefined;
 
 	beforeEach(async () => {
-		originalAgentDir = process.env.OMP_AGENT_DIR;
+		originalAgentDir = process.env.GJC_AGENT_DIR;
 		agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-import-agent-"));
 		cliproxyDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-import-cliproxy-"));
 		setAgentDir(agentDir);
@@ -31,8 +31,8 @@ describe("auth-broker import (CLIProxyAPI)", () => {
 
 	afterEach(async () => {
 		process.stdout.write = ORIGINAL_STDOUT_WRITE;
-		if (originalAgentDir === undefined) delete process.env.OMP_AGENT_DIR;
-		else process.env.OMP_AGENT_DIR = originalAgentDir;
+		if (originalAgentDir === undefined) delete process.env.GJC_AGENT_DIR;
+		else process.env.GJC_AGENT_DIR = originalAgentDir;
 		await fs.rm(agentDir, { recursive: true, force: true });
 		await fs.rm(cliproxyDir, { recursive: true, force: true });
 	});
@@ -197,8 +197,8 @@ describe("auth-broker import (broker-routed)", () => {
 	const savedEnv: Record<string, string | undefined> = {};
 
 	beforeEach(async () => {
-		savedEnv.OMP_AUTH_BROKER_URL = process.env.OMP_AUTH_BROKER_URL;
-		savedEnv.OMP_AUTH_BROKER_TOKEN = process.env.OMP_AUTH_BROKER_TOKEN;
+		savedEnv.GJC_AUTH_BROKER_URL = process.env.GJC_AUTH_BROKER_URL;
+		savedEnv.GJC_AUTH_BROKER_TOKEN = process.env.GJC_AUTH_BROKER_TOKEN;
 		agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-import-client-"));
 		brokerAgentDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-import-broker-"));
 		cliproxyDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-import-cliproxy-broker-"));
@@ -213,8 +213,8 @@ describe("auth-broker import (broker-routed)", () => {
 			bearerTokens: [token],
 			disableRefresher: true,
 		});
-		process.env.OMP_AUTH_BROKER_URL = handle.url;
-		process.env.OMP_AUTH_BROKER_TOKEN = token;
+		process.env.GJC_AUTH_BROKER_URL = handle.url;
+		process.env.GJC_AUTH_BROKER_TOKEN = token;
 	});
 
 	afterEach(async () => {
@@ -224,7 +224,7 @@ describe("auth-broker import (broker-routed)", () => {
 		await fs.rm(agentDir, { recursive: true, force: true });
 		await fs.rm(brokerAgentDir, { recursive: true, force: true });
 		await fs.rm(cliproxyDir, { recursive: true, force: true });
-		for (const key of ["OMP_AUTH_BROKER_URL", "OMP_AUTH_BROKER_TOKEN"] as const) {
+		for (const key of ["GJC_AUTH_BROKER_URL", "GJC_AUTH_BROKER_TOKEN"] as const) {
 			if (savedEnv[key] === undefined) delete process.env[key];
 			else process.env[key] = savedEnv[key];
 		}

@@ -2,15 +2,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { ToolExecutionComponent } from "@oh-my-pi/pi-coding-agent/modes/components/tool-execution";
-import * as themeModule from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import { resetVimRendererStateForTest, VimTool, vimToolRenderer } from "@oh-my-pi/pi-coding-agent/tools/vim";
-import { VimBuffer } from "@oh-my-pi/pi-coding-agent/vim/buffer";
-import { VimEngine } from "@oh-my-pi/pi-coding-agent/vim/engine";
-import { parseKeySequences } from "@oh-my-pi/pi-coding-agent/vim/parser";
-import type { TUI } from "@oh-my-pi/pi-tui";
+import { resetSettingsForTest, Settings } from "@gajae-code/coding-agent/config/settings";
+import { ToolExecutionComponent } from "@gajae-code/coding-agent/modes/components/tool-execution";
+import * as themeModule from "@gajae-code/coding-agent/modes/theme/theme";
+import type { ToolSession } from "@gajae-code/coding-agent/tools";
+import { resetVimRendererStateForTest, VimTool, vimToolRenderer } from "@gajae-code/coding-agent/tools/vim";
+import { VimBuffer } from "@gajae-code/coding-agent/vim/buffer";
+import { VimEngine } from "@gajae-code/coding-agent/vim/engine";
+import { parseKeySequences } from "@gajae-code/coding-agent/vim/parser";
+import type { TUI } from "@gajae-code/tui";
 
 function textResult(result: { content: Array<{ type: string; text?: string }> }): string {
 	return result.content

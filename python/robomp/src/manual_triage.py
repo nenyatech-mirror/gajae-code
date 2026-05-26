@@ -1,6 +1,6 @@
 """Manually enqueue an issue as if a webhook arrived.
 
-Shared by the `robomp triage` CLI and the dashboard's POST /api/trigger.
+Shared by the `robogjc triage` CLI and the dashboard's POST /api/trigger.
 """
 
 from __future__ import annotations
@@ -10,8 +10,8 @@ import re
 import time
 from typing import Any
 
-from robomp.db import INACTIVE_EVENT_STATES, Database, EventRow, issue_key
-from robomp.github_backend import GitHubBackend
+from robogjc.db import INACTIVE_EVENT_STATES, Database, EventRow, issue_key
+from robogjc.github_backend import GitHubBackend
 
 _ISSUE_REF = re.compile(r"^(?P<owner>[^/\s]+)/(?P<repo>[^#\s]+)#(?P<number>\d+)$")
 _ISSUE_URL = re.compile(

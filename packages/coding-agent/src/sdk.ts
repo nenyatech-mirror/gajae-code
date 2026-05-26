@@ -7,19 +7,19 @@ import {
 	AppendOnlyContextManager,
 	INTENT_FIELD,
 	type ThinkingLevel,
-} from "@oh-my-pi/pi-agent-core";
+} from "@gajae-code/agent-core";
 import {
 	type CredentialDisabledEvent,
 	type Message,
 	type Model,
 	type SimpleStreamOptions,
 	streamSimple,
-} from "@oh-my-pi/pi-ai";
+} from "@gajae-code/ai";
 import {
 	getOpenAICodexTransportDetails,
 	prewarmOpenAICodexResponses,
-} from "@oh-my-pi/pi-ai/providers/openai-codex-responses";
-import type { Component } from "@oh-my-pi/pi-tui";
+} from "@gajae-code/ai/providers/openai-codex-responses";
+import type { Component } from "@gajae-code/tui";
 import {
 	$env,
 	$flag,
@@ -30,7 +30,7 @@ import {
 	postmortem,
 	prompt,
 	Snowflake,
-} from "@oh-my-pi/pi-utils";
+} from "@gajae-code/utils";
 import chalk from "chalk";
 import { type AsyncJob, AsyncJobManager, isBackgroundJobSupportEnabled } from "./async";
 import { createAutoresearchExtension } from "./autoresearch";
@@ -406,7 +406,7 @@ function getDefaultAgentDir(): string {
  *
  * Default: local SQLite store at `<agentDir>/agent.db`.
  *
- * Broker mode: when `OMP_AUTH_BROKER_URL` is set, credentials are pulled from
+ * Broker mode: when `GJC_AUTH_BROKER_URL` is set, credentials are pulled from
  * a remote auth-broker over the wire. Refresh tokens never leave the broker;
  * the client receives access tokens with `refresh = "__remote__"` and calls
  * back into the broker through the {@link AuthStorageOptions.refreshOAuthCredential}
@@ -785,7 +785,7 @@ function buildMCPPromptCommands(manager: MCPManager): LoadedCustomCommand[] {
  * const { session } = await createAgentSession();
  *
  * // With explicit model
- * import { getModel } from '@oh-my-pi/pi-ai';
+ * import { getModel } from '@gajae-code/ai';
  * const { session } = await createAgentSession({
  *   model: getModel('anthropic', 'claude-opus-4-5'),
  *   thinkingLevel: 'high',

@@ -21,8 +21,8 @@
  *
  * What this test guards:
  *   - The cursor column for a value containing N jamo is **bounded above
- *     by `PROMPT_WIDTH + N`** (the correct cell count after the fix).
- *     Before the fix it would have been ~`PROMPT_WIDTH + 2N`, which is
+ *     by `PRGJCT_WIDTH + N`** (the correct cell count after the fix).
+ *     Before the fix it would have been ~`PRGJCT_WIDTH + 2N`, which is
  *     what the test catches.
  *   - Pure-ASCII and Hangul-syllable baselines are unchanged.
  *
@@ -31,9 +31,9 @@
  *     follow-up; will tighten this test once the Rust crate is rebuilt.
  */
 import { describe, expect, it } from "bun:test";
-import { CURSOR_MARKER } from "@oh-my-pi/pi-tui";
-import { Input } from "@oh-my-pi/pi-tui/components/input";
-import { visibleWidth } from "@oh-my-pi/pi-tui/utils";
+import { CURSOR_MARKER } from "@gajae-code/tui";
+import { Input } from "@gajae-code/tui/components/input";
+import { visibleWidth } from "@gajae-code/tui/utils";
 
 /**
  * Drive `text` through `Input.handleInput()` one Unicode code point at a
@@ -55,31 +55,31 @@ function cursorColAfterTyping(text: string, width = 80): number {
 	return visibleWidth(line.slice(0, markerIdx));
 }
 
-const PROMPT_WIDTH = 2; // "> "
+const PRGJCT_WIDTH = 2; // "> "
 
 describe("Input cursor column does not grow at 2× per jamo", () => {
 	it("ASCII baseline: cursor lands exactly after the typed text", () => {
-		expect(cursorColAfterTyping("hello")).toBe(PROMPT_WIDTH + 5);
+		expect(cursorColAfterTyping("hello")).toBe(PRGJCT_WIDTH + 5);
 	});
 
 	it("Hangul syllables: cursor lands exactly after typed text (2 cells each)", () => {
-		expect(cursorColAfterTyping("안녕")).toBe(PROMPT_WIDTH + 4);
+		expect(cursorColAfterTyping("안녕")).toBe(PRGJCT_WIDTH + 4);
 	});
 
-	it("single jamo: cursor column is at most `PROMPT_WIDTH + 1`", () => {
-		// Before fix: PROMPT_WIDTH + 2 = 4. After fix: ≤ 3.
-		expect(cursorColAfterTyping("ㅁ")).toBeLessThanOrEqual(PROMPT_WIDTH + 1);
+	it("single jamo: cursor column is at most `PRGJCT_WIDTH + 1`", () => {
+		// Before fix: PRGJCT_WIDTH + 2 = 4. After fix: ≤ 3.
+		expect(cursorColAfterTyping("ㅁ")).toBeLessThanOrEqual(PRGJCT_WIDTH + 1);
 	});
 
-	it("8 consecutive jamo: cursor column is at most `PROMPT_WIDTH + 8`", () => {
-		// Before fix: PROMPT_WIDTH + 16 = 18. After fix: ≤ 10.
-		expect(cursorColAfterTyping("ㅁㄴㅁㄴㅇㅂㄴㅂ")).toBeLessThanOrEqual(PROMPT_WIDTH + 8);
+	it("8 consecutive jamo: cursor column is at most `PRGJCT_WIDTH + 8`", () => {
+		// Before fix: PRGJCT_WIDTH + 16 = 18. After fix: ≤ 10.
+		expect(cursorColAfterTyping("ㅁㄴㅁㄴㅇㅂㄴㅂ")).toBeLessThanOrEqual(PRGJCT_WIDTH + 8);
 	});
 
-	it("20 consecutive jamo: cursor column is at most `PROMPT_WIDTH + 20`", () => {
-		// Before fix: PROMPT_WIDTH + 40 = 42 (catastrophic gap). After fix: ≤ 22.
+	it("20 consecutive jamo: cursor column is at most `PRGJCT_WIDTH + 20`", () => {
+		// Before fix: PRGJCT_WIDTH + 40 = 42 (catastrophic gap). After fix: ≤ 22.
 		const jamo = "ㅁㄴㄷㅂㅈㅎㅋㅌㄱㄹ".repeat(2);
-		expect(cursorColAfterTyping(jamo)).toBeLessThanOrEqual(PROMPT_WIDTH + 20);
+		expect(cursorColAfterTyping(jamo)).toBeLessThanOrEqual(PRGJCT_WIDTH + 20);
 	});
 
 	it("cursor column grows by ≤1 per typed jamo (not 2)", () => {
@@ -89,7 +89,7 @@ describe("Input cursor column does not grow at 2× per jamo", () => {
 		const input = new Input();
 		(input as unknown as { focused: boolean }).focused = true;
 		const jamo = "ㅁㄴㅇㅂㅈㅎㅋㅌㄷㄹ";
-		let prevCol = PROMPT_WIDTH;
+		let prevCol = PRGJCT_WIDTH;
 		for (let i = 0; i < jamo.length; i++) {
 			input.handleInput(jamo[i]);
 			const [line] = input.render(80);

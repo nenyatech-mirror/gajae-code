@@ -8,14 +8,14 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { HindsightApi } from "@oh-my-pi/pi-coding-agent/hindsight/client";
-import type { HindsightConfig } from "@oh-my-pi/pi-coding-agent/hindsight/config";
-import { HindsightSessionState } from "@oh-my-pi/pi-coding-agent/hindsight/state";
-import { HindsightRecallTool } from "@oh-my-pi/pi-coding-agent/tools/hindsight-recall";
-import { HindsightReflectTool } from "@oh-my-pi/pi-coding-agent/tools/hindsight-reflect";
-import { HindsightRetainTool } from "@oh-my-pi/pi-coding-agent/tools/hindsight-retain";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools/index";
+import { resetSettingsForTest, Settings } from "@gajae-code/coding-agent/config/settings";
+import { HindsightApi } from "@gajae-code/coding-agent/hindsight/client";
+import type { HindsightConfig } from "@gajae-code/coding-agent/hindsight/config";
+import { HindsightSessionState } from "@gajae-code/coding-agent/hindsight/state";
+import { HindsightRecallTool } from "@gajae-code/coding-agent/tools/hindsight-recall";
+import { HindsightReflectTool } from "@gajae-code/coding-agent/tools/hindsight-reflect";
+import { HindsightRetainTool } from "@gajae-code/coding-agent/tools/hindsight-retain";
+import type { ToolSession } from "@gajae-code/coding-agent/tools/index";
 
 const TEST_SESSION_ID = "test-session-id";
 let registeredState: HindsightSessionState | undefined;

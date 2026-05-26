@@ -6,9 +6,9 @@ the spawned process's environment, never in argv visible to other UIDs via
 `/proc/<pid>/cmdline`. The env var is wiped from the parent after each call.
 
 Used by:
-- `robomp.sandbox.LocalGitTransport` for in-process git operations when no
+- `robogjc.sandbox.LocalGitTransport` for in-process git operations when no
   proxy is configured.
-- `robomp.proxy.server` for proxied operations on the gh-proxy side.
+- `robogjc.proxy.server` for proxied operations on the gh-proxy side.
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ log = logging.getLogger(__name__)
 
 # Per-call env var name. `git --config-env` reads the header value from this
 # env entry inside the spawned process — never persisted into `.git/config`.
-AUTH_ENV_VAR = "ROBOMP_GIT_HTTP_AUTH"
+AUTH_ENV_VAR = "ROBGJC_GIT_HTTP_AUTH"
 
 _CRED_URL = re.compile(r"(https?://)([^:/@\s]+):([^@/\s]+)@")
 _BAD_OBJECT_REF_RE = re.compile(
@@ -37,7 +37,7 @@ _BAD_OBJECT_REF_RE = re.compile(
 )
 _FETCH_PRUNE_REPAIR_ATTEMPTS = 8
 
-_SHARED_OMP_GID = 2000
+_SHARED_GJC_GID = 2000
 _AGENT_HOME = Path("/srv/agent-home")
 
 
@@ -49,7 +49,7 @@ def _slot_subprocess_kwargs(slot_uid: int | None) -> dict[str, Any]:
     if not _slot_permissions_active(slot_uid):
         return {}
     assert slot_uid is not None
-    return {"user": slot_uid, "group": slot_uid, "extra_groups": [_SHARED_OMP_GID], "umask": 0o002}
+    return {"user": slot_uid, "group": slot_uid, "extra_groups": [_SHARED_GJC_GID], "umask": 0o002}
 
 
 def _append_safe_directory(env: dict[str, str], repo_dir: Path) -> None:
@@ -145,7 +145,7 @@ def _run_git(
     returncode (124, matching coreutils `timeout`). `None` uses
     `_DEFAULT_GIT_TIMEOUT_SECONDS`.
     """
-    env: dict[str, str] = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
+    env: dict[str, str] = {**os.environ, "GIT_TERMINAL_PRGJCT": "0"}
     if user is not None and _AGENT_HOME.is_dir():
         env["HOME"] = str(_AGENT_HOME)
     if extra_env:

@@ -1,9 +1,9 @@
 import { beforeAll, describe, expect, it, vi } from "bun:test";
-import type { AssistantMessage, Usage } from "@oh-my-pi/pi-ai";
-import { BtwController } from "@oh-my-pi/pi-coding-agent/modes/controllers/btw-controller";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { InteractiveModeContext } from "@oh-my-pi/pi-coding-agent/modes/types";
-import { Container, type TUI } from "@oh-my-pi/pi-tui";
+import type { AssistantMessage, Usage } from "@gajae-code/ai";
+import { BtwController } from "@gajae-code/coding-agent/modes/controllers/btw-controller";
+import { initTheme } from "@gajae-code/coding-agent/modes/theme/theme";
+import type { InteractiveModeContext } from "@gajae-code/coding-agent/modes/types";
+import { Container, type TUI } from "@gajae-code/tui";
 
 const usage: Usage = {
 	input: 0,

@@ -1,12 +1,12 @@
 /**
- * Discovery integration tests for OMP plugin registry reading.
+ * Discovery integration tests for GJC plugin registry reading.
  *
  * NOTE: listClaudePluginRoots() lives in discovery/helpers.ts which imports
- * @oh-my-pi/pi-natives (native Rust addon via glob). We cannot call it here.
+ * @gajae-code/natives (native Rust addon via glob). We cannot call it here.
  *
  * Instead these tests validate the structural contract that listClaudePluginRoots
  * depends on:
- *   1. OMP registry lives at path.join(home, ".omp", "plugins", "installed_plugins.json")
+ *   1. GJC registry lives at path.join(home, ".omp", "plugins", "installed_plugins.json")
  *      (matches getConfigDirName() == ".omp")
  *   2. The registry format passes the same validator that parseClaudePluginsRegistry uses
  *   3. readInstalledPluginsRegistry / writeInstalledPluginsRegistry produce files that
@@ -19,18 +19,18 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import type { InstalledPluginEntry } from "@oh-my-pi/pi-coding-agent/extensibility/plugins/marketplace";
+import type { InstalledPluginEntry } from "@gajae-code/coding-agent/extensibility/plugins/marketplace";
 import {
 	addInstalledPlugin,
 	buildPluginId,
 	readInstalledPluginsRegistry,
 	writeInstalledPluginsRegistry,
-} from "@oh-my-pi/pi-coding-agent/extensibility/plugins/marketplace";
+} from "@gajae-code/coding-agent/extensibility/plugins/marketplace";
 
 // ── Inline validator ───────────────────────────────────────────────────────────
 //
 // Mirrors parseClaudePluginsRegistry() in discovery/helpers.ts exactly.
-// Kept here to avoid importing helpers.ts (which pulls in @oh-my-pi/pi-natives).
+// Kept here to avoid importing helpers.ts (which pulls in @gajae-code/natives).
 function validateClaudeRegistryFormat(content: string): Record<string, unknown> | null {
 	let data: Record<string, unknown>;
 	try {
@@ -51,10 +51,10 @@ function validateClaudeRegistryFormat(content: string): Record<string, unknown> 
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-// Matches getConfigDirName() — single source of truth is in @oh-my-pi/pi-utils,
+// Matches getConfigDirName() — single source of truth is in @gajae-code/utils,
 // but we know the value is ".omp" and hardcoding it here keeps tests free of
 // native-addon transitive imports.
-const OMP_CONFIG_DIR = ".omp";
+const GJC_CONFIG_DIR = ".omp";
 
 function makeEntry(installPath: string, version = "1.0.0"): InstalledPluginEntry {
 	return {
@@ -74,7 +74,7 @@ let ompRegistryPath: string;
 
 beforeEach(() => {
 	tmpHome = fs.mkdtempSync(path.join(os.tmpdir(), "omp-discovery-test-"));
-	ompRegistryPath = path.join(tmpHome, OMP_CONFIG_DIR, "plugins", "installed_plugins.json");
+	ompRegistryPath = path.join(tmpHome, GJC_CONFIG_DIR, "plugins", "installed_plugins.json");
 	fs.mkdirSync(path.dirname(ompRegistryPath), { recursive: true });
 });
 
@@ -84,25 +84,25 @@ afterEach(() => {
 
 // ── Path contract ─────────────────────────────────────────────────────────────
 
-describe("OMP registry path contract", () => {
-	it("OMP registry lives at home/.omp/plugins/installed_plugins.json", () => {
+describe("GJC registry path contract", () => {
+	it("GJC registry lives at home/.omp/plugins/installed_plugins.json", () => {
 		// This is the path that listClaudePluginRoots reads.
 		// Any change to this path must be reflected in helpers.ts.
 		const expected = path.join(tmpHome, ".omp", "plugins", "installed_plugins.json");
 		expect(ompRegistryPath).toBe(expected);
 	});
 
-	it("OMP config dir name is .omp", () => {
+	it("GJC config dir name is .omp", () => {
 		// Validate our hardcoded constant matches getConfigDirName().
 		// If getConfigDirName() ever changes, this assertion will fail and
 		// we'll know the path constant here must be updated too.
-		expect(OMP_CONFIG_DIR).toBe(".omp");
+		expect(GJC_CONFIG_DIR).toBe(".omp");
 	});
 });
 
 // ── Format compatibility ───────────────────────────────────────────────────────
 
-describe("OMP registry format compatibility with Claude parser", () => {
+describe("GJC registry format compatibility with Claude parser", () => {
 	it("empty registry written by writeInstalledPluginsRegistry passes validator", async () => {
 		await writeInstalledPluginsRegistry(ompRegistryPath, { version: 2, plugins: {} });
 
@@ -148,7 +148,7 @@ describe("OMP registry format compatibility with Claude parser", () => {
 
 // ── Round-trip ────────────────────────────────────────────────────────────────
 
-describe("OMP registry round-trip", () => {
+describe("GJC registry round-trip", () => {
 	it("reads back what was written — single plugin", async () => {
 		const id = buildPluginId("hello-plugin", "test-marketplace");
 		const entry = makeEntry("/tmp/fake-plugin-path");
@@ -210,18 +210,18 @@ describe("OMP registry round-trip", () => {
 
 // ── Precedence contract (structural) ─────────────────────────────────────────
 //
-// listClaudePluginRoots must replace Claude entries with OMP entries when the same
+// listClaudePluginRoots must replace Claude entries with GJC entries when the same
 // plugin ID appears in both registries. We cannot call that function here, but we
 // can verify the data shapes that the replacement logic reads are correct.
 
-describe("OMP precedence contract (registry structure)", () => {
-	it("same plugin ID in both registries — OMP entry has required fields for deduplication", () => {
+describe("GJC precedence contract (registry structure)", () => {
+	it("same plugin ID in both registries — GJC entry has required fields for deduplication", () => {
 		// The replacement logic: roots.filter(r => r.id !== pluginId) keyed by id.
-		// OMP entries must have installPath so they can be added to roots[].
+		// GJC entries must have installPath so they can be added to roots[].
 		const id = buildPluginId("shared-plugin", "common-mkt");
 		const ompEntry = makeEntry("/omp/cached/path");
 
-		// OMP registry entry has installPath (required by listClaudePluginRoots)
+		// GJC registry entry has installPath (required by listClaudePluginRoots)
 		expect(ompEntry.installPath).toBeTruthy();
 		expect(typeof ompEntry.installPath).toBe("string");
 		// ID parses correctly with lastIndexOf("@")

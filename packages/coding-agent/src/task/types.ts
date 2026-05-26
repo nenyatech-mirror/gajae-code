@@ -1,6 +1,6 @@
-import type { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { Usage } from "@oh-my-pi/pi-ai";
-import { $env } from "@oh-my-pi/pi-utils";
+import type { ThinkingLevel } from "@gajae-code/agent-core";
+import type { Usage } from "@gajae-code/ai";
+import { $env } from "@gajae-code/utils";
 import * as z from "zod/v4";
 import { getTaskSimpleModeCapabilities, type TaskSimpleMode } from "./simple-mode";
 import type { NestedRepoPatch } from "./worktree";

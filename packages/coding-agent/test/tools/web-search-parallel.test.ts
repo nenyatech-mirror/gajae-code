@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
-import type { AuthStorage } from "@oh-my-pi/pi-ai";
-import { hookFetch } from "@oh-my-pi/pi-utils";
+import type { AuthStorage } from "@gajae-code/ai";
+import { hookFetch } from "@gajae-code/utils";
 import type { AgentStorage } from "../../src/session/agent-storage";
 import { searchWithParallel } from "../../src/web/parallel";
 import { searchParallel } from "../../src/web/search/providers/parallel";

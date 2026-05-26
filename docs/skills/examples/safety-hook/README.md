@@ -1,6 +1,6 @@
 # safety-hook
 
-An `oh-my-pi` extension that demonstrates `tool_call` blocking. It intercepts every `bash` tool call and returns `{ block: true, reason: "..." }` if the command matches `rm -rf /`, preventing the LLM from executing the command.
+An `gajae-code` extension that demonstrates `tool_call` blocking. It intercepts every `bash` tool call and returns `{ block: true, reason: "..." }` if the command matches `rm -rf /`, preventing the LLM from executing the command.
 
 ## What it demonstrates
 

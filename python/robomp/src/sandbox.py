@@ -3,8 +3,8 @@
 The remote-facing git operations (clone, fetch, push) go through a pluggable
 `GitTransport` so a deploy can keep the PAT entirely in a separate `gh-proxy`
 container. The default `LocalGitTransport` runs git in-process with ephemeral
-PAT injection via `--config-env` (see `robomp.git_ops`); the `ProxyGitTransport`
-in `robomp.proxy_client` forwards the same set of operations over HMAC RPC.
+PAT injection via `--config-env` (see `robogjc.git_ops`); the `ProxyGitTransport`
+in `robogjc.proxy_client` forwards the same set of operations over HMAC RPC.
 
 Per-issue worktree add/remove stays local — those operations only touch the
 shared on-disk pool clone, no remote authentication required.
@@ -51,25 +51,25 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
-from robomp.git_ops import (
+from robogjc.git_ops import (
     GitCommandError,
     PushResult,
     redact_credentials,
 )
-from robomp.git_ops import (
+from robogjc.git_ops import (
     clone as git_clone,
 )
-from robomp.git_ops import (
+from robogjc.git_ops import (
     fetch_prune as git_fetch_prune,
 )
-from robomp.git_ops import (
+from robogjc.git_ops import (
     fetch_ref as git_fetch_ref,
 )
-from robomp.git_ops import (
+from robogjc.git_ops import (
     push as git_push,
 )
-from robomp.natives_cache import CacheHit, NativesCache
-from robomp.natives_cache import compute_key as natives_compute_key
+from robogjc.natives_cache import CacheHit, NativesCache
+from robogjc.natives_cache import compute_key as natives_compute_key
 
 log = logging.getLogger(__name__)
 
@@ -125,7 +125,7 @@ def _safe_directory_env(repo_dir: Path) -> dict[str, str]:
 def _git_env_for_repo(repo_dir: Path) -> dict[str, str]:
     env = os.environ.copy()
     env.update(_safe_directory_env(repo_dir))
-    env["GIT_TERMINAL_PROMPT"] = "0"
+    env["GIT_TERMINAL_PRGJCT"] = "0"
     return env
 
 
@@ -216,7 +216,7 @@ class GitTransport(Protocol):
 
     Two implementations ship in-tree:
     - `LocalGitTransport`: in-process git with PAT injected per invocation.
-    - `robomp.proxy_client.ProxyGitTransport`: forwards over HMAC RPC.
+    - `robogjc.proxy_client.ProxyGitTransport`: forwards over HMAC RPC.
     """
 
     def clone_pool(self, *, repo: str, clone_url: str, default_branch: str, target: Path) -> None:
@@ -318,7 +318,7 @@ def _run(cmd: list[str], *, cwd: Path | None = None) -> subprocess.CompletedProc
     return proc
 
 
-_SHARED_OMP_GID = 2000
+_SHARED_GJC_GID = 2000
 
 
 def _slot_permissions_active(slot_uid: int | None) -> bool:
@@ -421,7 +421,7 @@ def _slot_subprocess_kwargs(slot_uid: int | None) -> dict[str, Any]:
     if not _slot_permissions_active(slot_uid):
         return {}
     assert slot_uid is not None
-    return {"user": slot_uid, "group": slot_uid, "extra_groups": [_SHARED_OMP_GID], "umask": 0o002}
+    return {"user": slot_uid, "group": slot_uid, "extra_groups": [_SHARED_GJC_GID], "umask": 0o002}
 
 
 def _prepare_slot_runtime_env(workspace: Workspace, slot_uid: int | None) -> dict[str, str]:
@@ -557,7 +557,7 @@ def _share_git_metadata_with_slots(repo_dir: Path, slot_uid: int | None) -> None
     if dirs is None:
         return
     git_dir, common_dir = dirs
-    gid = _SHARED_OMP_GID
+    gid = _SHARED_GJC_GID
     _grant_tree(git_dir, gid=gid, files_group_writable=True)
     _grant_group_bits(common_dir, gid=gid, bits=stat.S_IRWXG | stat.S_ISGID)
     for rel, files_group_writable in (

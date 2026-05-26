@@ -1,6 +1,6 @@
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
-import type { AssistantMessage, ImageContent, Message } from "@oh-my-pi/pi-ai";
-import { type Component, Spacer, Text, TruncatedText } from "@oh-my-pi/pi-tui";
+import type { AgentMessage } from "@gajae-code/agent-core";
+import type { AssistantMessage, ImageContent, Message } from "@gajae-code/ai";
+import { type Component, Spacer, Text, TruncatedText } from "@gajae-code/tui";
 import { settings } from "../../config/settings";
 import { AssistantMessageComponent } from "../../modes/components/assistant-message";
 import { BashExecutionComponent } from "../../modes/components/bash-execution";
@@ -22,7 +22,7 @@ import type { CompactionQueuedMessage, InteractiveModeContext } from "../../mode
 import {
 	type CustomMessage,
 	isSilentAbort,
-	SKILL_PROMPT_MESSAGE_TYPE,
+	SKILL_PRGJCT_MESSAGE_TYPE,
 	type SkillPromptDetails,
 } from "../../session/messages";
 import type { SessionContext } from "../../session/session-manager";
@@ -151,7 +151,7 @@ export class UiHelpers {
 						}
 						break;
 					}
-					if (message.customType === SKILL_PROMPT_MESSAGE_TYPE) {
+					if (message.customType === SKILL_PRGJCT_MESSAGE_TYPE) {
 						const component = new SkillMessageComponent(message as CustomMessage<SkillPromptDetails>);
 						component.setExpanded(this.ctx.toolOutputExpanded);
 						this.ctx.chatContainer.addChild(component);

@@ -6,8 +6,8 @@
  */
 import * as path from "node:path";
 import * as url from "node:url";
-import type { TSchema } from "@oh-my-pi/pi-ai";
-import { logger } from "@oh-my-pi/pi-utils";
+import type { TSchema } from "@gajae-code/ai";
+import { logger } from "@gajae-code/utils";
 import type { SourceMeta } from "../capability/types";
 import { resolveConfigValue } from "../config/resolve-config-value";
 import type { CustomTool } from "../extensibility/custom-tools/types";
@@ -548,7 +548,7 @@ export class MCPManager {
 				}
 				break;
 			}
-			case MCPNotificationMethods.PROMPTS_LIST_CHANGED:
+			case MCPNotificationMethods.PRGJCTS_LIST_CHANGED:
 				this.#triggerNotificationRefresh(serverName, "prompts");
 				break;
 			default:

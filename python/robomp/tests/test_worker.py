@@ -1,6 +1,6 @@
 """Resume-aware behavior of `worker._run_rpc_blocking`.
 
-These tests swap `robomp.worker.RpcClient` for a recording fake so we can
+These tests swap `robogjc.worker.RpcClient` for a recording fake so we can
 observe the `extra_args` and `set_todos` decisions the driver takes based on
 whether the workspace's omp session directory already holds a JSONL transcript.
 """
@@ -14,9 +14,9 @@ from types import SimpleNamespace
 
 import pytest
 
-from robomp import worker
-from robomp.config import Settings
-from robomp.git_ops import DirtyState
+from robogjc import worker
+from robogjc.config import Settings
+from robogjc.git_ops import DirtyState
 
 
 class _FakeRpcClient:
@@ -107,7 +107,7 @@ def _make_inputs(
         root=root,
         session_dir=session_dir,
         repo_dir=repo_dir,
-        branch="robomp/issue-1",
+        branch="robogjc/issue-1",
     )
     repo = SimpleNamespace(full_name="acme/widgets", owner="acme", name="widgets")
     issue = SimpleNamespace(repo="acme/widgets", number=1, title="bug")
@@ -144,15 +144,15 @@ def _reset_fake() -> None:
 
 @pytest.fixture(autouse=True)
 def _patch_worker(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    monkeypatch.setattr("robomp.worker.RpcClient", _FakeRpcClient)
-    monkeypatch.setattr("robomp.worker._AGENT_HOME_STAGE", tmp_path / "missing-agent-home-stage")
-    monkeypatch.setattr("robomp.worker.host_tools.build", lambda _b: ())
+    monkeypatch.setattr("robogjc.worker.RpcClient", _FakeRpcClient)
+    monkeypatch.setattr("robogjc.worker._AGENT_HOME_STAGE", tmp_path / "missing-agent-home-stage")
+    monkeypatch.setattr("robogjc.worker.host_tools.build", lambda _b: ())
     monkeypatch.setattr(
-        "robomp.worker.persona.system_append",
+        "robogjc.worker.persona.system_append",
         lambda *, repo, issue, workspace: "SYS",
     )
     monkeypatch.setattr(
-        "robomp.worker.persona.seed_phases",
+        "robogjc.worker.persona.seed_phases",
         lambda _kind: [dict(p) for p in _SEEDED_PHASES],
     )
 
@@ -199,8 +199,8 @@ async def test_run_rpc_omits_continue_when_session_empty(
     assert client_kwargs["env"]["HOME"] == str(agent_home)
     assert client_kwargs["env"]["GITHUB_TOKEN"] == ""
     assert client_kwargs["env"]["GITHUB_WEBHOOK_SECRET"] == ""
-    assert client_kwargs["env"]["ROBOMP_REPLAY_TOKEN"] == ""
-    assert client_kwargs["env"]["ROBOMP_GH_PROXY_HMAC_KEY"] == ""
+    assert client_kwargs["env"]["ROBGJC_REPLAY_TOKEN"] == ""
+    assert client_kwargs["env"]["ROBGJC_GH_PROXY_HMAC_KEY"] == ""
     assert client_kwargs["user"] is None
     assert client_kwargs["group"] is None
     assert client_kwargs["extra_groups"] is None
@@ -257,8 +257,8 @@ async def test_run_rpc_omits_home_when_agent_home_absent(
     assert "HOME" not in client_kwargs["env"]
     assert client_kwargs["env"]["GITHUB_TOKEN"] == ""
     assert client_kwargs["env"]["GITHUB_WEBHOOK_SECRET"] == ""
-    assert client_kwargs["env"]["ROBOMP_REPLAY_TOKEN"] == ""
-    assert client_kwargs["env"]["ROBOMP_GH_PROXY_HMAC_KEY"] == ""
+    assert client_kwargs["env"]["ROBGJC_REPLAY_TOKEN"] == ""
+    assert client_kwargs["env"]["ROBGJC_GH_PROXY_HMAC_KEY"] == ""
 
 
 @pytest.mark.asyncio
@@ -302,9 +302,9 @@ async def test_run_rpc_uses_workspace_xdg_dirs_for_slot_without_chown(
     tmp_path: Path, settings: Settings, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     chown_calls: list[tuple[Path, int, int]] = []
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Linux")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 0)
-    monkeypatch.setattr("robomp.sandbox.os.chown", lambda path, uid, gid: chown_calls.append((Path(path), uid, gid)))
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Linux")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox.os.chown", lambda path, uid, gid: chown_calls.append((Path(path), uid, gid)))
 
     inputs, bindings = _make_inputs(tmp_path, settings, session_has_jsonl=False, slot_uid=2001)
     loop = asyncio.new_event_loop()
@@ -425,7 +425,7 @@ async def test_run_rpc_arms_hard_timeout_timer(
         def cancel(self) -> None:
             self.cancelled = True
 
-    monkeypatch.setattr("robomp.worker.threading.Timer", FakeTimer)
+    monkeypatch.setattr("robogjc.worker.threading.Timer", FakeTimer)
     settings.task_timeout_seconds = 3.0
     settings.task_timeout_hard_grace_seconds = 7.0
     inputs, bindings = _make_inputs(tmp_path, settings, session_has_jsonl=False)
@@ -466,7 +466,7 @@ async def test_run_rpc_hard_timeout_stops_client_and_fails(
         def cancel(self) -> None:
             self.cancelled = True
 
-    monkeypatch.setattr("robomp.worker.threading.Timer", FiringTimer)
+    monkeypatch.setattr("robogjc.worker.threading.Timer", FiringTimer)
     inputs, bindings = _make_inputs(tmp_path, settings, session_has_jsonl=False)
     loop = asyncio.new_event_loop()
     try:
@@ -501,8 +501,8 @@ async def test_run_rpc_cancel_hook_stops_and_marks_closed(
     an upstream omp_rpc bug where `stop()` does not set `_closed_error`, leaving
     `_wait_for_agent_end` blocked until timeout."""
     captured: list = []
-    monkeypatch.setattr("robomp.worker.register_cancel_hook", lambda hook: captured.append(hook))
-    monkeypatch.setattr("robomp.worker.unregister_cancel_hook", lambda: None)
+    monkeypatch.setattr("robogjc.worker.register_cancel_hook", lambda hook: captured.append(hook))
+    monkeypatch.setattr("robogjc.worker.unregister_cancel_hook", lambda: None)
 
     inputs, bindings = _make_inputs(tmp_path, settings, session_has_jsonl=False)
     loop = asyncio.new_event_loop()
@@ -566,7 +566,7 @@ async def test_run_rpc_sends_reminder_when_pr_class_quits_early(tmp_path: Path, 
     finally:
         loop.close()
     fake = _FakeRpcClient.instances[0]
-    # kickoff + 2 reminders (default ROBOMP_TASK_COMPLETION_MAX_REMINDERS=2)
+    # kickoff + 2 reminders (default ROBGJC_TASK_CGJCLETION_MAX_REMINDERS=2)
     assert len(fake.prompts) == 1 + settings.task_completion_max_reminders
     assert fake.prompts[0] == "kickoff"
     assert all("terminal action" in p.lower() or "open the pr" in p.lower() for p in fake.prompts[1:])

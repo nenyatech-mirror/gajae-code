@@ -17,7 +17,7 @@
  * regression sanity check.
  */
 import { describe, expect, it } from "bun:test";
-import { Ellipsis, sliceWithWidth, truncateToWidth, visibleWidth } from "@oh-my-pi/pi-tui/utils";
+import { Ellipsis, sliceWithWidth, truncateToWidth, visibleWidth } from "@gajae-code/tui/utils";
 
 describe("visibleWidth — Hangul Compatibility Jamo correction", () => {
 	it("single compatibility jamo is 1 cell (not 2)", () => {

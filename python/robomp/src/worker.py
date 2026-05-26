@@ -29,17 +29,17 @@ from omp_rpc import (
     ToolExecutionEndEvent,
 )
 
-from robomp import host_tools, persona, pragmas
-from robomp.cancellation import register_cancel_hook, unregister_cancel_hook
-from robomp.config import Settings
-from robomp.db import Database, issue_key
-from robomp.git_ops import DirtyState, inspect_dirty_state
-from robomp.github_backend import GitHubBackend
-from robomp.github_client import CommentInfo, IssueInfo, RepoInfo
-from robomp.host_tools import AbortController, ToolBindings, _git_identity_env
-from robomp.natives_cache import NativesCache
-from robomp.natives_cache import compute_key as natives_compute_key
-from robomp.sandbox import GitTransport, Workspace, _prepare_slot_runtime_env, _safe_directory_env
+from robogjc import host_tools, persona, pragmas
+from robogjc.cancellation import register_cancel_hook, unregister_cancel_hook
+from robogjc.config import Settings
+from robogjc.db import Database, issue_key
+from robogjc.git_ops import DirtyState, inspect_dirty_state
+from robogjc.github_backend import GitHubBackend
+from robogjc.github_client import CommentInfo, IssueInfo, RepoInfo
+from robogjc.host_tools import AbortController, ToolBindings, _git_identity_env
+from robogjc.natives_cache import NativesCache
+from robogjc.natives_cache import compute_key as natives_compute_key
+from robogjc.sandbox import GitTransport, Workspace, _prepare_slot_runtime_env, _safe_directory_env
 
 log = logging.getLogger(__name__)
 
@@ -109,11 +109,11 @@ def _resolve_pragma_overrides(
 
 _SCRUBBED_ENV_KEYS: tuple[str, ...] = (
     # Secrets that MUST NOT reach the agent subprocess; an agent with the
-    # `bash` tool could otherwise `printenv` them out of roboomp's env.
+    # `bash` tool could otherwise `printenv` them out of robogjc's env.
     "GITHUB_TOKEN",
     "GITHUB_WEBHOOK_SECRET",
-    "ROBOMP_REPLAY_TOKEN",
-    "ROBOMP_GH_PROXY_HMAC_KEY",
+    "ROBGJC_REPLAY_TOKEN",
+    "ROBGJC_GH_PROXY_HMAC_KEY",
 )
 
 _AGENT_HOME = Path("/srv/agent-home")

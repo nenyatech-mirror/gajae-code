@@ -4,7 +4,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from robomp.db import Database, iso_seconds_ago, issue_key
+from robogjc.db import Database, iso_seconds_ago, issue_key
 
 
 def test_record_event_dedupes_by_delivery(db: Database) -> None:

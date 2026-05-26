@@ -1,6 +1,6 @@
-"""gh-proxy: PAT-holding companion service for roboomp.
+"""gh-proxy: PAT-holding companion service for robogjc.
 
-roboomp container holds zero credentials; every GitHub side-effect (REST +
+robogjc container holds zero credentials; every GitHub side-effect (REST +
 git clone/fetch/push) flows through this service over an HMAC-authenticated
-internal channel. See `robomp.proxy.server` for the request surface.
+internal channel. See `robogjc.proxy.server` for the request surface.
 """

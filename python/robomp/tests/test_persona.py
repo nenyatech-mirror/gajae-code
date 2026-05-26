@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from robomp import persona
-from robomp.worker import DirectiveInfo, ThreadMessage
+from robogjc import persona
+from robogjc.worker import DirectiveInfo, ThreadMessage
 
 
 @dataclass(slots=True, frozen=True)
@@ -40,7 +40,7 @@ class _Workspace:
 class _Comment:
     id: int = 1
     author: str = "can1357"
-    body: str = "@roboomp please fix"
+    body: str = "@robogjc please fix"
     created_at: str = "2026-05-14T20:00:00Z"
 
 
@@ -104,7 +104,7 @@ def test_directive_prompt_embeds_thread_and_directive_body() -> None:
 
 def test_followup_comment_prompt_embeds_thread_context() -> None:
     thread = (
-        ThreadMessage(kind="pr_body", author="roboomp", body="PR body", created_at=""),
+        ThreadMessage(kind="pr_body", author="robogjc", body="PR body", created_at=""),
         ThreadMessage(kind="comment", author="can1357", body="prior request", created_at="2026-05-01T10:00:00Z"),
     )
     out = persona.followup_comment(

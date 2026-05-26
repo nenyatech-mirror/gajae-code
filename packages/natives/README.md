@@ -1,4 +1,4 @@
-# @oh-my-pi/pi-natives
+# @gajae-code/natives
 
 Native Rust functionality via N-API.
 
@@ -16,7 +16,7 @@ that terminal protocol.
 ## Usage
 
 ```typescript
-import { grep, find, encodeSixel } from "@oh-my-pi/pi-natives";
+import { grep, find, encodeSixel } from "@gajae-code/natives";
 
 // Grep for a pattern
 const results = await grep({

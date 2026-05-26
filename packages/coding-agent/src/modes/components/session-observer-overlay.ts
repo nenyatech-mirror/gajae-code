@@ -14,9 +14,9 @@
  *   - Esc from picker -> close overlay
  *   - Enter on main session -> close overlay (jump back)
  */
-import type { ToolResultMessage } from "@oh-my-pi/pi-ai";
-import { Container, Markdown, type MarkdownTheme, matchesKey } from "@oh-my-pi/pi-tui";
-import { formatDuration, formatNumber, logger } from "@oh-my-pi/pi-utils";
+import type { ToolResultMessage } from "@gajae-code/ai";
+import { Container, Markdown, type MarkdownTheme, matchesKey } from "@gajae-code/tui";
+import { formatDuration, formatNumber, logger } from "@gajae-code/utils";
 import type { KeyId } from "../../config/keybindings";
 import { isSilentAbort } from "../../session/messages";
 import type { SessionMessageEntry } from "../../session/session-manager";

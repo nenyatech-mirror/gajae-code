@@ -1,11 +1,11 @@
 /**
  * Install dependencies for optional features.
  */
-import { Args, Command, Flags, renderCommandHelp } from "@oh-my-pi/pi-utils/cli";
+import { Args, Command, Flags, renderCommandHelp } from "@gajae-code/utils/cli";
 import { runSetupCommand, type SetupCommandArgs, type SetupComponent } from "../cli/setup-cli";
 import { initTheme } from "../modes/theme/theme";
 
-const COMPONENTS: SetupComponent[] = ["python", "stt"];
+const CGJCONENTS: SetupComponent[] = ["python", "stt"];
 
 export default class Setup extends Command {
 	static description = "Install dependencies for optional features";
@@ -14,7 +14,7 @@ export default class Setup extends Command {
 		component: Args.string({
 			description: "Component to install",
 			required: false,
-			options: COMPONENTS,
+			options: CGJCONENTS,
 		}),
 	};
 

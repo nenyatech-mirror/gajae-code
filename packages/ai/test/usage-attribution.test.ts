@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
-import { applyAnthropicUsageExtras } from "@oh-my-pi/pi-ai/providers/anthropic";
-import { parseChunkUsage } from "@oh-my-pi/pi-ai/providers/openai-completions";
-import type { Model, Usage } from "@oh-my-pi/pi-ai/types";
+import { applyAnthropicUsageExtras } from "@gajae-code/ai/providers/anthropic";
+import { parseChunkUsage } from "@gajae-code/ai/providers/openai-completions";
+import type { Model, Usage } from "@gajae-code/ai/types";
 
 const OPENAI_MODEL: Model<"openai-completions"> = {
 	id: "gpt-5",

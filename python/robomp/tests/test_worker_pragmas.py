@@ -4,14 +4,14 @@ from __future__ import annotations
 
 import pytest
 
-from robomp.config import Settings, reset_settings_cache
-from robomp.worker import DirectiveInfo, _resolve_pragma_overrides
+from robogjc.config import Settings, reset_settings_cache
+from robogjc.worker import DirectiveInfo, _resolve_pragma_overrides
 
 
 @pytest.fixture
 def settings_with_pool(monkeypatch: pytest.MonkeyPatch, env: dict[str, str]) -> Settings:
     monkeypatch.setenv(
-        "ROBOMP_MODEL",
+        "ROBGJC_MODEL",
         "anthropic/claude-sonnet-4-6,openai/gpt-5.5,openai/gpt-5.5-mini",
     )
     reset_settings_cache()

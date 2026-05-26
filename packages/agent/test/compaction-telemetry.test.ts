@@ -12,21 +12,21 @@ import {
 	type CompactionPreparation,
 	compact,
 	createFileOps,
-	DEFAULT_COMPACTION_SETTINGS,
+	DEFAULT_CGJCACTION_SETTINGS,
 	generateBranchSummary,
 	generateHandoff,
 	generateSummary,
-} from "@oh-my-pi/pi-agent-core/compaction";
+} from "@gajae-code/agent-core/compaction";
 import {
 	type AgentTelemetryConfig,
 	GenAIAttr,
 	GenAIOperation,
 	PiGenAIAttr,
 	resolveTelemetry,
-} from "@oh-my-pi/pi-agent-core/telemetry";
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core/types";
-import type { AssistantMessage, Model, Usage } from "@oh-my-pi/pi-ai";
-import * as ai from "@oh-my-pi/pi-ai";
+} from "@gajae-code/agent-core/telemetry";
+import type { AgentMessage } from "@gajae-code/agent-core/types";
+import type { AssistantMessage, Model, Usage } from "@gajae-code/ai";
+import * as ai from "@gajae-code/ai";
 import { SpanStatusCode } from "@opentelemetry/api";
 import {
 	BasicTracerProvider,
@@ -113,7 +113,7 @@ function makePreparation(overrides: Partial<CompactionPreparation> = {}): Compac
 		isSplitTurn: false,
 		tokensBefore: 12345,
 		fileOps: createFileOps(),
-		settings: { ...DEFAULT_COMPACTION_SETTINGS, remoteEnabled: false },
+		settings: { ...DEFAULT_CGJCACTION_SETTINGS, remoteEnabled: false },
 		...overrides,
 	};
 }

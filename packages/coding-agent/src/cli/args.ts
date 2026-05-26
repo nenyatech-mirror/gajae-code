@@ -1,8 +1,8 @@
 /**
  * CLI argument parsing and help display
  */
-import { type Effort, THINKING_EFFORTS } from "@oh-my-pi/pi-ai";
-import { APP_NAME, CONFIG_DIR_NAME, logger } from "@oh-my-pi/pi-utils";
+import { type Effort, THINKING_EFFORTS } from "@gajae-code/ai";
+import { APP_NAME, CONFIG_DIR_NAME, logger } from "@gajae-code/utils";
 import chalk from "chalk";
 import { parseEffort } from "../thinking";
 import { BUILTIN_TOOLS } from "../tools";
@@ -248,12 +248,12 @@ export function getExtraHelpText(): string {
   ANTHROPIC_SEARCH_API_KEY   - Anthropic search provider
 
   ${chalk.dim("# Configuration")}
-  PI_CODING_AGENT_DIR        - Session storage directory (default: ~/${CONFIG_DIR_NAME}/agent)
-  PI_PACKAGE_DIR             - Override package directory (for Nix/Guix store paths)
-  PI_SMOL_MODEL              - Override smol/fast model (see --smol)
-  PI_SLOW_MODEL              - Override slow/reasoning model (see --slow)
-  PI_PLAN_MODEL              - Override planning model (see --plan)
-  PI_NO_PTY                  - Disable PTY-based interactive bash execution
+  GJC_CODING_AGENT_DIR       - Session storage directory (default: ~/${CONFIG_DIR_NAME}/agent)
+  GJC_PACKAGE_DIR            - Override package directory (for Nix/Guix store paths)
+  GJC_SMOL_MODEL              - Override smol/fast model (see --smol)
+  GJC_SLOW_MODEL              - Override slow/reasoning model (see --slow)
+  GJC_PLAN_MODEL              - Override planning model (see --plan)
+  GJC_NO_PTY                  - Disable PTY-based interactive bash execution
 
   For complete environment variable reference, see:
   ${chalk.dim("docs/environment-variables.md")}
@@ -278,8 +278,8 @@ ${chalk.bold("Plugin Options:")}
   --plugin-dir <path>        Load plugin from directory (repeatable)
 
 ${chalk.bold("Useful Commands:")}
-  omp agents unpack           - Export bundled subagents to ~/.omp/agent/agents (default)
-  omp agents unpack --project - Export bundled subagents to ./.omp/agents`;
+  gjc agents unpack           - Export bundled subagents to ~/.gjc/agent/agents (default)
+  gjc agents unpack --project - Export bundled subagents to ./.gjc/agents`;
 }
 
 export function printHelp(): void {

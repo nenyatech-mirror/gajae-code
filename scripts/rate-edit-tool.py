@@ -23,7 +23,7 @@ from rich.table import Table
 from rich.text import Text
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(REPO_ROOT / "python/omp-rpc/src"))
+sys.path.insert(0, str(REPO_ROOT / "python/gjc-rpc/src"))
 
 from omp_rpc import (  # noqa: E402
     AgentEndEvent,
@@ -53,7 +53,7 @@ MODELS = [
 
 ORACLE_MODEL = "openrouter/anthropic/claude-opus-4.6"
 
-PROMPT = textwrap.dedent(
+PRGJCT = textwrap.dedent(
     """\
     You are evaluating the **edit** tool on files in this directory. The `read` tool is available so you can inspect file state before and after edits, but it is not under review — do not report on it.
 
@@ -80,7 +80,7 @@ PROMPT = textwrap.dedent(
     """
 ).strip()
 
-FINAL_REVIEW_PROMPT = textwrap.dedent(
+FINAL_REVIEW_PRGJCT = textwrap.dedent(
     """\
     Your prior turn completed without a final written review in the assistant text.
 
@@ -95,7 +95,7 @@ FINAL_REVIEW_PROMPT = textwrap.dedent(
     """
 ).strip()
 
-ORACLE_REVIEW_PROMPT = textwrap.dedent(
+ORACLE_REVIEW_PRGJCT = textwrap.dedent(
     """\
     <context>
     You are the oracle reviewer for a tool-evaluation benchmark.
@@ -557,7 +557,7 @@ PYTHON_FIXTURE = (
 )
 
 REFERENCE_FILES = {
-    "PROMPT.md": PROMPT + "\n",
+    "PRGJCT.md": PRGJCT + "\n",
     "main.ts": TS_FIXTURE,
     "main.rs": RUST_FIXTURE,
     "main.py": PYTHON_FIXTURE,
@@ -591,7 +591,7 @@ def build_fixture_prompt() -> str:
         lines
     )
     return (
-        PROMPT.format(FIXTURE_SURFACE=surface)
+        PRGJCT.format(FIXTURE_SURFACE=surface)
         + "\n\nExercise every fixture in one session; do not skip any file type."
     )
 
@@ -951,7 +951,7 @@ def resolve_omp_bin(raw: str | None) -> str:
         return raw
     found = shutil.which("omp")
     if not found:
-        raise SystemExit("Could not find `omp` on PATH. Set --omp-bin or OMP_BIN.")
+        raise SystemExit("Could not find `omp` on PATH. Set --omp-bin or GJC_BIN.")
     return found
 
 
@@ -1251,7 +1251,7 @@ def run_model_sync(
             review_markdown = recorder.build_review_markdown()
             if not review_markdown.strip():
                 printer.mark_prompt_submitted(run_id)
-                client.prompt(FINAL_REVIEW_PROMPT)
+                client.prompt(FINAL_REVIEW_PRGJCT)
                 wait_for_settle()
                 review_markdown = recorder.build_review_markdown()
             if not review_markdown.strip():
@@ -1335,7 +1335,7 @@ def build_oracle_review_prompt(sources: list[tuple[str, str, str]]) -> str:
         raise ValueError("No review content available for oracle synthesis")
 
     review_payload = "\n\n".join(review_sections)
-    return ORACLE_REVIEW_PROMPT.replace("{{REVIEWS}}", review_payload)
+    return ORACLE_REVIEW_PRGJCT.replace("{{REVIEWS}}", review_payload)
 
 
 def oracle_sources_from_results(
@@ -1412,7 +1412,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run OpenRouter fixture evaluations through omp RPC mode."
     )
-    parser.add_argument("--omp-bin", default=os.environ.get("OMP_BIN"))
+    parser.add_argument("--omp-bin", default=os.environ.get("GJC_BIN"))
     parser.add_argument("--fixtures-dir", default=os.path.expanduser("~/tmp/fixtures"))
     parser.add_argument("--results-dir")
     parser.add_argument(

@@ -1,11 +1,11 @@
 import { afterAll, describe, expect, it } from "bun:test";
-import type { AgentTool, AgentToolResult } from "@oh-my-pi/pi-agent-core";
+import type { AgentTool, AgentToolResult } from "@gajae-code/agent-core";
 import {
 	disposePyToolBridge,
 	ensurePyToolBridge,
 	registerPyToolBridge,
-} from "@oh-my-pi/pi-coding-agent/eval/py/tool-bridge";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
+} from "@gajae-code/coding-agent/eval/py/tool-bridge";
+import type { ToolSession } from "@gajae-code/coding-agent/tools";
 
 interface FakeCall {
 	id: string;

@@ -1,7 +1,7 @@
 """Gated end-to-end smoke test.
 
-Runs only when ROBOMP_INTEGRATION=1 and `omp` is available on PATH (or via
-ROBOMP_OMP_COMMAND). Spins up:
+Runs only when ROBGJC_INTEGRATION=1 and `omp` is available on PATH (or via
+ROBGJC_GJC_COMMAND). Spins up:
 
 - a local bare git repo with a trivial failing test,
 - a fake GitHub API via httpx.MockTransport that records comments + PRs,
@@ -26,11 +26,11 @@ from typing import Any
 import httpx
 import pytest
 
-INTEGRATION = os.environ.get("ROBOMP_INTEGRATION") == "1"
+INTEGRATION = os.environ.get("ROBGJC_INTEGRATION") == "1"
 
 pytestmark = pytest.mark.skipif(
     not INTEGRATION,
-    reason="ROBOMP_INTEGRATION=1 required to run the omp-backed smoke test",
+    reason="ROBGJC_INTEGRATION=1 required to run the omp-backed smoke test",
 )
 
 
@@ -65,24 +65,24 @@ def _seed_failing_repo(tmp_path: Path) -> Path:
 
 
 def test_triage_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    from robomp.config import Settings, reset_settings_cache
-    from robomp.db import Database
-    from robomp.github_client import GitHubClient
-    from robomp.sandbox import LocalGitTransport, SandboxManager
-    from robomp.tasks import triage_issue
+    from robogjc.config import Settings, reset_settings_cache
+    from robogjc.db import Database
+    from robogjc.github_client import GitHubClient
+    from robogjc.sandbox import LocalGitTransport, SandboxManager
+    from robogjc.tasks import triage_issue
 
     bare = _seed_failing_repo(tmp_path)
 
-    monkeypatch.setenv("ROBOMP_GH_PROXY_URL", "http://gh-proxy.invalid:8081")
-    monkeypatch.setenv("ROBOMP_GH_PROXY_HMAC_KEY", "test-hmac-key-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    monkeypatch.setenv("ROBGJC_GH_PROXY_URL", "http://gh-proxy.invalid:8081")
+    monkeypatch.setenv("ROBGJC_GH_PROXY_HMAC_KEY", "test-hmac-key-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     monkeypatch.setenv("GITHUB_TOKEN", "")
     monkeypatch.setenv("GITHUB_WEBHOOK_SECRET", "secret")
-    monkeypatch.setenv("ROBOMP_BOT_LOGIN", "robomp-bot")
-    monkeypatch.setenv("ROBOMP_REPO_ALLOWLIST", "octo/widget")
-    monkeypatch.setenv("ROBOMP_WORKSPACE_ROOT", str(tmp_path / "workspaces"))
-    monkeypatch.setenv("ROBOMP_SQLITE_PATH", str(tmp_path / "robomp.sqlite"))
-    monkeypatch.setenv("ROBOMP_LOG_DIR", str(tmp_path / "logs"))
-    monkeypatch.setenv("ROBOMP_TASK_TIMEOUT_SECONDS", "300")
+    monkeypatch.setenv("ROBGJC_BOT_LOGIN", "robogjc-bot")
+    monkeypatch.setenv("ROBGJC_REPO_ALLOWLIST", "octo/widget")
+    monkeypatch.setenv("ROBGJC_WORKSPACE_ROOT", str(tmp_path / "workspaces"))
+    monkeypatch.setenv("ROBGJC_SQLITE_PATH", str(tmp_path / "robogjc.sqlite"))
+    monkeypatch.setenv("ROBGJC_LOG_DIR", str(tmp_path / "logs"))
+    monkeypatch.setenv("ROBGJC_TASK_TIMEOUT_SECONDS", "300")
     reset_settings_cache()
     cfg = Settings()  # type: ignore[call-arg]
     cfg.ensure_paths()
@@ -124,7 +124,7 @@ def test_triage_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> N
             next_comment_id[0] += 1
             comment = {
                 "id": next_comment_id[0],
-                "user": {"login": "robomp-bot"},
+                "user": {"login": "robogjc-bot"},
                 "body": body["body"],
                 "created_at": "now",
             }

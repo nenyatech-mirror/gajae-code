@@ -2,15 +2,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { getBundledModel } from "@oh-my-pi/pi-ai";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import * as pythonExecutor from "@oh-my-pi/pi-coding-agent/eval/py/executor";
-import type { PythonKernel as PythonKernelInstance } from "@oh-my-pi/pi-coding-agent/eval/py/kernel";
-import * as pythonKernel from "@oh-my-pi/pi-coding-agent/eval/py/kernel";
-import { AgentRegistry } from "@oh-my-pi/pi-coding-agent/registry/agent-registry";
-import { createAgentSession, type ExtensionFactory, type WorkspaceTree } from "@oh-my-pi/pi-coding-agent/sdk";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { Snowflake } from "@oh-my-pi/pi-utils";
+import { getBundledModel } from "@gajae-code/ai";
+import { Settings } from "@gajae-code/coding-agent/config/settings";
+import * as pythonExecutor from "@gajae-code/coding-agent/eval/py/executor";
+import type { PythonKernel as PythonKernelInstance } from "@gajae-code/coding-agent/eval/py/kernel";
+import * as pythonKernel from "@gajae-code/coding-agent/eval/py/kernel";
+import { AgentRegistry } from "@gajae-code/coding-agent/registry/agent-registry";
+import { createAgentSession, type ExtensionFactory, type WorkspaceTree } from "@gajae-code/coding-agent/sdk";
+import { SessionManager } from "@gajae-code/coding-agent/session/session-manager";
+import { Snowflake } from "@gajae-code/utils";
 
 const OK_EXECUTION = { status: "ok", cancelled: false, timedOut: false, stdinRequested: false } as const;
 
@@ -138,15 +138,15 @@ describe("AgentSession python cleanup", () => {
 	let originalNullPrompt: string | undefined;
 
 	beforeEach(() => {
-		originalNullPrompt = Bun.env.NULL_PROMPT;
-		Bun.env.NULL_PROMPT = "true";
+		originalNullPrompt = Bun.env.NULL_PRGJCT;
+		Bun.env.NULL_PRGJCT = "true";
 	});
 
 	afterEach(async () => {
 		if (originalNullPrompt === undefined) {
-			delete Bun.env.NULL_PROMPT;
+			delete Bun.env.NULL_PRGJCT;
 		} else {
-			Bun.env.NULL_PROMPT = originalNullPrompt;
+			Bun.env.NULL_PRGJCT = originalNullPrompt;
 		}
 		originalNullPrompt = undefined;
 		vi.restoreAllMocks();

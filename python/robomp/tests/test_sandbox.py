@@ -9,8 +9,8 @@ from pathlib import Path
 
 import pytest
 
-from robomp.git_ops import GitCommandError
-from robomp.sandbox import (
+from robogjc.git_ops import GitCommandError
+from robogjc.sandbox import (
     SandboxManager,
     Workspace,
     _chown_workspace,
@@ -158,7 +158,7 @@ def test_rename_workspace_branch_refreshes_shared_metadata(tmp_path: Path, monke
             os.chown(path, 2004, 2004, follow_symlinks=False)
     calls: list[tuple[Path, int | None]] = []
     monkeypatch.setattr(
-        "robomp.sandbox._share_git_metadata_with_slots",
+        "robogjc.sandbox._share_git_metadata_with_slots",
         lambda repo_dir, slot_uid: calls.append((repo_dir, slot_uid)),
     )
 
@@ -191,10 +191,10 @@ def test_rename_workspace_branch_runs_git_as_slot_when_permissions_active(
         captured["kwargs"] = kwargs
         return subprocess.CompletedProcess(cmd, 0, "", "")
 
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Linux")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 0)
-    monkeypatch.setattr("robomp.sandbox.subprocess.run", fake_run)
-    monkeypatch.setattr("robomp.sandbox._share_git_metadata_with_slots", lambda _repo_dir, _slot_uid: None)
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Linux")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox.subprocess.run", fake_run)
+    monkeypatch.setattr("robogjc.sandbox._share_git_metadata_with_slots", lambda _repo_dir, _slot_uid: None)
 
     new_branch = rename_workspace_branch(ws, "fix-json-bom", slot_uid=2004)
 
@@ -319,7 +319,7 @@ def test_delete_bad_refs_removes_worktree_holding_the_ref(tmp_path: Path) -> Non
     """When a bad-object ref is still checked out by a worktree, the worktree's
     stale ``HEAD`` keeps fetch failing even after ``update-ref -d`` succeeds.
     The repair MUST also tear down that worktree before deleting the ref."""
-    from robomp.git_ops import _delete_bad_refs
+    from robogjc.git_ops import _delete_bad_refs
 
     pool = tmp_path / "pool"
     _init_worktree_repo(pool, "main")
@@ -356,7 +356,7 @@ def test_delete_bad_refs_removes_worktree_holding_the_ref(tmp_path: Path) -> Non
 
 
 def test_delete_bad_refs_noop_when_no_bad_ref_in_output(tmp_path: Path) -> None:
-    from robomp.git_ops import _delete_bad_refs
+    from robogjc.git_ops import _delete_bad_refs
 
     pool = tmp_path / "pool"
     _init_worktree_repo(pool, "main")
@@ -372,8 +372,8 @@ def test_ensure_workspace_creates_worktree(tmp_path: Path, upstream_repo: Path) 
         title="something is wrong",
         clone_url=str(upstream_repo),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     assert ws.repo_dir.is_dir()
     assert (ws.repo_dir / "README.md").read_text() == "hello\n"
@@ -396,10 +396,10 @@ def test_ensure_workspace_creates_worktree(tmp_path: Path, upstream_repo: Path) 
 def test_chown_workspace_noops_when_not_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[tuple[list[str], bool]] = []
 
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Linux")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 1000)
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Linux")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 1000)
     monkeypatch.setattr(
-        "robomp.sandbox.subprocess.run",
+        "robogjc.sandbox.subprocess.run",
         lambda cmd, *, check: calls.append((cmd, check)),
     )
 
@@ -411,10 +411,10 @@ def test_chown_workspace_noops_when_not_root(tmp_path: Path, monkeypatch: pytest
 def test_chown_workspace_noops_off_linux(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[tuple[list[str], bool]] = []
 
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Darwin")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Darwin")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 0)
     monkeypatch.setattr(
-        "robomp.sandbox.subprocess.run",
+        "robogjc.sandbox.subprocess.run",
         lambda cmd, *, check: calls.append((cmd, check)),
     )
 
@@ -426,10 +426,10 @@ def test_chown_workspace_noops_off_linux(tmp_path: Path, monkeypatch: pytest.Mon
 def test_chown_workspace_runs_chown_and_chmod_as_root_on_linux(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[tuple[list[str], bool]] = []
 
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Linux")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Linux")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 0)
     monkeypatch.setattr(
-        "robomp.sandbox.subprocess.run",
+        "robogjc.sandbox.subprocess.run",
         lambda cmd, *, check: calls.append((cmd, check)),
     )
 
@@ -480,9 +480,9 @@ def test_chown_workspace_makes_workspace_slot_owned(tmp_path: Path, monkeypatch:
         else:
             raise AssertionError(f"unexpected command: {cmd!r}")
 
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Linux")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 0)
-    monkeypatch.setattr("robomp.sandbox.subprocess.run", fake_run)
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Linux")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox.subprocess.run", fake_run)
 
     _chown_workspace(tmp_path, 2001)
 
@@ -525,9 +525,9 @@ def test_slot_pids_reads_proc_status_and_skips_zombies(tmp_path: Path) -> None:
 def test_reap_slot_noops_when_permissions_inactive(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[tuple[int, int]] = []
 
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Darwin")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 0)
-    monkeypatch.setattr("robomp.sandbox.os.kill", lambda pid, sig: calls.append((pid, sig)))
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Darwin")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox.os.kill", lambda pid, sig: calls.append((pid, sig)))
 
     _reap_slot(2001)
 
@@ -537,10 +537,10 @@ def test_reap_slot_noops_when_permissions_inactive(monkeypatch: pytest.MonkeyPat
 def test_reap_slot_kills_slot_uid_on_linux_root(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[tuple[int, int]] = []
 
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Linux")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 0)
-    monkeypatch.setattr("robomp.sandbox._slot_pids", lambda _uid: (111, 222))
-    monkeypatch.setattr("robomp.sandbox.os.kill", lambda pid, sig: calls.append((pid, sig)))
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Linux")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox._slot_pids", lambda _uid: (111, 222))
+    monkeypatch.setattr("robogjc.sandbox.os.kill", lambda pid, sig: calls.append((pid, sig)))
 
     _reap_slot(2001)
 
@@ -550,9 +550,9 @@ def test_reap_slot_kills_slot_uid_on_linux_root(monkeypatch: pytest.MonkeyPatch)
 def test_prepare_slot_tmpdir_mkdirs_without_chown(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     chowns: list[tuple[Path, int, int]] = []
 
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Linux")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 0)
-    monkeypatch.setattr("robomp.sandbox.os.chown", lambda path, uid, gid: chowns.append((Path(path), uid, gid)))
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Linux")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox.os.chown", lambda path, uid, gid: chowns.append((Path(path), uid, gid)))
 
     tmpdir = _prepare_slot_tmpdir(_workspace(tmp_path), 2001)
 
@@ -605,8 +605,8 @@ def test_safe_directory_env_scopes_single_repo_path(tmp_path: Path) -> None:
 
 
 def test_slot_subprocess_kwargs_run_as_slot_on_linux_root(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Linux")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Linux")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 0)
 
     assert _slot_subprocess_kwargs(2001) == {
         "user": 2001,
@@ -625,10 +625,10 @@ def test_chown_workspace_normalizes_to_root_when_slots_disabled(
         calls.append((cmd, kwargs.get("check") if isinstance(kwargs.get("check"), bool) else None))
         return subprocess.CompletedProcess(cmd, 0, "", "")
 
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Linux")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 0)
-    monkeypatch.setattr("robomp.sandbox.os.getegid", lambda: 0)
-    monkeypatch.setattr("robomp.sandbox.subprocess.run", fake_run)
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Linux")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox.os.getegid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox.subprocess.run", fake_run)
 
     _chown_workspace(tmp_path, None)
 
@@ -644,10 +644,10 @@ def test_prepare_slot_runtime_env_returns_workspace_private_paths_without_chown(
     chowns: list[tuple[Path, int, int]] = []
     calls: list[list[str]] = []
 
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Linux")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 0)
-    monkeypatch.setattr("robomp.sandbox.os.chown", lambda path, uid, gid: chowns.append((Path(path), uid, gid)))
-    monkeypatch.setattr("robomp.sandbox.subprocess.run", lambda cmd, **_kwargs: calls.append(cmd))
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Linux")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox.os.chown", lambda path, uid, gid: chowns.append((Path(path), uid, gid)))
+    monkeypatch.setattr("robogjc.sandbox.subprocess.run", lambda cmd, **_kwargs: calls.append(cmd))
 
     ws = _workspace(tmp_path)
     bun_cache = ws.root / ".omp-xdg" / "cache" / "bun-install"
@@ -697,9 +697,9 @@ def test_share_git_metadata_keeps_pool_writable_for_retry_slot(tmp_path: Path, m
     index_file.chmod(0o600)
 
     chowns: list[tuple[Path, int, int]] = []
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Linux")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 0)
-    monkeypatch.setattr("robomp.sandbox.os.chown", lambda path, uid, gid: chowns.append((Path(path), uid, gid)))
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Linux")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox.os.chown", lambda path, uid, gid: chowns.append((Path(path), uid, gid)))
 
     _share_git_metadata_with_slots(repo_dir, 2002)
 
@@ -730,8 +730,8 @@ def test_ensure_workspace_refreshes_permissions_for_retry_slot_and_session(
         shared.append((repo_dir, slot_uid))
         real_share(repo_dir, slot_uid)
 
-    monkeypatch.setattr("robomp.sandbox._chown_workspace", record_chown)
-    monkeypatch.setattr("robomp.sandbox._share_git_metadata_with_slots", record_share)
+    monkeypatch.setattr("robogjc.sandbox._chown_workspace", record_chown)
+    monkeypatch.setattr("robogjc.sandbox._share_git_metadata_with_slots", record_share)
 
     mgr = SandboxManager(tmp_path / "workspaces")
     ws1 = mgr.ensure_workspace(
@@ -741,8 +741,8 @@ def test_ensure_workspace_refreshes_permissions_for_retry_slot_and_session(
         clone_url=str(upstream_repo),
         default_branch="main",
         slot_uid=2001,
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     transcript = ws1.session_dir / "turn.jsonl"
     transcript.write_text("{}\n", encoding="utf-8")
@@ -754,8 +754,8 @@ def test_ensure_workspace_refreshes_permissions_for_retry_slot_and_session(
         default_branch="main",
         existing_branch=ws1.branch,
         slot_uid=2002,
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
 
     assert ws2.repo_dir == ws1.repo_dir
@@ -780,8 +780,8 @@ def test_ensure_workspace_preserves_checked_out_branch_on_replay(tmp_path: Path,
         clone_url=str(upstream_repo),
         default_branch="main",
         slot_uid=None,
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     renamed = "farm/abc12345/renamed"
     _git(["-C", str(ws1.repo_dir), "branch", "-m", ws1.branch, renamed], cwd=ws1.repo_dir.parent)
@@ -793,8 +793,8 @@ def test_ensure_workspace_preserves_checked_out_branch_on_replay(tmp_path: Path,
         clone_url=str(upstream_repo),
         default_branch="main",
         slot_uid=None,
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
 
     assert ws2.branch == renamed
@@ -811,8 +811,8 @@ def test_ensure_workspace_runs_existing_worktree_git_as_slot_after_chown(
         clone_url=str(upstream_repo),
         default_branch="main",
         slot_uid=None,
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     events: list[tuple[str, int | None]] = []
     git_calls: list[tuple[list[str], dict[str, object]]] = []
@@ -833,11 +833,11 @@ def test_ensure_workspace_runs_existing_worktree_git_as_slot_after_chown(
     def record_chown(_ws_root: Path, slot_uid: int | None) -> None:
         events.append(("chown", slot_uid))
 
-    monkeypatch.setattr("robomp.sandbox.platform.system", lambda: "Linux")
-    monkeypatch.setattr("robomp.sandbox.os.geteuid", lambda: 0)
-    monkeypatch.setattr("robomp.sandbox.subprocess.run", fake_run)
-    monkeypatch.setattr("robomp.sandbox._chown_workspace", record_chown)
-    monkeypatch.setattr("robomp.sandbox._share_git_metadata_with_slots", lambda _repo_dir, _slot_uid: None)
+    monkeypatch.setattr("robogjc.sandbox.platform.system", lambda: "Linux")
+    monkeypatch.setattr("robogjc.sandbox.os.geteuid", lambda: 0)
+    monkeypatch.setattr("robogjc.sandbox.subprocess.run", fake_run)
+    monkeypatch.setattr("robogjc.sandbox._chown_workspace", record_chown)
+    monkeypatch.setattr("robogjc.sandbox._share_git_metadata_with_slots", lambda _repo_dir, _slot_uid: None)
 
     ws2 = mgr.ensure_workspace(
         repo="octo/widget",
@@ -846,8 +846,8 @@ def test_ensure_workspace_runs_existing_worktree_git_as_slot_after_chown(
         clone_url=str(upstream_repo),
         default_branch="main",
         slot_uid=2002,
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
 
     assert ws2.branch == ws1.branch
@@ -873,7 +873,7 @@ def test_ensure_workspace_invokes_slot_chown(
         # itself a no-op; on Linux+root in CI it hands the tree to the slot.
         real_chown(ws_root, slot_uid)
 
-    monkeypatch.setattr("robomp.sandbox._chown_workspace", record_chown)
+    monkeypatch.setattr("robogjc.sandbox._chown_workspace", record_chown)
     mgr = SandboxManager(tmp_path / "workspaces")
 
     ws = mgr.ensure_workspace(
@@ -883,8 +883,8 @@ def test_ensure_workspace_invokes_slot_chown(
         clone_url=str(upstream_repo),
         default_branch="main",
         slot_uid=2001,
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
 
     assert calls == [(ws.root, 2001)]
@@ -918,7 +918,7 @@ def test_ensure_workspace_provisions_and_slot_owns_runtime_dirs(
         # real slot permissions in CI.
         real_chown(ws_root, slot_uid)
 
-    monkeypatch.setattr("robomp.sandbox._chown_workspace", record_chown)
+    monkeypatch.setattr("robogjc.sandbox._chown_workspace", record_chown)
     mgr = SandboxManager(tmp_path / "workspaces")
 
     ws = mgr.ensure_workspace(
@@ -928,8 +928,8 @@ def test_ensure_workspace_provisions_and_slot_owns_runtime_dirs(
         clone_url=str(upstream_repo),
         default_branch="main",
         slot_uid=2001,
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
 
     assert runtime_paths
@@ -954,8 +954,8 @@ def test_ensure_workspace_is_idempotent(tmp_path: Path, upstream_repo: Path) -> 
         title="t",
         clone_url=str(upstream_repo),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     ws2 = mgr.ensure_workspace(
         repo="octo/widget",
@@ -963,8 +963,8 @@ def test_ensure_workspace_is_idempotent(tmp_path: Path, upstream_repo: Path) -> 
         title="t",
         clone_url=str(upstream_repo),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     assert ws1.repo_dir == ws2.repo_dir
     assert ws1.branch == ws2.branch
@@ -1001,8 +1001,8 @@ def test_ensure_workspace_existing_branch_starts_from_remote_head(tmp_path: Path
         clone_url=str(upstream_repo),
         default_branch="main",
         existing_branch=branch,
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
 
     assert ws.branch == branch
@@ -1017,8 +1017,8 @@ def test_remove_workspace(tmp_path: Path, upstream_repo: Path) -> None:
         title="t",
         clone_url=str(upstream_repo),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     assert ws.repo_dir.exists()
     mgr.remove_workspace(repo="octo/widget", number=12)
@@ -1027,7 +1027,7 @@ def test_remove_workspace(tmp_path: Path, upstream_repo: Path) -> None:
 
 
 def test_redact_credentials_strips_userinfo() -> None:
-    from robomp.sandbox import redact_credentials
+    from robogjc.sandbox import redact_credentials
 
     assert (
         redact_credentials("Cloning into 'x' from https://bot:ghp_secret@github.com/o/r.git failed")
@@ -1047,7 +1047,7 @@ def test_git_command_error_redacts_url_in_args_and_stderr(tmp_path: Path) -> Non
     """An ENOENT-style git failure on a credentialed clone URL must not echo the token."""
     import pytest as _pytest
 
-    from robomp.sandbox import _run
+    from robogjc.sandbox import _run
 
     cred_url = "https://bot:ghp_abc123secret@example.invalid/o/r.git"
     with _pytest.raises(Exception) as exc:
@@ -1083,8 +1083,8 @@ def test_ensure_workspace_rewrites_credentialed_origin(tmp_path: Path, upstream_
         title="t",
         clone_url=str(upstream_repo),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     config_after = (pool / ".git" / "config").read_text()
     assert "ghp_seekrit" not in config_after, config_after
@@ -1103,7 +1103,7 @@ def test_push_force_with_lease_succeeds_after_local_amend(tmp_path: Path, upstre
     """An agent amending an already-pushed commit (e.g. `--reset-author`) must
     still be able to push: `--force-with-lease` allows the local rewrite as
     long as origin still matches what we last fetched."""
-    from robomp.git_ops import push as git_push
+    from robogjc.git_ops import push as git_push
 
     # Clone, make a commit, push, then amend and push again.
     work = tmp_path / "work"
@@ -1143,8 +1143,8 @@ def test_push_force_with_lease_refuses_when_origin_moved(tmp_path: Path, upstrea
     """If origin's branch ref has been moved by some other writer between our
     last fetch and this push, the lease MUST refuse — even though we're
     force-pushing."""
-    from robomp.git_ops import GitCommandError
-    from robomp.git_ops import push as git_push
+    from robogjc.git_ops import GitCommandError
+    from robogjc.git_ops import push as git_push
 
     work = tmp_path / "work"
     _git(["clone", str(upstream_repo), str(work)], cwd=tmp_path)
@@ -1187,7 +1187,7 @@ def test_push_force_with_lease_refuses_when_origin_moved(tmp_path: Path, upstrea
 def test_run_git_injects_safe_directory_and_subprocess_identity(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from robomp.git_ops import _run_git
+    from robogjc.git_ops import _run_git
 
     captured: dict[str, object] = {}
 
@@ -1196,7 +1196,7 @@ def test_run_git_injects_safe_directory_and_subprocess_identity(
         captured.update(kwargs)
         return subprocess.CompletedProcess(cmd, 0, "", "")
 
-    monkeypatch.setattr("robomp.git_ops.subprocess.run", fake_run)
+    monkeypatch.setattr("robogjc.git_ops.subprocess.run", fake_run)
 
     _run_git(
         ["status"],
@@ -1226,7 +1226,7 @@ def test_run_git_kills_hung_child(tmp_path: Path, monkeypatch: pytest.MonkeyPatc
     thread. The proxy already bounds the async caller via
     `asyncio.wait_for`, but the OS process only goes away because of this
     timeout."""
-    from robomp.git_ops import GitCommandError, _run_git
+    from robogjc.git_ops import GitCommandError, _run_git
 
     fakebin = tmp_path / "bin"
     fakebin.mkdir()
@@ -1265,8 +1265,8 @@ def test_ensure_workspace_without_cache_leaves_native_dir_untouched(tmp_path: Pa
         title="no cache",
         clone_url=str(upstream_repo),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     assert mgr.natives_cache is None
     # No `packages/natives/native/` was tracked in the upstream, and no cache
@@ -1275,7 +1275,7 @@ def test_ensure_workspace_without_cache_leaves_native_dir_untouched(tmp_path: Pa
 
 
 def test_ensure_workspace_populates_from_natives_cache(tmp_path: Path, upstream_repo: Path) -> None:
-    from robomp.natives_cache import NativesCache, compute_key, target_triple
+    from robogjc.natives_cache import NativesCache, compute_key, target_triple
 
     cache = NativesCache(tmp_path / "natives-cache")
     mgr = SandboxManager(tmp_path / "workspaces", natives_cache=cache)
@@ -1287,8 +1287,8 @@ def test_ensure_workspace_populates_from_natives_cache(tmp_path: Path, upstream_
         title="producer",
         clone_url=str(upstream_repo),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     native_dir1 = _seed_native_dir(ws1.repo_dir)
     # Mirror the napi build output set. The filename must match the live
@@ -1312,8 +1312,8 @@ def test_ensure_workspace_populates_from_natives_cache(tmp_path: Path, upstream_
         title="consumer",
         clone_url=str(upstream_repo),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     native_dir2 = ws2.repo_dir / "packages" / "natives" / "native"
     # The auto-populate path used the real target_triple() — which matches
@@ -1328,7 +1328,7 @@ def test_ensure_workspace_populates_from_natives_cache(tmp_path: Path, upstream_
 
 
 def test_ensure_workspace_cache_miss_is_silent_noop(tmp_path: Path, upstream_repo: Path) -> None:
-    from robomp.natives_cache import NativesCache
+    from robogjc.natives_cache import NativesCache
 
     cache = NativesCache(tmp_path / "empty-cache")
     mgr = SandboxManager(tmp_path / "workspaces", natives_cache=cache)
@@ -1338,8 +1338,8 @@ def test_ensure_workspace_cache_miss_is_silent_noop(tmp_path: Path, upstream_rep
         title="miss",
         clone_url=str(upstream_repo),
         default_branch="main",
-        author_name="robomp-bot",
-        author_email="robomp-bot@example.invalid",
+        author_name="robogjc-bot",
+        author_email="robogjc-bot@example.invalid",
     )
     # Cache is empty so the workspace ends up identical to the no-cache case.
     assert ws.repo_dir.is_dir()

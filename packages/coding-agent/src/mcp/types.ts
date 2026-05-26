@@ -101,7 +101,7 @@ export interface MCPSseServerConfig extends MCPServerConfigBase {
 export type MCPServerConfig = MCPStdioServerConfig | MCPHttpServerConfig | MCPSseServerConfig;
 
 export const MCP_CONFIG_SCHEMA_URL =
-	"https://raw.githubusercontent.com/can1357/oh-my-pi/main/packages/coding-agent/src/config/mcp-schema.json";
+	"https://raw.githubusercontent.com/can1357/gajae-code/main/packages/coding-agent/src/config/mcp-schema.json";
 
 /** Root mcp.json/.mcp.json file structure */
 export interface MCPConfigFile {
@@ -404,7 +404,7 @@ export const MCPNotificationMethods = {
 	TOOLS_LIST_CHANGED: "notifications/tools/list_changed",
 	RESOURCES_LIST_CHANGED: "notifications/resources/list_changed",
 	RESOURCES_UPDATED: "notifications/resources/updated",
-	PROMPTS_LIST_CHANGED: "notifications/prompts/list_changed",
+	PRGJCTS_LIST_CHANGED: "notifications/prompts/list_changed",
 } as const;
 
 /** Extract a JsonRpcError from a thrown value. Preserves `.code` and `.message` from Error instances or plain objects. */

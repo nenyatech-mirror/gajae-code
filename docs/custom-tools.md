@@ -45,7 +45,7 @@ CustomTool.execute(toolCallId, params, onUpdate, ctx, signal)
 `discoverAndLoadCustomTools(configuredPaths, cwd, builtInToolNames)` merges:
 
 1. Capability providers (`toolCapability`), including:
-   - Native OMP config (`~/.omp/agent/tools`, `.omp/tools`)
+   - Native GJC config (`~/.omp/agent/tools`, `.omp/tools`)
    - Claude config (`~/.claude/tools`, `.claude/tools`)
    - Codex config (`~/.codex/tools`, `.codex/tools`)
    - Claude marketplace plugin cache provider
@@ -64,7 +64,7 @@ CustomTool.execute(toolCallId, params, onUpdate, ctx, signal)
 A custom tool module must export a function (default export preferred):
 
 ```ts
-import type { CustomToolFactory } from "@oh-my-pi/pi-coding-agent";
+import type { CustomToolFactory } from "@gajae-code/coding-agent";
 
 const factory: CustomToolFactory = (pi) => ({
 	name: "repo_stats",
@@ -123,7 +123,7 @@ From `types.ts` and `loader.ts`:
 - `hasUI`: `false` in non-interactive flows
 - `logger`: shared file logger
 - `zod`: injected `zod` module (use `pi.zod.object`, `pi.zod.string`, …)
-- `pi`: injected `@oh-my-pi/pi-coding-agent` exports
+- `pi`: injected `@gajae-code/coding-agent` exports
 - `pushPendingAction(action)`: register a preview action for hidden `resolve` tool (`docs/resolve-tool-runtime.md`)
 
 Loader starts with a no-op UI context and requires host code to call `setUIContext(...)` when real UI is ready.
