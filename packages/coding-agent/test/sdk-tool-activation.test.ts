@@ -112,6 +112,54 @@ describe("createAgentSession defaultInactive tool activation", () => {
 		}
 	});
 
+	it("preserves inline and local OMP tools when MCP is not enabled", async () => {
+		const tempDir = path.join(os.tmpdir(), `pi-sdk-tool-activation-${Snowflake.next()}`);
+		tempDirs.push(tempDir);
+		fs.mkdirSync(tempDir, { recursive: true });
+
+		const { session, mcpManager } = await createAgentSession({
+			cwd: tempDir,
+			agentDir: tempDir,
+			sessionManager: SessionManager.inMemory(),
+			settings: Settings.isolated({
+				"astGrep.enabled": true,
+				"astEdit.enabled": true,
+				"search.enabled": true,
+				"find.enabled": true,
+			}),
+			model: getBundledModel("openai", "gpt-4o-mini"),
+			disableExtensionDiscovery: true,
+			extensions: [toolActivationExtension],
+			skills: [],
+			contextFiles: [],
+			promptTemplates: [],
+			slashCommands: [],
+			enableLsp: false,
+			toolNames: ["read", "write", "edit", "bash", "search", "find", "ast_grep", "ast_edit"],
+		});
+
+		try {
+			const expectedLocalTools = [
+				"read",
+				"write",
+				"edit",
+				"bash",
+				"search",
+				"find",
+				"ast_grep",
+				"ast_edit",
+				"default_active_tool",
+			];
+			expect(mcpManager).toBeUndefined();
+			expect(session.getAllToolNames()).toEqual(expect.arrayContaining(expectedLocalTools));
+			expect(session.getActiveToolNames()).toEqual(expect.arrayContaining(expectedLocalTools));
+			expect(session.getAllToolNames().filter(name => name.startsWith("mcp__"))).toEqual([]);
+			expect(session.getActiveToolNames().filter(name => name.startsWith("mcp__"))).toEqual([]);
+		} finally {
+			await session.dispose();
+		}
+	});
+
 	it("keeps edit active when vim edit mode is configured", async () => {
 		const tempDir = path.join(os.tmpdir(), `pi-sdk-tool-activation-${Snowflake.next()}`);
 		tempDirs.push(tempDir);
