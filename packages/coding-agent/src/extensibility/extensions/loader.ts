@@ -293,13 +293,7 @@ async function loadExtension(
 		}
 
 		const extension = createExtension(extensionPath, resolvedPath);
-		const api = new ConcreteExtensionAPI(
-			await import("@gajae-code/coding-agent"),
-			extension,
-			runtime,
-			cwd,
-			eventBus,
-		);
+		const api = new ConcreteExtensionAPI(await import("@gajae-code/coding-agent"), extension, runtime, cwd, eventBus);
 		await factory(api);
 
 		return { extension, error: null };

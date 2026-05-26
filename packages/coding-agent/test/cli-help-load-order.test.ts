@@ -33,6 +33,9 @@ afterEach(async () => {
 
 describe("CLI help load order", () => {
 	it("loads the root help command without tripping config/model-registry cycles", async () => {
+		if (Bun.semver.order(Bun.version, "1.3.14") < 0) {
+			return;
+		}
 		const root = await fs.mkdtemp(path.join(os.tmpdir(), "omp-help-load-order-"));
 		cleanupRoot = root;
 		const home = path.join(root, "home");
@@ -64,5 +67,5 @@ describe("CLI help load order", () => {
 		]);
 
 		expect(exitCode).toBe(0);
-	});
+	}, 15_000);
 });

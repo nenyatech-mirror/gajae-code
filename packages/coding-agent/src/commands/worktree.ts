@@ -1,17 +1,17 @@
 /**
- * List and clean up agent-managed git worktrees under `~/.omp/wt`.
+ * List and clean up agent-managed git worktrees under `~/.gjc/wt`.
  */
 import { Args, Command, Flags } from "@gajae-code/utils/cli";
 import { clearWorktrees, listWorktrees } from "../cli/worktree-cli";
 
 export default class Worktree extends Command {
-	static description = "List or clear agent-managed git worktrees (~/.omp/wt)";
+	static description = "List or clear agent-managed git worktrees (~/.gjc/wt)";
 
 	static aliases = ["wt"];
 
 	static args = {
 		// `list` (default) inspects the worktree dir; `clear` removes entries.
-		// A positional action keeps `omp worktree` (the no-arg form) useful.
+		// A positional action keeps `gjc worktree` (the no-arg form) useful.
 		action: Args.string({
 			description: "list (default) or clear",
 			required: false,
@@ -34,11 +34,11 @@ export default class Worktree extends Command {
 	};
 
 	static examples = [
-		"omp worktree",
-		"omp worktree list --json",
-		"omp worktree clear",
-		"omp worktree clear --dry-run",
-		"omp worktree clear --all",
+		"gjc worktree",
+		"gjc worktree list --json",
+		"gjc worktree clear",
+		"gjc worktree clear --dry-run",
+		"gjc worktree clear --all",
 	];
 
 	async run(): Promise<void> {
