@@ -1975,7 +1975,7 @@ export class InteractiveMode implements InteractiveModeContext {
 	 * Kept in-module rather than i18n'd because the whole charm is the tone
 	 * — translations would need to preserve it deliberately, not auto-render.
 	 */
-	static #AUTOQA_CONSENT_PRGJCTS: ReadonlyArray<readonly [string, string]> = [
+	static #AUTOQA_CONSENT_PROMPTS: ReadonlyArray<readonly [string, string]> = [
 		[
 			"😤 Your agent is fuming about a tool.",
 			"Wanna let it vent to the devs? Just the tool name + what set it off, nothing personal.",
@@ -2016,7 +2016,7 @@ export class InteractiveMode implements InteractiveModeContext {
 	 * subagent invocations bubble up here through the shared module state.
 	 */
 	async #promptAutoQaConsent(): Promise<boolean | null> {
-		const pool = InteractiveMode.#AUTOQA_CONSENT_PRGJCTS;
+		const pool = InteractiveMode.#AUTOQA_CONSENT_PROMPTS;
 		const [headline, body] = pool[Math.floor(Math.random() * pool.length)];
 		const choice = await this.showHookSelector(`${headline}\n${body}`, ["Yes", "No"]);
 		return choice === "Yes";
